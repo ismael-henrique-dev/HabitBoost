@@ -1,34 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
+import ProfileScreen from '@/components/screens/profile'
 
-import { router } from 'expo-router'
-
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text
-        style={styles.title}
-        onPress={() => router.navigate('/(auth)/register')}
-      >
-        Profile
-      </Text>
-      <View style={styles.separator} />
-    </View>
-  )
+export default function Profile() {
+  return <ProfileScreen />
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-})
