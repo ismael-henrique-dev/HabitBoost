@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const apiUrl = process.env.EXPO_PUBLIC_API_URL
+
 export const api = axios.create({
-  baseURL: 'https://habitboost-api.onrender.com',
+  baseURL: apiUrl,
 })
