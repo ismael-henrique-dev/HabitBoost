@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
@@ -17,6 +17,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^7.0.14",
     "@tabler/icons-react-native": "^3.31.0",
+    "axios": "^1.8.4",
     "expo": "~52.0.43",
     "expo-font": "~13.0.4",
     "expo-linking": "~7.0.5",
