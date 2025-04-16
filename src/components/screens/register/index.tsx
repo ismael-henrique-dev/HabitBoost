@@ -47,8 +47,7 @@ export function RegisterScreen() {
       <View style={styles.content}>
         <Image
           source={require('@/assets/images/logo.png')}
-          width={19}
-          height={10}
+          style={styles.logo}
         />
         <Text style={styles.title}>Criar conta</Text>
         <View style={styles.formContainer}>

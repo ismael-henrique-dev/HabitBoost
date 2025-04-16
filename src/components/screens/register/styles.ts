@@ -21,4 +21,5 @@ export const styles = StyleSheet.create({
   formContainer: {
     gap: 20,
   },
+  logo: { width: 240, height: 40 }
 })

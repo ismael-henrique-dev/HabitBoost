@@ -1,11 +1,11 @@
 import { Input, Button } from '@/components/ui'
-import { colors, fontFamily } from '@/styles/theme'
-import { IconLock, IconMail, IconUser } from '@tabler/icons-react-native'
+import { colors } from '@/styles/theme'
+import { IconLock, IconMail } from '@tabler/icons-react-native'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
-
-import { View, Text, StyleSheet, Alert, Image } from 'react-native'
+import { View, Text, Alert } from 'react-native'
 import { styles } from './styles'
+import { Image } from 'react-native'
 
 export function LoginScreen() {
   const [email, setEmail] = useState('')
@@ -46,9 +46,9 @@ export function LoginScreen() {
       <View style={styles.content}>
         <Image
           source={require('@/assets/images/logo.png')}
-          width={19}
-          height={10}
+          style={styles.logo}
         />
+
         <Text style={styles.title}>Entrar</Text>
         <View style={styles.formContainer}>
           <Input

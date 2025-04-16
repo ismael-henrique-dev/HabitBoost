@@ -28,4 +28,5 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
+  logo: { width: 240, height: 40 }
 })
