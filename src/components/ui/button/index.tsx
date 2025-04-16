@@ -29,7 +29,7 @@ function Button({
       {...rest}
     >
       {isLoading ? (
-        <ActivityIndicator size='small' color={colors.zinc[900]} />
+        <ActivityIndicator size={20} color={colors.zinc[50]} />
       ) : (
         children
       )}

@@ -1,14 +1,14 @@
 import { Stack } from 'expo-router'
 
-export default function AuthLayout() {
+export default function WelcomeLayout() {
   return (
     <Stack
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name='login' />
-      <Stack.Screen name='register' />
+      <Stack.Screen name='confirm-email' />
+      <Stack.Screen name='welcome' />
     </Stack>
   )
 }

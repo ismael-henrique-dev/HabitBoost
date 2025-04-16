@@ -56,6 +56,7 @@ function RootLayoutNav() {
     >
       <Stack.Screen name='(tabs)' />
       <Stack.Screen name='(auth)' />
+      <Stack.Screen name='(welcome)' />
     </Stack>
   )
 }

@@ -30,9 +30,9 @@ function Input({ variant = 'default', children, ...rest }: InputProps) {
       {variant === 'password' && (
         <TouchableOpacity onPress={() => setShowpassword(!showPassword)}>
           {showPassword ? (
-            <IconEyeOff color={colors.zinc[600]} size={24} />
+            <IconEye color={colors.zinc[600]} size={24} />
           ) : (
-            <IconEye color={colors.zinc[600]} />
+            <IconEyeOff color={colors.zinc[600]} size={24} />
           )}
         </TouchableOpacity>
       )}
