@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.red[600],
     textAlign: 'left',
-    fontFamily: fontFamily.regular
+    fontFamily: fontFamily.regular,
+    marginTop: -4
   },
 })
