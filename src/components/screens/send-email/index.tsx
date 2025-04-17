@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { View, Text, Image, ScrollView } from 'react-native'
 import { Input, Button } from '@/components/ui'
 import { colors } from '@/styles/theme'
-import { IconLock, IconMail, IconUser } from '@tabler/icons-react-native'
+import { IconMail } from '@tabler/icons-react-native'
 import { router } from 'expo-router'
-import { styles } from './styles'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -14,8 +13,9 @@ import {
 import { register } from '@/services/http/auth/register'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
+import { styles } from './style'
 
-export function RegisterScreen() {
+export function SendEmailScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const {
     control,
@@ -29,7 +29,7 @@ export function RegisterScreen() {
     },
   })
 
-  async function handleRegister(data: RegisterFormData) {
+  async function handleSendEmail(data: RegisterFormData) {
     try {
       setIsLoading(true)
       await register(data)
@@ -56,22 +56,6 @@ export function RegisterScreen() {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Input
-                  placeholder='Digite seu nome'
-                  value={value}
-                  onChangeText={onChange}
-                >
-                  <Input.Icon icon={IconUser} />
-                </Input>
-              )}
-              name='name'
-            />
-            {errors.name && (
-              <ErrorMenssage>{errors.name.message}</ErrorMenssage>
-            )}
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
                   placeholder='Digite seu email'
                   keyboardType='email-address'
                   value={value}
@@ -85,43 +69,9 @@ export function RegisterScreen() {
             {errors.email && (
               <ErrorMenssage>{errors.email.message}</ErrorMenssage>
             )}
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder='Crie uma senha'
-                  value={value}
-                  variant='password'
-                  onChangeText={onChange}
-                >
-                  <Input.Icon icon={IconLock} />
-                </Input>
-              )}
-              name='password'
-            />
-            {errors.password && (
-              <ErrorMenssage>{errors.password.message}</ErrorMenssage>
-            )}
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder='Crie uma senha'
-                  value={value}
-                  variant='password'
-                  onChangeText={onChange}
-                >
-                  <Input.Icon icon={IconLock} />
-                </Input>
-              )}
-              name='confirmPassword'
-            />
-            {errors.confirmPassword && (
-              <ErrorMenssage>{errors.confirmPassword.message}</ErrorMenssage>
-            )}
             <Button
               variant='secundary'
-              onPress={handleSubmit(handleRegister)}
+              onPress={handleSubmit(handleSendEmail)}
               disabled={isLoading && isValid}
               isLoading={isLoading}
             >

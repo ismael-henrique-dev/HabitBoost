@@ -7,7 +7,7 @@ export function HomeScreen() {
     <View style={styles.container}>
       <Text
         style={styles.title}
-        onPress={() => router.navigate('/register')}
+        onPress={() => router.navigate('/welcome')}
       >
         Home
       </Text>
