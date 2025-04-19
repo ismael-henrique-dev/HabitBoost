@@ -1,10 +1,13 @@
-import { StyleSheet } from "react-native";
+import { colors } from '@/styles/theme'
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: colors.zinc[200],
+  },
+  content: {
+    gap: 20,
   },
   title: {
     fontSize: 20,
