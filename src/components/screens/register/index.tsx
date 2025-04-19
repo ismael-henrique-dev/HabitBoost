@@ -24,15 +24,22 @@ export function RegisterScreen() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
+      username: '',
+      confirmPassword: '',
       email: '',
       password: '',
     },
   })
 
   async function handleRegister(data: RegisterFormData) {
+    const registerData = {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    }
     try {
       setIsLoading(true)
-      await register(data)
+      await register(registerData)
       console.log(data)
     } catch (responseError) {
       const error = getErrorMessage(responseError)
@@ -63,10 +70,10 @@ export function RegisterScreen() {
                   <Input.Icon icon={IconUser} />
                 </Input>
               )}
-              name='name'
+              name='username'
             />
-            {errors.name && (
-              <ErrorMenssage>{errors.name.message}</ErrorMenssage>
+            {errors.username && (
+              <ErrorMenssage>{errors.username.message}</ErrorMenssage>
             )}
             <Controller
               control={control}

@@ -10,7 +10,7 @@ export async function register(
   data: RegisterFormDataWithoutConfirmPassword
 ): Promise<RegisterResponse> {
   try {
-    const response = await api.post<RegisterResponse>('auth/login', data)
+    const response = await api.post<RegisterResponse>('user/register', data)
     console.log('Register response: ', response.data)
 
     return response.data
