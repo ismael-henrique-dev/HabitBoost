@@ -52,7 +52,6 @@ export default function TabLayout() {
           size?: number
         }) => {
           const iconProps = { color, size }
-
           switch (route.name) {
             case 'index':
               return <IconCalendar {...iconProps} />
@@ -78,7 +77,10 @@ export default function TabLayout() {
       <Tabs.Screen name='overview' options={{ title: 'Overview' }} />
       <Tabs.Screen
         name='ranking'
-        options={{ title: 'Ranking', headerRight: () => <HeaderRankingInfo /> }}
+        options={{
+          title: 'Ranking',
+          headerRight: () => <HeaderRankingInfo />,
+        }}
       />
       <Tabs.Screen name='profile' options={{ title: 'Perfil' }} />
     </Tabs>

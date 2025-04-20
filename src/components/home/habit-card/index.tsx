@@ -2,15 +2,11 @@ import { colors } from '@/styles/theme'
 import { IconDotsVertical, IconRun, IconBell } from '@tabler/icons-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
+import { Habit } from '@/types/habit'
 
-type HabitCardProps = {
-  title: string
-  description: string
-  time: string
-  category: string
-}
+type HabitCardProps = Habit
 
-export function HabitCard() {
+export function HabitCard(props: HabitCardProps) {
   return (
     <View style={styles.container}>
       <View>
@@ -18,16 +14,18 @@ export function HabitCard() {
           <View style={styles.headerGroup}>
             <Category />
             <View>
-              <Text style={styles.title}>Treinar</Text>
-              <View style={styles.timeContainer}>
-                <IconBell size={16} color={colors.lime[500]} />
-                <Text style={styles.timeText}>16:00</Text>
-              </View>
+              <Text style={styles.title}>{props.title}</Text>
+              {props.reminderTime && (
+                <View style={styles.timeContainer}>
+                  <IconBell size={16} color={colors.lime[500]} />
+                  <Text style={styles.timeText}>{props.reminderTime}</Text>
+                </View>
+              )}
             </View>
           </View>
           <IconDotsVertical color={colors.zinc[900]} />
         </View>
-        <Text style={styles.description}>Dias no mês: 3, 6, 6, 8</Text>
+        <Text style={styles.description}>Dias no mês: {props.days}</Text>
       </View>
 
       <TouchableOpacity style={styles.button}>

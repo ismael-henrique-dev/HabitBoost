@@ -2,6 +2,7 @@ import { colors } from '@/styles/theme'
 import { IconFilter, IconPlus } from '@tabler/icons-react-native'
 import { TouchableOpacity, View, Text } from 'react-native'
 import { styles } from './styles'
+import { router } from 'expo-router'
 
 export function HeaderHomeActions() {
   return (
@@ -10,7 +11,7 @@ export function HeaderHomeActions() {
         <IconFilter size={24} color={colors.zinc[900]} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.newButton}>
+      <TouchableOpacity onPress={() => router.navigate('/create-habit')} style={styles.newButton}>
         <Text style={styles.newButtonText}>Novo</Text>
         <IconPlus size={24} color={colors.zinc[900]} />
       </TouchableOpacity>

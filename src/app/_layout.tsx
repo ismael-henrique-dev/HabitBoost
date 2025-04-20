@@ -8,6 +8,9 @@ import {
   Rubik_400Regular,
   Rubik_500Medium,
 } from '@expo-google-fonts/rubik'
+import { HabitProvider } from '@/contexts/habit-context'
+import { CategoryProvider } from '@/contexts/category-context'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,14 +52,21 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name='(tabs)' />
-      <Stack.Screen name='(auth)' />
-      <Stack.Screen name='(welcome)' />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <CategoryProvider>
+        <HabitProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name='(tabs)' />
+            <Stack.Screen name='(auth)' />
+            <Stack.Screen name='(welcome)' />
+            <Stack.Screen name='(habit-management)' />
+          </Stack>
+        </HabitProvider>
+      </CategoryProvider>
+    </GestureHandlerRootView>
   )
 }
