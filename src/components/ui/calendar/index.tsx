@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, Modal } from 'react-native'
-import { IconChevronLeft, IconChevronRight, IconFeather, IconX } from '@tabler/icons-react-native'
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconFeather,
+  IconX,
+} from '@tabler/icons-react-native'
 import {
   Calendar as CalendarComponent,
   DateData,
@@ -11,6 +16,7 @@ import { DayState } from 'react-native-calendars/src/types'
 import { ptBR } from '@/utils/locale-calendar-config'
 import { Button } from '../button'
 import { colors } from '@/styles/theme'
+import { useNotifications } from 'react-native-notificated'
 
 LocaleConfig.locales['pt-br'] = ptBR
 LocaleConfig.defaultLocale = 'pt-br'
@@ -62,13 +68,17 @@ export function Calendar({ selectedDates = {}, onSelectDate }: CalendarProps) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Escolha os dias</Text> 
+              <Text style={styles.modalTitle}>Escolha os dias</Text>
               <IconX onPress={() => setIsModalVisible(false)} />
             </View>
             <CalendarComponent
               style={styles.calendar}
               renderArrow={(direction: 'right' | 'left') =>
-                direction === 'right' ? <IconChevronRight /> : <IconChevronLeft />
+                direction === 'right' ? (
+                  <IconChevronRight />
+                ) : (
+                  <IconChevronLeft />
+                )
               }
               headerStyle={{
                 borderBottomWidth: 0.5,
@@ -122,7 +132,11 @@ export function Calendar({ selectedDates = {}, onSelectDate }: CalendarProps) {
                 )
               }}
             />
-            <Button style={{ width: '100%' }} variant='secundary' onPress={() => setIsModalVisible(false)}>
+            <Button
+              style={{ width: '100%' }}
+              variant='secundary'
+              onPress={() => setIsModalVisible(false)}
+            >
               <Button.Title style={{ color: colors.zinc[50] }}>
                 Concluir
               </Button.Title>

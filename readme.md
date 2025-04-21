@@ -20,6 +20,8 @@
 
 - react-native-calendars
 
+- react-native-notificated
+
 ### 🛠️ Ferramentas e Tecnologias
 
 - TypeScript  

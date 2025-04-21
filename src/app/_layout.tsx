@@ -11,6 +11,20 @@ import {
 import { HabitProvider } from '@/contexts/habit-context'
 import { CategoryProvider } from '@/contexts/category-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import {
+  createNotifications,
+  SlideInLeftSlideOutRight,
+} from 'react-native-notificated'
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated'
+import { ToastSuccess } from '@/components/ui/toast'
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Reanimated runs in strict mode by default
+})
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,21 +65,41 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { NotificationsProvider } = createNotifications({
+    duration: 3000,
+    notificationPosition: 'top',
+    animationConfig: SlideInLeftSlideOutRight,
+    isNotch: undefined,
+    defaultStylesSettings: {},
+    gestureConfig: { direction: 'x' },
+    variants: {
+      custom: {
+        component: ToastSuccess,
+        config: {
+          notificationPosition: 'top',
+          duration: 300,
+        },
+      },
+    },
+  })
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <CategoryProvider>
-        <HabitProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name='(tabs)' />
-            <Stack.Screen name='(auth)' />
-            <Stack.Screen name='(welcome)' />
-            <Stack.Screen name='(habit-management)' />
-          </Stack>
-        </HabitProvider>
+        <NotificationsProvider>
+          <HabitProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name='(tabs)' />
+              <Stack.Screen name='(auth)' />
+              <Stack.Screen name='(welcome)' />
+              <Stack.Screen name='(habit-management)' />
+            </Stack>
+          </HabitProvider>
+        </NotificationsProvider>
       </CategoryProvider>
     </GestureHandlerRootView>
   )
