@@ -1,4 +1,5 @@
 import { Category } from '@/types/category'
+import { IconHeart } from '@tabler/icons-react-native'
 import { createContext, useContext, useState } from 'react'
 
 type CategoryContextData = {
@@ -13,7 +14,7 @@ const CategoryContext = createContext<CategoryContextData>(
 
 export function CategoryProvider({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState<Category[]>([
-    { id: '1', name: 'Saúde', isCustom: false },
+    { id: '1', name: 'Saúde', isCustom: false, icon: IconHeart },
     { id: '2', name: 'Trabalho', isCustom: false },
     { id: '3', name: 'Estudos', isCustom: false },
     { id: '4', name: 'Estudos', isCustom: false },

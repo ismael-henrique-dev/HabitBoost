@@ -5,7 +5,16 @@ export const createHabitFormSchema = z.object({
   description: z.string().optional(),
   reminderTime: z.string().optional(),
   category: z.string().min(1, 'A categoria é obrigatória.'),
-  days: z.array(z.number()).min(1, 'Selecione pelo menos um dia.'),
+  days: z
+    .record(
+      z.string(),
+      z.object({
+        selected: z.boolean(),
+      })
+    )
+    .refine((days) => Object.keys(days).length > 0, {
+      message: 'Selecione pelo menos um dia.',
+    }),
 })
 
 export type CreateHabitFormData = z.infer<typeof createHabitFormSchema>

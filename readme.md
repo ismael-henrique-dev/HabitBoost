@@ -18,6 +18,8 @@
 - react-native-gesture-handler  
   Biblioteca para manipulação de gestos em aplicações React Native, essencial para interações fluidas.
 
+- react-native-calendars
+
 ### 🛠️ Ferramentas e Tecnologias
 
 - TypeScript  
