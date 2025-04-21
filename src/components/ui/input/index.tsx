@@ -21,7 +21,7 @@ function Input({ variant = 'default', children, ...rest }: InputProps) {
       <View style={styles.inputContent}>
         {children}
         <TextInput
-          secureTextEntry={showPassword}
+          secureTextEntry={variant === 'password' && !showPassword}
           placeholderTextColor={colors.zinc[600]}
           style={styles.input}
           {...rest}
