@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    justifyContent: 'center',
     backgroundColor: colors.zinc[50],
+    flex: 1,
+    justifyContent: 'center',
   },
   content: {
     paddingHorizontal: 20,
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: fontFamily.semiBold,
     width: '100%',
-    textAlign: 'auto',
+    textAlign: 'left',
   },
   formContainer: {
     gap: 20,

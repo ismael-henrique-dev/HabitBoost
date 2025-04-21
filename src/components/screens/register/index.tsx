@@ -50,7 +50,10 @@ export function RegisterScreen() {
   }
 
   return (
-    <ScrollView style={{ paddingVertical: 20 }}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1, paddingVertical: 20, backgroundColor: colors.zinc[50] }}
+      keyboardShouldPersistTaps='handled'
+    >
       <View style={styles.container}>
         <View style={styles.content}>
           <Image
@@ -113,7 +116,7 @@ export function RegisterScreen() {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Input
-                  placeholder='Crie uma senha'
+                  placeholder='Confirme sua senha'
                   value={value}
                   variant='password'
                   onChangeText={onChange}
