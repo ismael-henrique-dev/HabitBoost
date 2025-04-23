@@ -2,9 +2,10 @@ import { useRef, useMemo, useCallback } from 'react'
 import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { BottomSheetModal, BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useCategory } from '@/contexts/category-context'
-import { IconChevronRight } from '@tabler/icons-react-native'
+import { IconCategory, IconChevronRight, IconPlus } from '@tabler/icons-react-native'
 import { colors } from '@/styles/theme'
 import { styles } from './styles'
+import { router } from 'expo-router'
 
 type CategorySelectBottomSheetProps = {
   selectedCategoryId: string | null
@@ -36,17 +37,28 @@ export function CategorySelectBottomSheet({
     <View>
       {/* Trigger */}
       <TouchableOpacity onPress={handleOpen} style={styles.trigger}>
-        <View style={styles.categoryIcon}>
-          {selectedCategoryId && (() => {
-            const selectedCategory = categories.find((c) => c.id === selectedCategoryId)
-            return selectedCategory?.icon ? <selectedCategory.icon size={24} /> : null
-          })()}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.categoryIcon}>
+            {selectedCategoryId &&
+              (() => {
+                const selectedCategory = categories.find(
+                  (c) => c.id === selectedCategoryId
+                )
+                return selectedCategory?.icon ? (
+                  <selectedCategory.icon size={20} />
+                ) : null
+              })()}
+            {!selectedCategoryId && (
+              <IconCategory size={20} color={colors.zinc[900]} />
+            )}
+          </View>
+          <Text style={styles.triggerText}>
+            {selectedCategoryId
+              ? categories.find((c) => c.id === selectedCategoryId)?.name
+              : 'Selecionar categoria'}
+          </Text>
         </View>
-        <Text style={styles.triggerText}>
-          {selectedCategoryId
-            ? categories.find((c) => c.id === selectedCategoryId)?.name
-            : 'Selecionar categoria'}
-        </Text>
+        <IconChevronRight color={colors.zinc[600]} />
       </TouchableOpacity>
 
       {/* BottomSheetModal */}
@@ -62,6 +74,13 @@ export function CategorySelectBottomSheet({
         <View style={styles.sheetContent}>
           <View style={styles.sheetHeader}>
             <Text style={styles.sheetTitle}>Categorias</Text>
+            <TouchableOpacity
+              onPress={() => router.navigate('/create-habit')}
+              style={styles.newButton}
+            >
+              <Text style={styles.newButtonText}>Nova</Text>
+              <IconPlus size={24} color={colors.zinc[900]} />
+            </TouchableOpacity>
           </View>
           <BottomSheetFlatList
             data={categories}

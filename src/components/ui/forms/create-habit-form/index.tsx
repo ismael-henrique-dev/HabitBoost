@@ -13,8 +13,11 @@ import { styles } from './styles'
 import { router } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { Calendar } from '../../calendar'
+import { notify } from 'react-native-notificated'
+import { useHabit } from '@/contexts/habit-context'
 
 export function CreateHabitForm() {
+  const { createHabit } = useHabit()
   const {
     control,
     handleSubmit,
@@ -29,6 +32,36 @@ export function CreateHabitForm() {
   const handleCreateHabit = (data: CreateHabitFormData) => {
     try {
       console.log('Novo hábito:', data)
+
+      const selectedDays = Object.entries(data.days)
+        .filter(([_, value]) => value.selected)
+        .map(([key]) => key)
+
+      console.log('Dias selecionados:', selectedDays)
+
+      createHabit({
+        id: String(Date.now()), // ou qualquer lógica para ID
+        days: selectedDays,
+        status: 'unstarted',
+        description: data.description,
+        reminderTime: data.reminderTime,
+        categoryId: data.category,
+        title: data.title,
+        createdAt: new Date(),
+        updatedAt: null,
+      })
+
+      router.navigate('/')
+
+      notify('custom', {
+        params: {
+          customTitle: 'Habito criado com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
     } catch (error) {
       console.error('Erro ao criar hábito:', error)
     }
@@ -98,7 +131,7 @@ export function CreateHabitForm() {
             <Calendar onSelectDate={onChange} selectedDates={value} />
           )}
         />
-        {/* {errors.days && <ErrorMenssage>{}</ErrorMenssage>} */}
+        {errors.days && <ErrorMenssage>{errors.days.menssage}</ErrorMenssage>}
       </View>
 
       {/* select com as categorias */}

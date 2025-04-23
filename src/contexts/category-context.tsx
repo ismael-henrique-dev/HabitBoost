@@ -1,5 +1,5 @@
 import { Category } from '@/types/category'
-import { IconHeart } from '@tabler/icons-react-native'
+import { IconBarbell, IconBrain, IconChartAreaLine, IconMusic, IconSalad } from '@tabler/icons-react-native'
 import { createContext, useContext, useState } from 'react'
 
 type CategoryContextData = {
@@ -14,11 +14,11 @@ const CategoryContext = createContext<CategoryContextData>(
 
 export function CategoryProvider({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState<Category[]>([
-    { id: '1', name: 'Saúde', isCustom: false, icon: IconHeart },
-    { id: '2', name: 'Trabalho', isCustom: false },
-    { id: '3', name: 'Estudos', isCustom: false },
-    { id: '4', name: 'Estudos', isCustom: false },
-    { id: '5', name: 'Estudos', isCustom: false },
+    { id: '1', name: 'Atividade física', isCustom: false, icon: IconBarbell },
+    { id: '2', name: 'Saúde mental', isCustom: false, icon: IconBrain },
+    { id: '3', name: 'Alimentação saudável', isCustom: false, icon: IconSalad},
+    { id: '4', name: 'Rotina e produtividade', isCustom: false, icon: IconChartAreaLine},
+    { id: '5', name: 'Bem-estar e lazer', isCustom: false, icon: IconMusic },
   ])
 
   function createCategory(category: Category) {

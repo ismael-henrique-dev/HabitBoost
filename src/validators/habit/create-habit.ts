@@ -1,13 +1,13 @@
 import { z } from 'zod'
 
 export const createHabitFormSchema = z.object({
-  title: z.string().min(1, 'O título é obrigatório.'),
+  title: z.string().nonempty('O título é obrigatório.'),
   description: z.string().optional(),
   reminderTime: z.string().optional(),
   category: z.string().min(1, 'A categoria é obrigatória.'),
   days: z
     .record(
-      z.string(),
+      z.string().min(1,'Selecione pelo menos um dia.'),
       z.object({
         selected: z.boolean(),
       })

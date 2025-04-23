@@ -41,20 +41,25 @@ export const styles = StyleSheet.create({
   },
   category: {
     backgroundColor: colors.lime[500],
-    padding: 10,
+    width: 40,
+    height: 40,
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
   },
   button: {
     backgroundColor: colors.zinc[900],
-    paddingVertical: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between'
   },
   buttonText: {
     color: colors.lime[500],
     fontFamily: fontFamily.medium,
     fontSize: 14,
+    textAlign: 'center'
   },
 })

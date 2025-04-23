@@ -7,9 +7,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center', // Centraliza verticalmente
+    justifyContent: 'space-between',
     backgroundColor: colors.zinc[200],
     borderRadius: 12,
-    height: 48,
+    height: 56,
   },
   triggerText: {
     color: colors.zinc[600],
@@ -40,6 +41,9 @@ export const styles = StyleSheet.create({
   },
   sheetHeader: {
     marginVertical: 12,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   sheetTitle: {
     fontSize: 16,
@@ -68,5 +72,20 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.zinc[600],
     fontFamily: fontFamily.regular,
+  },
+  newButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.lime[500],
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    height: 32,
+  },
+  newButtonText: {
+    fontFamily: fontFamily.semiBold,
+    color: colors.zinc[900],
+    fontSize: 16,
+    lineHeight: 29,
   },
 })

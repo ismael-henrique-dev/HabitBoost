@@ -7,8 +7,7 @@ export type Habit = {
   status: HabitStatus
   reminderTime?: string
   categoryId: string
-  days: number[]
-  createdAt: string
-  updatedAt: string | null
-  completedAt: string | null
+  days: string[]
+  createdAt: Date
+  updatedAt: Date | null
 }

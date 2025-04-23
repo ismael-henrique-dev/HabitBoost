@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 16,
     marginVertical: 20,
+    borderRadius: 24
   },
   formGroup: {
     gap: 12,

@@ -1,18 +1,28 @@
 import { colors } from '@/styles/theme'
-import { IconDotsVertical, IconRun, IconBell } from '@tabler/icons-react-native'
+import {
+  IconDotsVertical,
+  IconBell,
+  IconCheck,
+} from '@tabler/icons-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import { Habit } from '@/types/habit'
+import { useHabit } from '@/contexts/habit-context'
+import { useCategory } from '@/contexts/category-context'
 
 type HabitCardProps = Habit
 
 export function HabitCard(props: HabitCardProps) {
+  const { completeHabit } = useHabit()
+
+  const diasSelecionados = props.days.map((date) => new Date(date).getDate())
+
   return (
     <View style={styles.container}>
       <View>
         <View style={styles.header}>
           <View style={styles.headerGroup}>
-            <Category />
+            <Category categoryId={props.categoryId} />
             <View>
               <Text style={styles.title}>{props.title}</Text>
               {props.reminderTime && (
@@ -25,20 +35,41 @@ export function HabitCard(props: HabitCardProps) {
           </View>
           <IconDotsVertical color={colors.zinc[900]} />
         </View>
-        <Text style={styles.description}>Dias no mês: {props.days}</Text>
+        <Text style={styles.description}>
+          Dias no mês: {diasSelecionados.join(', ')}
+        </Text>
       </View>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Completar</Text>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          props.status === 'concluded' && { justifyContent: 'space-between' },
+          props.status === 'unstarted' && { justifyContent: 'center' },
+        ]}
+        onPress={() => completeHabit(props.id)}
+        disabled={props.status === 'concluded'}
+      >
+        <Text style={styles.buttonText}>
+          {props.status === 'unstarted' ? 'Completar' : 'Concluído'}
+        </Text>
+        {props.status === 'concluded' && <IconCheck color={colors.lime[500]} />}
       </TouchableOpacity>
     </View>
   )
 }
 
-function Category() {
+function Category({ categoryId }: { categoryId: string }) {
+  console.log('Id da categoria: ', categoryId)
+  const { categories } = useCategory()
   return (
     <View style={styles.category}>
-      <IconRun color={colors.zinc[900]} size={20} />
+      {categoryId &&
+        (() => {
+          const selectedCategory = categories.find((c) => c.id === categoryId)
+          return selectedCategory?.icon ? (
+            <selectedCategory.icon size={24} color={colors.zinc[900]} />
+          ) : null
+        })()}
     </View>
   )
 }

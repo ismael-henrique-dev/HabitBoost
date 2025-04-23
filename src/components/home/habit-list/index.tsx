@@ -18,9 +18,8 @@ export function HabitList() {
           days={habit.days}
           createdAt={habit.createdAt}
           updatedAt={habit.updatedAt}
-          completedAt={habit.completedAt}
           id={habit.id}
-          category={habit.category}
+          categoryId={habit.categoryId}
         />
       ))}
     </View>
