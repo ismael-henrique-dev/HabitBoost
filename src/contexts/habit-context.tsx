@@ -4,16 +4,19 @@ import { Habit, HabitStatus } from '@/types/habit'
 
 type HabitContextData = {
   habits: Habit[]
+  selectedDate: Date
   createHabit: (habit: Habit) => void
   updateHabit: (id: string, habit: Partial<Habit>) => void
   deleteHabit: (id: string) => void
   completeHabit: (id: string) => void
+  setSelectedDate: (date: Date) => void
 }
 
 const HabitContext = createContext<HabitContextData>({} as HabitContextData)
 
 export function HabitProvider({ children }: { children: React.ReactNode }) {
   const [habits, setHabits] = useState<Habit[]>([])
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
   async function createHabit(habit: Habit) {
     const updatedHabits = [...habits, habit]
@@ -42,28 +45,41 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
   function deleteHabit(id: string) {}
 
   async function completeHabit(id: string) {
-    const updatedHabits = habits.map((habit) =>
-      habit.id === id
-        ? {
-            ...habit,
-            status: 'concluded' as HabitStatus,
-            updatedAt: new Date(),
-          }
-        : habit
-    )
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === id) {
+        const isCompleted = habit.status === 'concluded'
+
+        return {
+          ...habit,
+          status: isCompleted
+            ? ('unstarted' as HabitStatus)
+            : ('concluded' as HabitStatus),
+          updatedAt: new Date(),
+        }
+      }
+      return habit
+    })
 
     setHabits(updatedHabits)
 
     try {
       await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
     } catch (error) {
-      console.log('Erro ao completar hábito', error)
+      console.log('Erro ao atualizar hábito', error)
     }
   }
 
   return (
     <HabitContext.Provider
-      value={{ habits, createHabit, deleteHabit, updateHabit, completeHabit }}
+      value={{
+        habits,
+        selectedDate,
+        createHabit,
+        deleteHabit,
+        updateHabit,
+        completeHabit,
+        setSelectedDate,
+      }}
     >
       {children}
     </HabitContext.Provider>

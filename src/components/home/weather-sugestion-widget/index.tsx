@@ -1,5 +1,9 @@
 import { colors } from '@/styles/theme'
-import { IconExclamationCircle, IconX } from '@tabler/icons-react-native'
+import {
+  IconExclamationCircle,
+  IconSun,
+  IconX,
+} from '@tabler/icons-react-native'
 import { Alert, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import * as Location from 'expo-location'
@@ -18,14 +22,9 @@ type WeatherData = {
   main: { temp: number }
 }
 
-const API_KEY = process.env.EXPO_PUBLIC_WEATHER_API_URL 
+const API_KEY = process.env.EXPO_PUBLIC_WEATHER_API_URL
 
-export function WeatherSuggestionWidget({
-  variant = 'default',
-  title,
-  description,
-  icon: Icon,
-}: WeatherSuggestionWidgetProps) {
+export function WeatherSuggestionWidget() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -61,14 +60,15 @@ export function WeatherSuggestionWidget({
     console.log(weather)
   }, [location])
 
+  // vou melhorar isso
+
   if (location && weather) {
     const clima = weather.weather[0].main.toLowerCase()
-    const sugestao =
-      clima.includes('clear')
-        ? 'Está um lindo dia lá fora! Que tal uma corrida no parque?'
-        : clima.includes('rain')
-        ? 'Está chovendo, talvez seja melhor ficar em casa e assistir um filme.'
-        : 'O clima está neutro. Que tal uma caminhada leve?'
+    const sugestao = clima.includes('clear')
+      ? 'Está um lindo dia lá fora! Que tal uma corrida no parque?'
+      : clima.includes('rain')
+      ? 'Está chovendo, talvez seja melhor ficar em casa e assistir um filme.'
+      : 'O clima está neutro. Que tal uma caminhada leve?'
 
     return (
       <View
@@ -81,8 +81,8 @@ export function WeatherSuggestionWidget({
       >
         <View style={styles.header}>
           <View style={styles.headerGroup}>
-            {Icon && <Icon size={24} color={colors.zinc[50]} />}
-            <Text style={styles.title}>{title}</Text>
+            {clima && <IconSun size={24} color={colors.zinc[50]} />}
+            <Text style={styles.title}>{clima}</Text>
           </View>
         </View>
         <Text style={styles.description}>{sugestao}</Text>
@@ -96,27 +96,21 @@ export function WeatherSuggestionWidget({
       style={[
         styles.container,
         {
-          backgroundColor:
-            variant === 'warning' ? colors.red[600] : colors.lime[500],
+          backgroundColor: colors.red[600],
         },
       ]}
     >
       <View style={styles.header}>
         <View style={styles.headerGroup}>
-          {Icon && <Icon size={24} color={colors.zinc[50]} />}
-          {variant === 'warning' && !Icon && (
-            <IconExclamationCircle size={24} color={colors.zinc[50]} />
-          )}
-          <Text style={styles.title}>
-            {variant === 'warning' ? 'Sugestões baseadas no clima' : title}
-          </Text>
+          <IconExclamationCircle size={24} color={colors.zinc[50]} />
+
+          <Text style={styles.title}>{'Sugestões baseadas no clima'}</Text>
         </View>
-        {variant === 'warning' && <IconX size={24} color={colors.zinc[50]} />}
+        <IconX size={24} color={colors.zinc[50]} />
       </View>
       <Text style={styles.description}>
-        {variant === 'warning'
-          ? 'Para ver atividades recomendadas de acordo com o clima, permita o acesso à sua localização.'
-          : description}
+        Para ver atividades recomendadas de acordo com o clima, permita o acesso
+        à sua localização.
       </Text>
     </TouchableOpacity>
   )

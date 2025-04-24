@@ -47,7 +47,6 @@ export function HabitCard(props: HabitCardProps) {
           props.status === 'unstarted' && { justifyContent: 'center' },
         ]}
         onPress={() => completeHabit(props.id)}
-        disabled={props.status === 'concluded'}
       >
         <Text style={styles.buttonText}>
           {props.status === 'unstarted' ? 'Completar' : 'Concluído'}

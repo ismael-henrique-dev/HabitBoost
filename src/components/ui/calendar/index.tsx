@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, Modal } from 'react-native'
 import {
   IconChevronLeft,
   IconChevronRight,
-  IconFeather,
   IconX,
 } from '@tabler/icons-react-native'
 import {
@@ -16,7 +15,7 @@ import { DayState } from 'react-native-calendars/src/types'
 import { ptBR } from '@/utils/locale-calendar-config'
 import { Button } from '../button'
 import { colors } from '@/styles/theme'
-import { useNotifications } from 'react-native-notificated'
+import dayjs from 'dayjs'
 
 LocaleConfig.locales['pt-br'] = ptBR
 LocaleConfig.defaultLocale = 'pt-br'
@@ -30,10 +29,10 @@ export function Calendar({ selectedDates = {}, onSelectDate }: CalendarProps) {
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   function toggleDate(date: DateData) {
-    const today = new Date().toDateString()
-    const selected = new Date(date.dateString).toDateString()
+    const today = dayjs().startOf('day')
+    const selected = dayjs(date.dateString).startOf('day')
 
-    if (new Date(selected) < new Date(today)) return
+    if (selected.isBefore(today)) return
 
     const updatedDates = { ...selectedDates }
     if (updatedDates[date.dateString]) {

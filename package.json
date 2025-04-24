@@ -17,12 +17,15 @@
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^5.1.2",
     "@hookform/resolvers": "^5.0.1",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/native": "^7.1.6",
     "@tabler/icons-react-native": "^3.31.0",
     "axios": "^1.8.4",
+    "dayjs": "^1.11.13",
     "expo": "~52.0.43",
     "expo-font": "~13.0.4",
     "expo-linking": "~7.0.5",
+    "expo-location": "~18.0.10",
     "expo-router": "~4.0.20",
     "expo-splash-screen": "~0.29.22",
     "expo-status-bar": "~2.0.1",
@@ -40,9 +43,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.11.2",
     "react-native-web": "~0.19.13",
-    "zod": "^3.24.2",
-    "@react-native-async-storage/async-storage": "1.23.1",
-    "expo-location": "~18.0.10"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

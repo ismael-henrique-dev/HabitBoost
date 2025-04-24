@@ -2,13 +2,19 @@ import { View } from 'react-native'
 import { useHabit } from '@/contexts/habit-context'
 import { HabitCard } from '../habit-card'
 import { styles } from './styles'
+import dayjs from 'dayjs'
 
 export function HabitList() {
-  const { habits } = useHabit()
+  const { habits, selectedDate } = useHabit()
+  const formattedSelectedDate = dayjs(selectedDate).format('YYYY-MM-DD')
+
+  const filteredHabits = habits.filter((habit) =>
+    habit.days.includes(formattedSelectedDate)
+  )
 
   return (
     <View style={styles.container}>
-      {habits.map((habit) => (
+      {filteredHabits.map((habit) => (
         <HabitCard
           key={habit.id}
           description={habit.description}
