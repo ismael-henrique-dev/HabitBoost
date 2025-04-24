@@ -9,13 +9,7 @@ import { styles } from './styles'
 import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-
-type WeatherSuggestionWidgetProps = {
-  title: string
-  description: string
-  variant?: 'default' | 'warning'
-  icon?: React.ElementType
-}
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type WeatherData = {
   weather: { main: string; description: string }[]
@@ -27,24 +21,26 @@ const API_KEY = process.env.EXPO_PUBLIC_WEATHER_API_URL
 export function WeatherSuggestionWidget() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
   const [weather, setWeather] = useState<WeatherData | null>(null)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [permissionLocationStatus, setPermissionLocationStatus] = useState('')
 
   async function getCurrentLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync()
+    console.log(status)
     if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied')
       Alert.alert('', 'Permissão negada.')
       return
     }
 
+    await AsyncStorage.setItem('@locationStatus', status)
     let loc = await Location.getCurrentPositionAsync({})
+    
     setLocation(loc)
   }
 
   async function getWeatherCurrentStatus(lat: number, lon: number) {
     try {
       const response = await axios.get<WeatherData>(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=pt`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=pt_br`
       )
       setWeather(response.data)
     } catch (error) {
@@ -60,10 +56,21 @@ export function WeatherSuggestionWidget() {
     console.log(weather)
   }, [location])
 
+  useEffect(() => {
+    async function getStoredLocationPermition() {
+      const storedPermissionLocationStatus = await AsyncStorage.getItem('@locationStatus')
+      if (storedPermissionLocationStatus) {
+        setPermissionLocationStatus(storedPermissionLocationStatus)
+      }
+    }
+
+    getStoredLocationPermition()
+  }, []) 
+
   // vou melhorar isso
 
-  if (location && weather) {
-    const clima = weather.weather[0].main.toLowerCase()
+  if (permissionLocationStatus === 'granted' && weather) {
+    const clima = weather.weather[0].main
     const sugestao = clima.includes('clear')
       ? 'Está um lindo dia lá fora! Que tal uma corrida no parque?'
       : clima.includes('rain')

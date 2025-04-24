@@ -40,7 +40,7 @@ export function CreateHabitForm() {
       console.log('Dias selecionados:', selectedDays)
 
       createHabit({
-        id: String(Date.now()), // ou qualquer lógica para ID
+        id: String(Date.now()), // vou arrumar dps colocar uuid, é só provisório
         days: selectedDays,
         status: 'unstarted',
         description: data.description,
@@ -131,7 +131,7 @@ export function CreateHabitForm() {
             <Calendar onSelectDate={onChange} selectedDates={value} />
           )}
         />
-        {errors.days && <ErrorMenssage>{errors.days.menssage}</ErrorMenssage>}
+        {/* {errors.days && <ErrorMenssage>{errors}</ErrorMenssage>} */}
       </View>
 
       {/* select com as categorias */}
