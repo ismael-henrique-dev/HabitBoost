@@ -14,7 +14,7 @@ export function HeaderHomeActions() {
       onPress={() =>
         notify('custom', {
           params: {
-            customTitle: 'The best Doughnuts in Krakow',
+            customTitle: 'Vou implementar ainda.',
             type: 'success'
           },
           config: {
