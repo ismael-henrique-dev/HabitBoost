@@ -10,6 +10,8 @@ import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getSuggestionByWeather } from '@/utils/get-suggestion-by-weather'
+import { translateWeather } from '@/utils/translate-weather'
 
 type WeatherData = {
   weather: { main: string; description: string }[]
@@ -71,11 +73,8 @@ export function WeatherSuggestionWidget() {
 
   if (permissionLocationStatus === 'granted' && weather) {
     const clima = weather.weather[0].main
-    const sugestao = clima.includes('clear')
-      ? 'Está um lindo dia lá fora! Que tal uma corrida no parque?'
-      : clima.includes('rain')
-      ? 'Está chovendo, talvez seja melhor ficar em casa e assistir um filme.'
-      : 'O clima está neutro. Que tal uma caminhada leve?'
+    const sugestao = getSuggestionByWeather(clima);
+
 
     return (
       <View
@@ -89,7 +88,7 @@ export function WeatherSuggestionWidget() {
         <View style={styles.header}>
           <View style={styles.headerGroup}>
             {clima && <IconSun size={24} color={colors.zinc[50]} />}
-            <Text style={styles.title}>{clima}</Text>
+            <Text style={styles.title}>{translateWeather(clima)}</Text>
           </View>
         </View>
         <Text style={styles.description}>{sugestao}</Text>

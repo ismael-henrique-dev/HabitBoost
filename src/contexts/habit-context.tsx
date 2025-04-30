@@ -42,7 +42,11 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
 
   function updateHabit(id: string, habit: Partial<Habit>) {}
 
-  function deleteHabit(id: string) {}
+  async function deleteHabit(id: string) {
+    const updatedHabits = habits.filter((habit) => habit.id !== id)
+    setHabits(updatedHabits)
+    await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+  }
 
   async function completeHabit(id: string) {
     const updatedHabits = habits.map((habit) => {

@@ -20,6 +20,7 @@ import {
   ReanimatedLogLevel,
 } from 'react-native-reanimated'
 import { ToastSuccess } from '@/components/ui/toast'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -88,16 +89,18 @@ function RootLayoutNav() {
       <CategoryProvider>
         <NotificationsProvider>
           <HabitProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            >
-              <Stack.Screen name='(tabs)' />
-              <Stack.Screen name='(auth)' />
-              <Stack.Screen name='(welcome)' />
-              <Stack.Screen name='(habit-management)' />
-            </Stack>
+            <BottomSheetModalProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name='(tabs)' />
+                <Stack.Screen name='(auth)' />
+                <Stack.Screen name='(welcome)' />
+                <Stack.Screen name='(habit-management)' />
+              </Stack>
+            </BottomSheetModalProvider>
           </HabitProvider>
         </NotificationsProvider>
       </CategoryProvider>

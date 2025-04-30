@@ -9,6 +9,7 @@ import { styles } from './styles'
 import { Habit } from '@/types/habit'
 import { useHabit } from '@/contexts/habit-context'
 import { useCategory } from '@/contexts/category-context'
+import { HabitOptionsBottomSheet } from '../habit-opitions-botton-sheet'
 
 type HabitCardProps = Habit
 
@@ -33,7 +34,7 @@ export function HabitCard(props: HabitCardProps) {
               )}
             </View>
           </View>
-          <IconDotsVertical color={colors.zinc[900]} />
+          <HabitOptionsBottomSheet habitId={props.id} />
         </View>
         <Text style={styles.description}>
           Dias no mês: {diasSelecionados.join(', ')}
