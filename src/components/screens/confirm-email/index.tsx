@@ -10,8 +10,10 @@ export function ConfirmEmailScreen() {
 
   useEffect(() => {
     if (token) {
+      console.log(token)
+
       api
-        .patch('user/validate/verifyToken', { token })
+        .patch('auth/validate/verifyToken', { token })
         .then(() => {
           alert('E-mail confirmado com sucesso!')
           console.log(token)
