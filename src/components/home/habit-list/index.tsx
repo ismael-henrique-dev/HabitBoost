@@ -2,7 +2,9 @@ import { View } from 'react-native'
 import { useHabit } from '@/contexts/habit-context'
 import { HabitCard } from '../habit-card'
 import { styles } from './styles'
+import { MagicMotion } from 'react-magic-motion'
 import dayjs from 'dayjs'
+import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated'
 
 export function HabitList() {
   const { habits, selectedDate } = useHabit()
@@ -15,18 +17,24 @@ export function HabitList() {
   return (
     <View style={styles.container}>
       {filteredHabits.map((habit) => (
-        <HabitCard
+        <Animated.View
           key={habit.id}
-          description={habit.description}
-          reminderTime={habit.reminderTime}
-          status={habit.status}
-          title={habit.title}
-          days={habit.days}
-          createdAt={habit.createdAt}
-          updatedAt={habit.updatedAt}
-          id={habit.id}
-          categoryId={habit.categoryId}
-        />
+          entering={FadeIn}
+          exiting={FadeOut.delay(300)}
+          layout={Layout.springify()}
+        >
+          <HabitCard
+            description={habit.description}
+            reminderTime={habit.reminderTime}
+            status={habit.status}
+            title={habit.title}
+            days={habit.days}
+            createdAt={habit.createdAt}
+            updatedAt={habit.updatedAt}
+            id={habit.id}
+            categoryId={habit.categoryId}
+          />
+        </Animated.View>
       ))}
     </View>
   )

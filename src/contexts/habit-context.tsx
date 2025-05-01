@@ -40,6 +40,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     loadHabits()
   }, [])
 
+  // arrumar essa função
   async function updateHabit(id: string, habit: Habit) {
     const updatedHabits = habits.map((beforeHabit) => {
       if (beforeHabit.id === id) {
