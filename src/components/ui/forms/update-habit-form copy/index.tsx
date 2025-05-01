@@ -16,7 +16,7 @@ import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
 
-export function CreateHabitForm() {
+export function UpdateHabitForm() {
   const { createHabit } = useHabit()
   const {
     control,

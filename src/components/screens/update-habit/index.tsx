@@ -1,9 +1,14 @@
-import { Text, View } from 'react-native'
+import { UpdateHabitForm } from '@/components/ui/forms/update-habit-form copy'
+import { colors } from '@/styles/theme'
+import { ScrollView } from 'react-native'
 
 export function UpdateHabitScreen() {
   return (
-    <View>
-      <Text>Update Habit</Text>
-    </View>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1, backgroundColor: colors.zinc[200] }}
+      keyboardShouldPersistTaps='handled'
+    >
+      <UpdateHabitForm />
+    </ScrollView>
   )
 }
