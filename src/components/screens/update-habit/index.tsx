@@ -1,4 +1,4 @@
-import { UpdateHabitForm } from '@/components/ui/forms/update-habit-form copy'
+import { UpdateHabitForm } from '@/components/ui/forms/update-habit-form'
 import { colors } from '@/styles/theme'
 import { ScrollView } from 'react-native'
 

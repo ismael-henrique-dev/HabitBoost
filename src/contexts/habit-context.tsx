@@ -6,7 +6,7 @@ type HabitContextData = {
   habits: Habit[]
   selectedDate: Date
   createHabit: (habit: Habit) => void
-  updateHabit: (id: string, habit: Partial<Habit>) => void
+  updateHabit: (id: string, habit: Habit) => void
   deleteHabit: (id: string) => void
   completeHabit: (id: string) => void
   setSelectedDate: (date: Date) => void
@@ -40,7 +40,22 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     loadHabits()
   }, [])
 
-  function updateHabit(id: string, habit: Partial<Habit>) {}
+  async function updateHabit(id: string, habit: Habit) {
+    const updatedHabits = habits.map((beforeHabit) => {
+      if (beforeHabit.id === id) {
+        return habit
+      }
+      return beforeHabit
+    })
+
+    setHabits(updatedHabits)
+
+    try {
+      await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+    } catch (error) {
+      console.log('Erro ao atualizar hábito', error)
+    }
+  }
 
   async function deleteHabit(id: string) {
     const updatedHabits = habits.filter((habit) => habit.id !== id)

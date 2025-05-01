@@ -10,14 +10,19 @@ import { Button } from '../../button'
 import { ErrorMenssage } from '../../error-menssage'
 import { CategorySelectBottomSheet } from '../../select'
 import { styles } from './styles'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
+import { Habit } from '@/types/habit'
 
 export function UpdateHabitForm() {
-  const { createHabit } = useHabit()
+  const { habitId } = useLocalSearchParams()
+  console.log('Pegando Id do Habito', habitId)
+
+  const { updateHabit, habits } = useHabit()
+
   const {
     control,
     handleSubmit,
@@ -29,9 +34,9 @@ export function UpdateHabitForm() {
     },
   })
 
-  const handleCreateHabit = (data: CreateHabitFormData) => {
+  const handleUpdateHabit = (data: CreateHabitFormData) => {
     try {
-      console.log('Novo hábito:', data)
+      console.log('Atualização do hábito:', data)
 
       const selectedDays = Object.entries(data.days)
         .filter(([_, value]) => value.selected)
@@ -39,17 +44,23 @@ export function UpdateHabitForm() {
 
       console.log('Dias selecionados:', selectedDays)
 
-      createHabit({
-        id: String(Date.now()), // vou arrumar dps colocar uuid, é só provisório
-        days: selectedDays,
-        status: 'unstarted',
-        description: data.description,
-        reminderTime: data.reminderTime,
-        categoryId: data.category,
-        title: data.title,
-        createdAt: new Date(),
-        updatedAt: null,
-      })
+      const habit = habits.find((habit) => habit.id === habitId)
+
+      if (habit) {
+        const updatedHabit: Habit = {
+          ...habit,
+          days: selectedDays,
+          description: data.description,
+          reminderTime: data.reminderTime,
+          categoryId: data.category,
+          title: data.title,
+          updatedAt: new Date(),
+        }
+
+        console.log('habito atualizado: ', updatedHabit)
+
+        updateHabit(habitId as string, updatedHabit)
+      }
 
       router.navigate('/')
 
@@ -152,7 +163,7 @@ export function UpdateHabitForm() {
         )}
       </View>
 
-      <Button variant='secundary' onPress={handleSubmit(handleCreateHabit)}>
+      <Button variant='secundary' onPress={handleSubmit(handleUpdateHabit)}>
         <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
       </Button>
       <Button onPress={() => router.back()}>

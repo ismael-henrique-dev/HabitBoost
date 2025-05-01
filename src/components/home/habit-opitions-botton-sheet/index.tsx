@@ -13,6 +13,7 @@ import {
 import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { useHabit } from '@/contexts/habit-context'
+import { router } from 'expo-router'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -65,7 +66,11 @@ export function HabitOptionsBottomSheet({
             <TouchableOpacity
               style={styles.optionButton}
               onPress={() => {
-                console.log('Excluir habit', habitId)
+                router.navigate({
+                  pathname: '/update-habit',
+                  params: { habitId: habitId },
+                })
+
                 handleClose()
               }}
             >
