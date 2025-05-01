@@ -2,7 +2,6 @@ import { View } from 'react-native'
 import { useHabit } from '@/contexts/habit-context'
 import { HabitCard } from '../habit-card'
 import { styles } from './styles'
-import { MagicMotion } from 'react-magic-motion'
 import dayjs from 'dayjs'
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated'
 

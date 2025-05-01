@@ -15,6 +15,7 @@ import { colors } from '@/styles/theme'
 import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
+import { v4 as uuidv4 } from 'uuid';
 
 export function CreateHabitForm() {
   const { createHabit } = useHabit()
@@ -40,7 +41,7 @@ export function CreateHabitForm() {
       console.log('Dias selecionados:', selectedDays)
 
       createHabit({
-        id: String(Date.now()), // vou arrumar dps colocar uuid, é só provisório
+        id: uuidv4(),
         days: selectedDays,
         status: 'unstarted',
         description: data.description,
