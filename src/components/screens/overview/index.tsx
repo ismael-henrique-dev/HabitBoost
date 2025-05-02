@@ -1,4 +1,5 @@
 import { OverviewCard } from '@/components/overview/overview-card'
+import { WeeklyBarChart } from '@/components/overview/weekly-bar-chart'
 import { colors } from '@/styles/theme'
 import {
   IconCalendarCheck,
@@ -9,6 +10,16 @@ import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 
 export const OverviewScreen = () => {
+  const data = [
+    { day: 'Dom', value: 2, max: 3 },
+    { day: 'Seg', value: 3, max: 3 },
+    { day: 'Ter', value: 2, max: 3 },
+    { day: 'Qua', value: 9, max: 9 },
+    { day: 'Qui', value: 2, max: 2 },
+    { day: 'Sex', value: 2, max: 3 },
+    { day: 'Sáb', value: 1, max: 3 },
+  ]
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <OverviewCard
@@ -32,6 +43,7 @@ export const OverviewScreen = () => {
         mainLabel='metas'
         secondaryText='Total: 24'
       />
+      <WeeklyBarChart data={data} />
     </ScrollView>
   )
 }
