@@ -12,6 +12,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getSuggestionByWeather } from '@/utils/get-suggestion-by-weather'
 import { translateWeather } from '@/utils/translate-weather'
+import { useSettings } from '@/hooks/use-settings'
 
 type WeatherData = {
   weather: { main: string; description: string }[]
@@ -24,6 +25,7 @@ export function WeatherSuggestionWidget() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [permissionLocationStatus, setPermissionLocationStatus] = useState('')
+  const { settings, updateSetting } = useSettings()
 
   async function getCurrentLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync()
@@ -35,7 +37,7 @@ export function WeatherSuggestionWidget() {
 
     await AsyncStorage.setItem('@locationStatus', status)
     let loc = await Location.getCurrentPositionAsync({})
-    
+
     setLocation(loc)
   }
 
@@ -60,21 +62,22 @@ export function WeatherSuggestionWidget() {
 
   useEffect(() => {
     async function getStoredLocationPermition() {
-      const storedPermissionLocationStatus = await AsyncStorage.getItem('@locationStatus')
+      const storedPermissionLocationStatus = await AsyncStorage.getItem(
+        '@locationStatus'
+      )
       if (storedPermissionLocationStatus) {
         setPermissionLocationStatus(storedPermissionLocationStatus)
       }
     }
 
     getStoredLocationPermition()
-  }, []) 
+  }, [])
 
   // vou melhorar isso
 
   if (permissionLocationStatus === 'granted' && weather) {
     const clima = weather.weather[0].main
-    const sugestao = getSuggestionByWeather(clima);
-
+    const sugestao = getSuggestionByWeather(clima)
 
     return (
       <View
@@ -112,7 +115,9 @@ export function WeatherSuggestionWidget() {
 
           <Text style={styles.title}>{'Sugestões baseadas no clima'}</Text>
         </View>
-        <IconX size={24} color={colors.zinc[50]} />
+        <TouchableOpacity onPress={() => updateSetting('weatherWidget', false)}>
+          <IconX size={24} color={colors.zinc[50]} />
+        </TouchableOpacity>
       </View>
       <Text style={styles.description}>
         Para ver atividades recomendadas de acordo com o clima, permita o acesso
