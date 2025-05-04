@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { IconBell, IconCloud } from '@tabler/icons-react-native'
 import { SettingItem } from './setting-item'
 import { styles } from './styles'
+import { useSettings } from '@/hooks/use-settings'
 
 export function AppSettings() {
-  const [isRemindersOn, setIsRemindersOn] = useState(true)
-  const [isWeatherWidgetOn, setIsWeatherWidgetOn] = useState(true)
+  const { settings, updateSetting } = useSettings()
 
   return (
     <View style={styles.container}>
@@ -15,15 +14,17 @@ export function AppSettings() {
       <SettingItem
         icon={IconBell}
         label='Receber lembretes'
-        value={isRemindersOn}
-        onValueChange={() => setIsRemindersOn(!isRemindersOn)}
+        value={settings.reminders}
+        onValueChange={() => updateSetting('reminders', !settings.reminders)}
       />
 
       <SettingItem
         icon={IconCloud}
         label='Mostrar widget de clima'
-        value={isWeatherWidgetOn}
-        onValueChange={() => setIsWeatherWidgetOn(!isWeatherWidgetOn)}
+        value={settings.weatherWidget}
+        onValueChange={() =>
+          updateSetting('weatherWidget', !settings.weatherWidget)
+        }
       />
     </View>
   )
