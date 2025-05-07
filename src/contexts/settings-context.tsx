@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 type Settings = {
   reminders: boolean
   weatherWidget: boolean
+  firstTimeUser: boolean
 }
 
 type SettingsContextType = {
@@ -14,6 +15,7 @@ type SettingsContextType = {
 const defaultSettings: Settings = {
   reminders: true,
   weatherWidget: true,
+  firstTimeUser: true
 }
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(
