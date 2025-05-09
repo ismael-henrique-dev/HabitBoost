@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router'
 
-export default function HabitManagementLayout() {
+export default function GoalsManagementLayout() {
   return (
     <Stack
       options={{
@@ -9,21 +9,15 @@ export default function HabitManagementLayout() {
       }}
     >
       <Stack.Screen
-        name='create-habit'
+        name='create-goal'
         options={{
-          headerTitle: 'Criar habito',
+          headerTitle: 'Criar meta',
         }}
       />
       <Stack.Screen
         name='update-habit'
         options={{
           headerTitle: 'Editar habito',
-        }}
-      />
-      <Stack.Screen
-        name='habit-details'
-        options={{
-          headerTitle: 'Detalhes do hábito',
         }}
       />
     </Stack>

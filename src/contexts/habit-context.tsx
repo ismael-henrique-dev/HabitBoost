@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
+import { Goal } from '@/types/goal'
 
 type HabitContextData = {
   habits: Habit[]
@@ -10,6 +11,13 @@ type HabitContextData = {
   deleteHabit: (id: string) => void
   completeHabit: (id: string) => void
   setSelectedDate: (date: Date) => void
+  addGoalToHabit: (habitId: string, goal: Goal) => void
+  updateGoalInHabit: (
+    habitId: string,
+    goalId: string,
+    updatedGoal: Goal
+  ) => void
+  deleteGoalFromHabit: (habitId: string, goalId: string) => void
 }
 
 const HabitContext = createContext<HabitContextData>({} as HabitContextData)
@@ -89,6 +97,66 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  function addGoalToHabit(habitId: string, goal: Goal) {
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === habitId) {
+        return {
+          ...habit,
+          goals: [...(habit.goals || []), goal],
+          updatedAt: new Date(),
+        }
+      }
+      return habit
+    })
+
+    setHabits(updatedHabits)
+    AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+  }
+
+  function updateGoalInHabit(
+    habitId: string,
+    goalId: string,
+    updatedGoal: Goal
+  ) {
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === habitId) {
+        const newGoals =
+          habit.goals?.map((goal) =>
+            goal.id === goalId ? updatedGoal : goal
+          ) || []
+
+        return {
+          ...habit,
+          goals: newGoals,
+          updatedAt: new Date(),
+        }
+      }
+      return habit
+    })
+
+    setHabits(updatedHabits)
+    AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+  }
+
+  function deleteGoalFromHabit(habitId: string, goalId: string) {
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === habitId) {
+        const filteredGoals =
+          habit.goals?.filter((goal) => goal.id !== goalId) || []
+
+        return {
+          ...habit,
+          goals: filteredGoals,
+          updatedAt: new Date(),
+        }
+      }
+      return habit
+    })
+
+    setHabits(updatedHabits)
+    AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+  }
+
   return (
     <HabitContext.Provider
       value={{
@@ -99,6 +167,9 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         updateHabit,
         completeHabit,
         setSelectedDate,
+        addGoalToHabit,
+        updateGoalInHabit,
+        deleteGoalFromHabit,
       }}
     >
       {children}
