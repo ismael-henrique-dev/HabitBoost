@@ -41,7 +41,7 @@ function Input({ variant = 'default', children, ...rest }: InputProps) {
 }
 
 function Icon({ icon: Icon }: IconProps) {
-  return <Icon size={24} color={colors.zinc[600]} />
+  return <Icon size={24} color={colors.zinc[600]} style={{marginRight: 8}} />
 }
 
 Input.Icon = Icon

@@ -14,13 +14,15 @@ export const styles = StyleSheet.create({
   },
   inputContent: {
     flex: 1,
-    gap: 8,
-    padding: 0,
+    // gap: 8, ❌ Remova isso
     flexDirection: 'row',
     alignItems: 'center',
   },
   input: {
+    flex: 1, // ✅ Importante
     fontSize: 16,
     fontFamily: fontFamily.regular,
+    color: colors.zinc[900], // Certifique-se de que está visível
   },
 })
+
