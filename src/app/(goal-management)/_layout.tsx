@@ -15,9 +15,9 @@ export default function GoalsManagementLayout() {
         }}
       />
       <Stack.Screen
-        name='update-habit'
+        name='update-goal'
         options={{
-          headerTitle: 'Editar habito',
+          headerTitle: 'Editar meta',
         }}
       />
     </Stack>

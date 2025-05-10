@@ -88,7 +88,8 @@ export function HabitDetailsScreen() {
           habit.goals.map((goal) => (
             <GoalCard
               key={goal.id}
-              id={goal.id}
+              goalId={goal.id}
+              habitId={habitId as string}
               currentCount={goal.currentCount}
               targetCount={goal.targetCount}
               title={goal.title}

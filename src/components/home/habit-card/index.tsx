@@ -1,9 +1,5 @@
 import { colors } from '@/styles/theme'
-import {
-  IconDotsVertical,
-  IconBell,
-  IconCheck,
-} from '@tabler/icons-react-native'
+import { IconBell, IconCheck } from '@tabler/icons-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import { Habit } from '@/types/habit'
@@ -20,13 +16,14 @@ export function HabitCard(props: HabitCardProps) {
   const diasSelecionados = props.days.map((date) => new Date(date).getDate())
 
   return (
-    <TouchableOpacity onPress={() => {
-      router.navigate({
-        pathname: '/habit-details',
-        params: { habitId: props.id },
-      })
-
-    }}>
+    <TouchableOpacity
+      onPress={() => {
+        router.navigate({
+          pathname: '/habit-details',
+          params: { habitId: props.id },
+        })
+      }}
+    >
       <View style={styles.container}>
         <View>
           <View style={styles.header}>
@@ -59,7 +56,9 @@ export function HabitCard(props: HabitCardProps) {
           <Text style={styles.buttonText}>
             {props.status === 'unstarted' ? 'Completar' : 'Concluído'}
           </Text>
-          {props.status === 'concluded' && <IconCheck color={colors.lime[500]} />}
+          {props.status === 'concluded' && (
+            <IconCheck color={colors.lime[500]} />
+          )}
         </TouchableOpacity>
       </View>
     </TouchableOpacity>

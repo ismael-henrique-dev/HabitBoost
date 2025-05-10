@@ -18,6 +18,7 @@ type HabitContextData = {
     updatedGoal: Goal
   ) => void
   deleteGoalFromHabit: (habitId: string, goalId: string) => void
+  completeGoal: (habitId: string, goalId: string) => void
 }
 
 const HabitContext = createContext<HabitContextData>({} as HabitContextData)
@@ -157,6 +158,33 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
   }
 
+  function completeGoal(habitId: string, goalId: string) {
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === habitId) {
+        const updatedGoals =
+          habit.goals?.map((goal) => {
+            if (goal.id === goalId) {
+              return {
+                ...goal,
+                currentCount: goal.currentCount + 1,
+              }
+            }
+            return goal
+          }) || []
+
+        return {
+          ...habit,
+          goals: updatedGoals,
+          updatedAt: new Date(),
+        }
+      }
+      return habit
+    })
+
+    setHabits(updatedHabits)
+    AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+  }
+
   return (
     <HabitContext.Provider
       value={{
@@ -170,6 +198,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         addGoalToHabit,
         updateGoalInHabit,
         deleteGoalFromHabit,
+        completeGoal
       }}
     >
       {children}
