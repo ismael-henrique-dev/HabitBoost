@@ -1,10 +1,7 @@
 import { Controller, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  createHabitFormSchema,
-  CreateHabitFormData,
-} from '@/validators/habit/create-habit'
+import { HabitFormData, habitFormSchema } from '@/validators/habit/create-habit'
 import { Input } from '../../input'
 import { Button } from '../../button'
 import { ErrorMenssage } from '../../error-menssage'
@@ -19,22 +16,29 @@ import { Habit } from '@/types/habit'
 
 export function UpdateHabitForm() {
   const { habitId } = useLocalSearchParams()
-  console.log('Pegando Id do Habito', habitId)
-
   const { updateHabit, habits } = useHabit()
+
+  const habit = habits.find((habit) => habit.id === habitId)
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateHabitFormData>({
-    resolver: zodResolver(createHabitFormSchema),
+  } = useForm<HabitFormData>({
+    resolver: zodResolver(habitFormSchema),
     defaultValues: {
-      days: {},
+      days: habit?.days?.reduce((acc, day) => {
+        acc[day] = { selected: true }
+        return acc
+      }, {} as Record<string, { selected: boolean }>),
+      title: habit?.title ?? '',
+      category: habit?.categoryId ?? '',
+      description: '',
+      reminderTime: '',
     },
   })
 
-  const handleUpdateHabit = (data: CreateHabitFormData) => {
+  const handleUpdateHabit = (data: HabitFormData) => {
     try {
       console.log('Atualização do hábito:', data)
 
@@ -43,8 +47,6 @@ export function UpdateHabitForm() {
         .map(([key]) => key)
 
       console.log('Dias selecionados:', selectedDays)
-
-      const habit = habits.find((habit) => habit.id === habitId)
 
       if (habit) {
         const updatedHabit: Habit = {
@@ -142,7 +144,9 @@ export function UpdateHabitForm() {
             <Calendar onSelectDate={onChange} selectedDates={value} />
           )}
         />
-        {/* {errors.days && <ErrorMenssage>{errors}</ErrorMenssage>} */}
+        {errors.days?.message && (
+          <ErrorMenssage>{String(errors.days?.message)}</ErrorMenssage>
+        )}
       </View>
 
       {/* select com as categorias */}

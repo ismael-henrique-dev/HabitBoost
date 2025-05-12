@@ -53,7 +53,7 @@ export function Calendar({ selectedDates = {}, onSelectDate }: CalendarProps) {
         <Text style={styles.triggerText}>
           {Object.keys(selectedDates).length > 0
             ? Object.keys(selectedDates).join(', ')
-            : 'Nenhuma'}
+            : 'Nenhum'}
         </Text>
       </TouchableOpacity>
 

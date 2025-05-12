@@ -2,8 +2,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  createHabitFormSchema,
-  CreateHabitFormData,
+  HabitFormData,
+  habitFormSchema,
 } from '@/validators/habit/create-habit'
 import { Input } from '../../input'
 import { Button } from '../../button'
@@ -15,7 +15,7 @@ import { colors } from '@/styles/theme'
 import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 export function CreateHabitForm() {
   const { createHabit } = useHabit()
@@ -23,14 +23,18 @@ export function CreateHabitForm() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateHabitFormData>({
-    resolver: zodResolver(createHabitFormSchema),
+  } = useForm<HabitFormData>({
+    resolver: zodResolver(habitFormSchema),
     defaultValues: {
       days: {},
+      title: '',
+      category: '',
+      description: '',
+      reminderTime: '',
     },
   })
 
-  const handleCreateHabit = (data: CreateHabitFormData) => {
+  const handleCreateHabit = (data: HabitFormData) => {
     try {
       console.log('Novo hábito:', data)
 
@@ -39,6 +43,7 @@ export function CreateHabitForm() {
         .map(([key]) => key)
 
       console.log('Dias selecionados:', selectedDays)
+      console.log('errors.days', errors.days)
 
       createHabit({
         id: uuidv4(),
@@ -132,7 +137,9 @@ export function CreateHabitForm() {
             <Calendar onSelectDate={onChange} selectedDates={value} />
           )}
         />
-        {/* {errors.days && <ErrorMenssage>{errors}</ErrorMenssage>} */}
+        {errors.days?.message && (
+          <ErrorMenssage>{String(errors.days?.message)}</ErrorMenssage>
+        )}
       </View>
 
       {/* select com as categorias */}

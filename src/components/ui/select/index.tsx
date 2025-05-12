@@ -2,7 +2,11 @@ import { useRef, useMemo, useCallback } from 'react'
 import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { BottomSheetModal, BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useCategory } from '@/contexts/category-context'
-import { IconCategory, IconChevronRight, IconPlus } from '@tabler/icons-react-native'
+import {
+  IconCategory,
+  IconChevronRight,
+  IconPlus,
+} from '@tabler/icons-react-native'
 import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { router } from 'expo-router'
@@ -19,11 +23,11 @@ export function CategorySelectBottomSheet({
   const { categories } = useCategory()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
-  const dimensions = useWindowDimensions()
-  const snapPoints = useMemo(
-    () => [200, 700, dimensions.height - 100],
-    [dimensions.height]
-  )
+  // const dimensions = useWindowDimensions()
+  // const snapPoints = useMemo(
+  //   () => [200, 700, dimensions.height - 100],
+  //   [dimensions.height]
+  // )
 
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -64,7 +68,7 @@ export function CategorySelectBottomSheet({
       {/* BottomSheetModal */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        snapPoints={snapPoints}
+        snapPoints={[440]}
         backgroundStyle={styles.bottomSheetBackgroundStyle}
         handleIndicatorStyle={styles.handleIndicatorStyle}
         style={styles.bottomSheetStyle}
