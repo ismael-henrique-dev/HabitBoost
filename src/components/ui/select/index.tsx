@@ -79,7 +79,7 @@ export function CategorySelectBottomSheet({
           <View style={styles.sheetHeader}>
             <Text style={styles.sheetTitle}>Categorias</Text>
             <TouchableOpacity
-              onPress={() => router.navigate('/create-habit')}
+              onPress={() => router.navigate('/create-category')}
               style={styles.newButton}
             >
               <Text style={styles.newButtonText}>Nova</Text>
