@@ -17,10 +17,7 @@ import { useCategory } from '@/contexts/category-context'
 import React, { useState } from 'react'
 import { IconPickerModal } from '../../icon-picker'
 import { Pressable } from 'react-native'
-import {
-  IconPencil,
-  IconPhoto
-} from '@tabler/icons-react-native'
+import { IconPencil, IconPhoto } from '@tabler/icons-react-native'
 import { tablerIcons } from '@/utils/icons-list'
 
 export function CreateCategoryForm() {
@@ -57,6 +54,7 @@ export function CreateCategoryForm() {
       }
 
       createCategory(category)
+      router.back()
     } catch (error) {
       console.error('Erro ao criar categoria:', error)
     }
@@ -76,11 +74,15 @@ export function CreateCategoryForm() {
             onPress={() => setIconModalVisible(true)}
             style={styles.iconCircle}
           >
-            {IconNode ? <IconNode /> : <IconPhoto size={28} color='#fff' />}
+            {IconNode ? (
+              <IconNode size={40} color={colors.zinc[900]} />
+            ) : (
+              <IconPhoto size={40} color={colors.zinc[900]} />
+            )}
 
             {/* Botão de editar */}
             <View style={styles.editIconButton}>
-              <IconPencil size={12} color='#000' />
+              <IconPencil size={16} color={colors.zinc[600]} />
             </View>
           </Pressable>
         </View>

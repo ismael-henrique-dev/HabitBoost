@@ -24,9 +24,9 @@ export const styles = StyleSheet.create({
   },
   iconCircle: {
     backgroundColor: colors.lime[500],
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 72,
+    height: 72,
+    borderRadius: 1234,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -36,8 +36,11 @@ export const styles = StyleSheet.create({
     right: -4,
     bottom: -4,
     backgroundColor: colors.zinc[200],
-    borderRadius: 999,
-    padding: 4,
-    elevation: 2,
+    borderRadius: 1234,
+    width: 32,
+    height: 32,
+    // elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 })

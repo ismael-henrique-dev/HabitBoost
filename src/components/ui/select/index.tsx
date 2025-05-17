@@ -6,6 +6,7 @@ import {
   IconCategory,
   IconChevronRight,
   IconPlus,
+  IconTrash,
 } from '@tabler/icons-react-native'
 import { colors } from '@/styles/theme'
 import { styles } from './styles'
@@ -20,7 +21,7 @@ export function CategorySelectBottomSheet({
   selectedCategoryId,
   onSelectCategory,
 }: CategorySelectBottomSheetProps) {
-  const { categories } = useCategory()
+  const { categories, deleteCategory } = useCategory()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   // const dimensions = useWindowDimensions()
@@ -79,7 +80,10 @@ export function CategorySelectBottomSheet({
           <View style={styles.sheetHeader}>
             <Text style={styles.sheetTitle}>Categorias</Text>
             <TouchableOpacity
-              onPress={() => router.navigate('/create-category')}
+              onPress={() => {
+                handleClose()
+                router.navigate('/create-category')
+              }}
               style={styles.newButton}
             >
               <Text style={styles.newButtonText}>Nova</Text>
@@ -103,7 +107,13 @@ export function CategorySelectBottomSheet({
                   </View>
                   <Text style={styles.categoryName}>{item.name}</Text>
                 </View>
-                <IconChevronRight size={20} color={colors.zinc[600]} />
+                {item.isCustom ? (
+                  <TouchableOpacity onPress={() => deleteCategory(item.id)}>
+                    <IconTrash size={20} color={colors.zinc[600]} />
+                  </TouchableOpacity>
+                ) : (
+                  <IconChevronRight size={20} color={colors.zinc[600]} />
+                )}
               </TouchableOpacity>
             )}
           />
