@@ -8,12 +8,18 @@ import { useCategory } from '@/contexts/category-context'
 import { HabitOptionsBottomSheet } from '../habit-opitions-botton-sheet'
 import { router } from 'expo-router'
 
-type HabitCardProps = Habit
+type HabitCardProps = Habit & {
+  selectedDate: string
+}
 
 export function HabitCard(props: HabitCardProps) {
   const { completeHabit } = useHabit()
 
   const diasSelecionados = props.days.map((date) => new Date(date).getDate())
+
+  const isPendingStatus = ['unstarted', 'missed', 'pending'].includes(
+    props.statusByDate?.[props.selectedDate]
+  )
 
   return (
     <TouchableOpacity
@@ -48,16 +54,20 @@ export function HabitCard(props: HabitCardProps) {
         <TouchableOpacity
           style={[
             styles.button,
-            props.status === 'concluded' && { justifyContent: 'space-between' },
-            props.status === 'unstarted' && { justifyContent: 'center' },
+            !isPendingStatus && {
+              justifyContent: 'space-between',
+            },
+            isPendingStatus && {
+              justifyContent: 'center',
+            },
           ]}
           onPress={() => completeHabit(props.id)}
         >
           <Text style={styles.buttonText}>
-            {props.status === 'unstarted' ? 'Completar' : 'Concluído'}
+            {isPendingStatus ? 'Completar' : 'Concluído'}
           </Text>
-          {props.status === 'concluded' && (
-            <IconCheck color={colors.lime[500]} />
+          {props.statusByDate?.[props.selectedDate] === 'concluded' && (
+            <IconCheck size={24} color={colors.lime[500]} />
           )}
         </TouchableOpacity>
       </View>

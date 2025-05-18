@@ -1,10 +1,7 @@
 import { Controller, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  HabitFormData,
-  habitFormSchema,
-} from '@/validators/habit/create-habit'
+import { HabitFormData, habitFormSchema } from '@/validators/habit/create-habit'
 import { Input } from '../../input'
 import { Button } from '../../button'
 import { ErrorMenssage } from '../../error-menssage'
@@ -33,7 +30,7 @@ export function CreateHabitForm() {
       reminderTime: '',
     },
   })
-
+ 
   const handleCreateHabit = (data: HabitFormData) => {
     try {
       console.log('Novo hábito:', data)
@@ -42,13 +39,15 @@ export function CreateHabitForm() {
         .filter(([_, value]) => value.selected)
         .map(([key]) => key)
 
-      console.log('Dias selecionados:', selectedDays)
-      console.log('errors.days', errors.days)
+      const statusByDate = selectedDays.reduce((acc, date) => {
+        acc[date] = 'unstarted'
+        return acc
+      }, {} as Record<string, 'unstarted'>)
 
       createHabit({
         id: uuidv4(),
         days: selectedDays,
-        status: 'unstarted',
+        statusByDate: statusByDate,
         description: data.description,
         reminderTime: data.reminderTime,
         categoryId: data.category,

@@ -25,13 +25,14 @@ export function HabitList() {
           <HabitCard
             description={habit.description}
             reminderTime={habit.reminderTime}
-            status={habit.status}
+            statusByDate={habit.statusByDate}
             title={habit.title}
             days={habit.days}
             createdAt={habit.createdAt}
             updatedAt={habit.updatedAt}
             id={habit.id}
             categoryId={habit.categoryId}
+            selectedDate={formattedSelectedDate}
           />
         </Animated.View>
       ))}

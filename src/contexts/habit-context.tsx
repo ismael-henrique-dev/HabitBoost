@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
 import { Goal } from '@/types/goal'
+import dayjs from 'dayjs'
 
 type HabitContextData = {
   habits: Habit[]
@@ -74,15 +75,20 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function completeHabit(id: string) {
+    const today = dayjs().startOf('day').format('YYYY-MM-DD')
+
     const updatedHabits = habits.map((habit) => {
       if (habit.id === id) {
-        const isCompleted = habit.status === 'concluded'
+        const currentStatus = habit.statusByDate?.[today] ?? 'unstarted'
+        const newStatus: HabitStatus =
+          currentStatus === 'concluded' ? 'unstarted' : 'concluded'
 
         return {
           ...habit,
-          status: isCompleted
-            ? ('unstarted' as HabitStatus)
-            : ('concluded' as HabitStatus),
+          statusByDate: {
+            ...habit.statusByDate,
+            [today]: newStatus,
+          },
           updatedAt: new Date(),
         }
       }
@@ -198,7 +204,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         addGoalToHabit,
         updateGoalInHabit,
         deleteGoalFromHabit,
-        completeGoal
+        completeGoal,
       }}
     >
       {children}

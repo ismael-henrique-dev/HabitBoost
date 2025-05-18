@@ -1,4 +1,4 @@
-import { Goal } from "./goal"
+import { Goal } from './goal'
 
 type HabitStatus = 'unstarted' | 'concluded' | 'missed'
 
@@ -6,7 +6,9 @@ export type Habit = {
   id: string
   title: string
   description?: string
-  status: HabitStatus
+  statusByDate: {
+    [date: string]: HabitStatus 
+  }
   reminderTime?: string
   categoryId: string
   days: string[]

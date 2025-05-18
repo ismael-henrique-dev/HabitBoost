@@ -1,5 +1,6 @@
 import { OverviewCard } from '@/components/overview/overview-card'
 import { WeeklyBarChart } from '@/components/overview/weekly-bar-chart'
+import { useStatistics } from '@/hooks/use-statistics'
 import { colors } from '@/styles/theme'
 import {
   IconCalendarCheck,
@@ -10,15 +11,24 @@ import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 
 export const OverviewScreen = () => {
-  const data = [
-    { day: 'Dom', value: 2, max: 3 },
-    { day: 'Seg', value: 3, max: 3 },
-    { day: 'Ter', value: 2, max: 3 },
-    { day: 'Qua', value: 9, max: 9 },
-    { day: 'Qui', value: 2, max: 2 },
-    { day: 'Sex', value: 2, max: 3 },
-    { day: 'Sáb', value: 1, max: 3 },
-  ]
+  const {
+    totalGoals,
+    totalGoalsCompleted,
+    totalHabits,
+    totalHabitsCompleted,
+    goalsChartData,
+  } = useStatistics()
+
+  console.log(goalsChartData)
+  // const data = [
+  //   { day: 'Dom', value: 2, max: 3 },
+  //   { day: 'Seg', value: 3, max: 3 },
+  //   { day: 'Ter', value: 2, max: 3 },
+  //   { day: 'Qua', value: 9, max: 9 },
+  //   { day: 'Qui', value: 2, max: 2 },
+  //   { day: 'Sex', value: 2, max: 3 },
+  //   { day: 'Sáb', value: 1, max: 3 },
+  // ]
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -32,18 +42,18 @@ export const OverviewScreen = () => {
       <OverviewCard
         icon={IconCalendarCheck}
         title='Hábitos concluídos'
-        mainValue='19'
+        mainValue={String(totalHabitsCompleted)}
         mainLabel='hábitos'
-        secondaryText='Total: 20'
+        secondaryText={`Total: ${totalHabits}`}
       />
       <OverviewCard
         icon={IconTargetArrow}
         title='Metas concluídas'
-        mainValue='12'
+        mainValue={String(totalGoalsCompleted)}
         mainLabel='metas'
-        secondaryText='Total: 24'
+        secondaryText={`Total: ${totalGoals}`}
       />
-      <WeeklyBarChart data={data} />
+      <WeeklyBarChart data={goalsChartData} />
     </ScrollView>
   )
 }
