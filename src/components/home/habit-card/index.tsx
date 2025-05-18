@@ -15,7 +15,9 @@ type HabitCardProps = Habit & {
 export function HabitCard(props: HabitCardProps) {
   const { completeHabit } = useHabit()
 
-  const diasSelecionados = props.days.map((date) => new Date(date).getDate())
+  const diasSelecionados = props.days.map((dateStr) =>
+    Number(dateStr.split('-')[2])
+  )
 
   const isPendingStatus = ['unstarted', 'missed', 'pending'].includes(
     props.statusByDate?.[props.selectedDate]
