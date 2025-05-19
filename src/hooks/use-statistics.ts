@@ -5,14 +5,16 @@ export function useStatistics() {
   const { habits } = useHabit()
 
   const totalHabits = habits.length
-  const totalHabitsCompleted = habits.filter(
-    (habit) => habit.status === 'concluded'
+
+  const totalHabitsCompleted = habits.filter((habit) =>
+    Object.values(habit.statusByDate || {}).includes('concluded')
   ).length
 
   const totalGoals = habits.reduce(
     (acc, habit) => acc + (habit.goals?.length || 0),
     0
   )
+
   const totalGoalsCompleted = habits.reduce(
     (acc, habit) =>
       acc +
@@ -27,19 +29,53 @@ export function useStatistics() {
     dayjs().startOf('week').add(i, 'day')
   )
 
-  const goalsChartData = weekDays.map((weekDay, index) => {
+  const habitChartData = weekDays.map((weekDay, index) => {
+    const dateStr = weekDay.format('YYYY-MM-DD')
+    const dayOfWeek = weekDay.day()
+
     let value = 0
     let max = 0
 
     habits.forEach((habit) => {
-      const habitDate = dayjs(habit.createdAt)
+      const isScheduled = habit.days?.some((d) => Number(d) === dayOfWeek)
 
-      if (habitDate.isSame(weekDay, 'day')) {
+      if (isScheduled) {
+        max++
+        const status = habit.statusByDate?.[dateStr]
+        if (status === 'concluded') {
+          value++
+        }
+      }
+    })
+
+    return {
+      day: daysOfWeek[index],
+      value,
+      max,
+    }
+  })
+
+  const goalsChartData = weekDays.map((weekDay, index) => {
+    const dateStr = weekDay.format('YYYY-MM-DD')
+    const dayOfWeek = weekDay.day()
+
+    let value = 0
+    let max = 0
+
+    habits.forEach((habit) => {
+      const isScheduled = habit.days?.includes(dayOfWeek.toString())
+
+      if (isScheduled) {
         const goals = habit.goals || []
         max += goals.length
-        value += goals.filter(
-          (goal) => goal.currentCount === goal.targetCount
-        ).length
+
+        // Aqui você pode filtrar também apenas se o hábito foi concluído neste dia:
+        const status = habit.statusByDate?.[dateStr]
+        if (status === 'concluded') {
+          value += goals.filter(
+            (goal) => goal.currentCount === goal.targetCount
+          ).length
+        }
       }
     })
 
@@ -55,6 +91,7 @@ export function useStatistics() {
     totalHabitsCompleted,
     totalGoals,
     totalGoalsCompleted,
+    habitChartData,
     goalsChartData,
   }
 }

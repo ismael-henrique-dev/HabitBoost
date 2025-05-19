@@ -17,9 +17,11 @@ export const OverviewScreen = () => {
     totalHabits,
     totalHabitsCompleted,
     goalsChartData,
+    habitChartData
   } = useStatistics()
 
-  console.log(goalsChartData)
+  console.log(console.log(habitChartData))
+
   // const data = [
   //   { day: 'Dom', value: 2, max: 3 },
   //   { day: 'Seg', value: 3, max: 3 },
@@ -53,7 +55,7 @@ export const OverviewScreen = () => {
         mainLabel='metas'
         secondaryText={`Total: ${totalGoals}`}
       />
-      <WeeklyBarChart data={goalsChartData} />
+      <WeeklyBarChart data={habitChartData} />
     </ScrollView>
   )
 }

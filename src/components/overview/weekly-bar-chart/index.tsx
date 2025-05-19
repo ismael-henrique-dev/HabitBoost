@@ -25,6 +25,8 @@ export const WeeklyBarChart: React.FC<WeeklyBarChartProps> = ({ data }) => {
 
   const maxBarHeight = 240
 
+  console.log(data)
+
   return (
     <View style={styles.container}>
       {/* Modal de informação */}

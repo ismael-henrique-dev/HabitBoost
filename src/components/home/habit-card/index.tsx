@@ -1,12 +1,13 @@
 import { colors } from '@/styles/theme'
 import { IconBell, IconCheck } from '@tabler/icons-react-native'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import { Habit } from '@/types/habit'
 import { useHabit } from '@/contexts/habit-context'
 import { useCategory } from '@/contexts/category-context'
 import { HabitOptionsBottomSheet } from '../habit-opitions-botton-sheet'
 import { router } from 'expo-router'
+import dayjs from 'dayjs'
 
 type HabitCardProps = Habit & {
   selectedDate: string
@@ -14,6 +15,7 @@ type HabitCardProps = Habit & {
 
 export function HabitCard(props: HabitCardProps) {
   const { completeHabit } = useHabit()
+  const today = dayjs().startOf('day').format('YYYY-MM-DD')
 
   const diasSelecionados = props.days.map((dateStr) =>
     Number(dateStr.split('-')[2])
@@ -22,6 +24,14 @@ export function HabitCard(props: HabitCardProps) {
   const isPendingStatus = ['unstarted', 'missed', 'pending'].includes(
     props.statusByDate?.[props.selectedDate]
   )
+
+  function handleCompleteHabit() {
+    if (today !== props.selectedDate) {
+      Alert.alert('Aviso!', 'Você não pode completar esse hábito hoje.')
+    }
+
+    completeHabit(props.id)
+  }
 
   return (
     <TouchableOpacity
@@ -63,7 +73,7 @@ export function HabitCard(props: HabitCardProps) {
               justifyContent: 'center',
             },
           ]}
-          onPress={() => completeHabit(props.id)}
+          onPress={handleCompleteHabit}
         >
           <Text style={styles.buttonText}>
             {isPendingStatus ? 'Completar' : 'Concluído'}
