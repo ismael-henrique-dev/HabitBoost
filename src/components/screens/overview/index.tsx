@@ -1,7 +1,6 @@
 import { OverviewCard } from '@/components/overview/overview-card'
 import { WeeklyBarChart } from '@/components/overview/weekly-bar-chart'
 import { useStatistics } from '@/hooks/use-statistics'
-import { colors } from '@/styles/theme'
 import {
   IconCalendarCheck,
   IconFlame,
@@ -9,18 +8,11 @@ import {
 } from '@tabler/icons-react-native'
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
+import { styles } from './styles'
 
-export const OverviewScreen = () => {
-  const {
-    totalGoals,
-    totalGoalsCompleted,
-    totalHabits,
-    totalHabitsCompleted,
-    goalsChartData,
-    habitChartData
-  } = useStatistics()
-
-  console.log(console.log(habitChartData))
+export function OverviewScreen() {
+  const { totalGoals, totalGoalsCompleted, totalHabits, totalHabitsCompleted } =
+    useStatistics()
 
   // const data = [
   //   { day: 'Dom', value: 2, max: 3 },
@@ -55,16 +47,8 @@ export const OverviewScreen = () => {
         mainLabel='metas'
         secondaryText={`Total: ${totalGoals}`}
       />
-      <WeeklyBarChart data={habitChartData} />
+      <WeeklyBarChart />
     </ScrollView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 24,
-    paddingHorizontal: 20,
-    backgroundColor: colors.zinc[200],
-    gap: 24,
-  },
-})

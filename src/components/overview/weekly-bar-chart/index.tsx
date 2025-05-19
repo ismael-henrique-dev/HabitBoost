@@ -1,37 +1,39 @@
-import { colors, fontFamily } from '@/styles/theme'
+import { colors } from '@/styles/theme'
 import React, { useState } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  Pressable
-} from 'react-native'
+import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native'
+import { styles } from './styles'
+import { useWeeklyChartData } from '@/hooks/use-weekly-chart-data'
+import { useHabit } from '@/contexts/habit-context'
 
-interface DayData {
+type DayData = {
   day: string
   value: number
   max: number
 }
 
-interface WeeklyBarChartProps {
+type WeeklyBarChartProps = {
   data: DayData[]
 }
 
-export const WeeklyBarChart: React.FC<WeeklyBarChartProps> = ({ data }) => {
+export const WeeklyBarChart: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [modalVisible, setModalVisible] = useState(false)
+  const { habits } = useHabit()
 
   const maxBarHeight = 240
 
-  console.log(data)
+  
+
+  const chartData = useWeeklyChartData(habits)
+
+  console.log(chartData)
+  console.log(habits)
 
   return (
     <View style={styles.container}>
       {/* Modal de informação */}
       <Modal
-        animationType="fade"
+        animationType='fade'
         transparent
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
@@ -40,8 +42,8 @@ export const WeeklyBarChart: React.FC<WeeklyBarChartProps> = ({ data }) => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Informações do gráfico</Text>
             <Text style={styles.modalText}>
-              Este gráfico representa os valores diários de uma semana. Toque
-              em uma barra para ver os valores detalhados.
+              Este gráfico representa os valores diários de uma semana. Toque em
+              uma barra para ver os valores detalhados.
             </Text>
             <Pressable
               onPress={() => setModalVisible(false)}
@@ -61,7 +63,7 @@ export const WeeklyBarChart: React.FC<WeeklyBarChartProps> = ({ data }) => {
       </View>
 
       <View style={styles.chartContainer}>
-        {data.map((item, index) => {
+        {chartData.map((item, index) => {
           const percentage = item.max === 0 ? 0 : item.value / item.max
           const barHeight = maxBarHeight * percentage
           const isSelected = selectedIndex === index
@@ -103,96 +105,3 @@ export const WeeklyBarChart: React.FC<WeeklyBarChartProps> = ({ data }) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.zinc[50],
-    borderRadius: 16,
-    padding: 16,
-    gap: 16,
-    width: '100%',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  dateText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    fontFamily: fontFamily.semiBold,
-  },
-  infoIcon: {
-    fontSize: 16,
-    color: '#444',
-  },
-  chartContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-    maxHeight: 320,
-  },
-  barWrapper: {
-    alignItems: 'center',
-  },
-  bar: {
-    width: 14,
-    borderTopEndRadius: 12,
-    borderTopStartRadius: 12,
-  },
-  dayLabel: {
-    marginTop: 8,
-    fontSize: 12,
-    color: '#666',
-  },
-  tooltip: {
-    backgroundColor: colors.lime[600],
-    borderRadius: 8,
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    marginBottom: 4,
-  },
-  tooltipText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: colors.zinc[50],
-    padding: 24,
-    borderRadius: 12,
-    width: '80%',
-    alignItems: 'center',
-    gap: 12,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontFamily: fontFamily.semiBold,
-    color: '#000',
-  },
-  modalText: {
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: '#333',
-    textAlign: 'center',
-  },
-  modalButton: {
-    marginTop: 8,
-    backgroundColor: colors.lime[600],
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-})

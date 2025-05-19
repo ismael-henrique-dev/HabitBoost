@@ -23,75 +23,15 @@ export function useStatistics() {
     0
   )
 
-  const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
-  const weekDays = Array.from({ length: 7 }, (_, i) =>
-    dayjs().startOf('week').add(i, 'day')
-  )
+ 
 
-  const habitChartData = weekDays.map((weekDay, index) => {
-    const dateStr = weekDay.format('YYYY-MM-DD')
-    const dayOfWeek = weekDay.day()
 
-    let value = 0
-    let max = 0
-
-    habits.forEach((habit) => {
-      const isScheduled = habit.days?.some((d) => Number(d) === dayOfWeek)
-
-      if (isScheduled) {
-        max++
-        const status = habit.statusByDate?.[dateStr]
-        if (status === 'concluded') {
-          value++
-        }
-      }
-    })
-
-    return {
-      day: daysOfWeek[index],
-      value,
-      max,
-    }
-  })
-
-  const goalsChartData = weekDays.map((weekDay, index) => {
-    const dateStr = weekDay.format('YYYY-MM-DD')
-    const dayOfWeek = weekDay.day()
-
-    let value = 0
-    let max = 0
-
-    habits.forEach((habit) => {
-      const isScheduled = habit.days?.includes(dayOfWeek.toString())
-
-      if (isScheduled) {
-        const goals = habit.goals || []
-        max += goals.length
-
-        // Aqui você pode filtrar também apenas se o hábito foi concluído neste dia:
-        const status = habit.statusByDate?.[dateStr]
-        if (status === 'concluded') {
-          value += goals.filter(
-            (goal) => goal.currentCount === goal.targetCount
-          ).length
-        }
-      }
-    })
-
-    return {
-      day: daysOfWeek[index],
-      value,
-      max,
-    }
-  })
 
   return {
     totalHabits,
     totalHabitsCompleted,
     totalGoals,
     totalGoalsCompleted,
-    habitChartData,
-    goalsChartData,
   }
 }
