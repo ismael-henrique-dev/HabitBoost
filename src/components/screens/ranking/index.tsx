@@ -7,7 +7,7 @@ import { Podium } from '@/components/ranking/podium'
 export function RankingScreen() {
   return (
     <View style={styles.container}>
-      <View>
+ 
         <RankingCard
           icon={IconTrophy}
           title='Metas para você ser o vencedor'
@@ -18,7 +18,7 @@ export function RankingScreen() {
           title='Metas para você ser o vencedor'
           value={10}
         />
-      </View>
+    
       <Podium />
     </View>
   )

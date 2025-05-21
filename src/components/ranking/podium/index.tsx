@@ -5,7 +5,7 @@ export function Podium() {
   return (
     <View style={styles.podiumContainer}>
       {/* Terceiro lugar */}
-      <View style={[styles.podiumItem, { height: 'auto' }]}>
+      <View style={[styles.podiumItem, { height: '95%' }]}>
         <View style={styles.circle}>
           <Text style={styles.initials}>PH</Text>
         </View>
@@ -19,7 +19,7 @@ export function Podium() {
       </View>
 
       {/* Primeiro lugar */}
-      <View style={[styles.podiumItem, { height: '100%' }]}>
+      <View style={[styles.podiumItem, { height: '105%' }]}>
         <View style={styles.circle}>
           <Text style={styles.initials}>PH</Text>
         </View>

@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 20,
     backgroundColor: colors.zinc[200],
-    gap: 24,justifyContent: 'space-between'
+    gap: 24,
+    justifyContent: 'space-between',
   },
 })
