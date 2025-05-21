@@ -7,22 +7,13 @@ import {
   IconTargetArrow,
 } from '@tabler/icons-react-native'
 import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { styles } from './styles'
+import { GoalSummaryCard } from '@/components/overview/goals-summary-card'
 
 export function OverviewScreen() {
   const { totalGoals, totalGoalsCompleted, totalHabits, totalHabitsCompleted } =
     useStatistics()
-
-  // const data = [
-  //   { day: 'Dom', value: 2, max: 3 },
-  //   { day: 'Seg', value: 3, max: 3 },
-  //   { day: 'Ter', value: 2, max: 3 },
-  //   { day: 'Qua', value: 9, max: 9 },
-  //   { day: 'Qui', value: 2, max: 2 },
-  //   { day: 'Sex', value: 2, max: 3 },
-  //   { day: 'Sáb', value: 1, max: 3 },
-  // ]
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -47,8 +38,16 @@ export function OverviewScreen() {
         mainLabel='metas'
         secondaryText={`Total: ${totalGoals}`}
       />
+      <View style={styles.infoGroup}>
+        <Text style={styles.title}>Resumo dos hábitos</Text>
+        <Text style={styles.link}>VER MAIS</Text>
+      </View>
       <WeeklyBarChart />
+       <View style={styles.infoGroup}>
+        <Text style={styles.title}>Resumo das metas</Text>
+        <Text style={styles.link}>VER MAIS</Text>
+      </View>
+      <GoalSummaryCard />
     </ScrollView>
   )
 }
-

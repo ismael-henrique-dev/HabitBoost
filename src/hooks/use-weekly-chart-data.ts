@@ -11,15 +11,15 @@ type DayData = {
   max: number
 }
 
-export function useWeeklyChartData(habits: Habit[]): DayData[] {
-  const data: DayData[] = useMemo(() => {
+export function useWeeklyChartData(habits: Habit[]) {
+  const { habitChartData } = useMemo(() => {
     const today = dayjs()
     const weekStart = today.startOf('week')
     const daysOfWeek = Array.from({ length: 7 }, (_, i) =>
       weekStart.add(i, 'day')
     )
 
-    return daysOfWeek.map((date) => {
+    const habitChartData: DayData[] = daysOfWeek.map((date) => {
       const fullDate = date.format('YYYY-MM-DD')
       const shortDay = date.format('ddd')
       let value = 0
@@ -43,7 +43,9 @@ export function useWeeklyChartData(habits: Habit[]): DayData[] {
         max,
       }
     })
+
+    return { habitChartData }
   }, [habits])
 
-  return data
+  return { habitChartData }
 }

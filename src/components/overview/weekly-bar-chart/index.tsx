@@ -15,6 +15,19 @@ type WeeklyBarChartProps = {
   data: DayData[]
 }
 
+import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
+import { IconInfoCircle, IconX } from '@tabler/icons-react-native'
+dayjs.locale('pt-br')
+
+const today = dayjs()
+const weekStart = today.startOf('week') // domingo
+const weekEnd = today.endOf('week') // sábado
+
+const formattedRange = `${weekStart.format('D [de] MMM')} - ${weekEnd.format(
+  'D [de] MMM'
+)}`
+
 export const WeeklyBarChart: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [modalVisible, setModalVisible] = useState(false)
@@ -22,12 +35,7 @@ export const WeeklyBarChart: React.FC = () => {
 
   const maxBarHeight = 240
 
-  
-
-  const chartData = useWeeklyChartData(habits)
-
-  console.log(chartData)
-  console.log(habits)
+  const { habitChartData } = useWeeklyChartData(habits)
 
   return (
     <View style={styles.container}>
@@ -39,31 +47,19 @@ export const WeeklyBarChart: React.FC = () => {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Informações do gráfico</Text>
-            <Text style={styles.modalText}>
-              Este gráfico representa os valores diários de uma semana. Toque em
-              uma barra para ver os valores detalhados.
-            </Text>
-            <Pressable
-              onPress={() => setModalVisible(false)}
-              style={styles.modalButton}
-            >
-              <Text style={styles.modalButtonText}>Fechar</Text>
-            </Pressable>
-          </View>
+          <ModalContent setModalVisible={() => setModalVisible(false)} />
         </View>
       </Modal>
 
       <View style={styles.header}>
-        <Text style={styles.dateText}>10 de mar - 16 de mar</Text>
+        <Text style={styles.dateText}>{formattedRange}</Text>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text style={styles.infoIcon}>ⓘ</Text>
+          <IconInfoCircle color={colors.zinc[600]} size={24} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.chartContainer}>
-        {chartData.map((item, index) => {
+        {habitChartData.map((item, index) => {
           const percentage = item.max === 0 ? 0 : item.value / item.max
           const barHeight = maxBarHeight * percentage
           const isSelected = selectedIndex === index
@@ -102,6 +98,34 @@ export const WeeklyBarChart: React.FC = () => {
           )
         })}
       </View>
+    </View>
+  )
+}
+
+type ModalContentProps = {
+  setModalVisible: (value: React.SetStateAction<boolean>) => void
+}
+
+function ModalContent({ setModalVisible }: ModalContentProps) {
+  return (
+    <View style={styles.modalContent}>
+      <View style={styles.modalHeader}>
+        <Text style={styles.modalTitle}>Como este gráfico funciona?</Text>{' '}
+        <IconX
+          color={colors.zinc[900]}
+          size={24}
+          onPress={() => setModalVisible(false)}
+        />
+      </View>
+      <Text style={styles.modalText}>
+        Este gráfico exibe o seu progresso diário, mostrando a relação entre os
+        hábitos ou metas concluídas e o total planejado para cada dia.
+      </Text>
+      <Text style={styles.modalText}>
+        Exemplo: se, na terça-feira, você tinha 4 hábitos para concluir e
+        completou 2, ao clicar na barra desse dia, verá a informação "2/4",
+        indicando que 2 dos 4 hábitos foram concluídos.
+      </Text>
     </View>
   )
 }

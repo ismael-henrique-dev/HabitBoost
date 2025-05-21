@@ -19,10 +19,6 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fontFamily.semiBold,
   },
-  infoIcon: {
-    fontSize: 16,
-    color: '#444',
-  },
   chartContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -66,30 +62,24 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.zinc[50],
     padding: 24,
     borderRadius: 12,
-    width: '80%',
-    alignItems: 'center',
+    width: '90%',
     gap: 12,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: fontFamily.semiBold,
-    color: '#000',
+    color: colors.zinc[900],
+  },
+  modalHeader: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    // flex: 1
   },
   modalText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: fontFamily.regular,
-    color: '#333',
-    textAlign: 'center',
-  },
-  modalButton: {
-    marginTop: 8,
-    backgroundColor: colors.lime[600],
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: colors.zinc[600],
+    textAlign: 'left',
   },
 })
