@@ -12,6 +12,7 @@ import { LoginFormData, loginFormSchema } from '@/validators/auth/login'
 import { login } from '@/services/http/auth/login'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
 import { getErrorMessage } from '@/utils/get-error-menssage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
@@ -31,8 +32,12 @@ export function LoginScreen() {
   async function handleLogin(data: LoginFormData) {
     try {
       setIsLoading(true)
-      await login(data)
+      const response = await login(data)
+
+      
       console.log(data)
+
+      await AsyncStorage.setItem('@token', response.token)
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)

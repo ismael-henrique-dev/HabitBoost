@@ -4,9 +4,12 @@ import { UserInfoCard } from '@/components/profile/user-info-card'
 import { AppSettings } from '@/components/profile/app-settings'
 import { AccountActions } from '@/components/profile/account-actions'
 import { WarningCard } from '@/components/ui/warning-card'
+import { useAuth } from '@/hooks/use-auth'
+import { Button } from '@/components/ui'
+import { colors } from '@/styles/theme'
 
 export default function ProfileScreen() {
-  const isLogged = true
+  const { isLogged } = useAuth()
 
   return (
     <ScrollView
@@ -20,7 +23,18 @@ export default function ProfileScreen() {
         {isLogged ? (
           <AccountActions />
         ) : (
-          <WarningCard warningMessage='Para salvar suas configurações e acessar o perfil em diferentes dispositivos, faça login com sua conta.' />
+          <View>
+            <WarningCard warningMessage='Para salvar suas configurações e acessar o perfil em diferentes dispositivos, faça login com sua conta.' />
+            <Button variant='secundary' style={{ marginTop: 20 }}>
+              <Button.Title
+                style={{
+                  color: colors.zinc[50],
+                }}
+              >
+                Fazer login
+              </Button.Title>
+            </Button>
+          </View>
         )}
       </View>
     </ScrollView>
