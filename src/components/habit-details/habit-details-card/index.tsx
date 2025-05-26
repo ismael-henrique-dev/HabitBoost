@@ -5,6 +5,7 @@ import { Text, View } from 'react-native'
 import { styles } from './styles'
 import { Habit } from '@/types/habit'
 import { useCategory } from '@/contexts/category-context'
+import { categoriesIcons } from '@/utils/icons-list'
 
 type HabitDetailsCardProps = {
   habit: Habit
@@ -16,9 +17,9 @@ export function HabitDetailsCard({ habit }: HabitDetailsCardProps) {
     : []
   const { categories } = useCategory()
 
-  const selectedCategory = categories.find((c) => c.id === habit.categoryId)
+  const selectedCategory = categories.find((c) => c.id === habit.categoryId)!
 
-  const CategoryIcon = selectedCategory?.icon
+  const CategoryIcon = categoriesIcons[selectedCategory.iconId!]
 
   return (
     <View style={styles.habitCard}>

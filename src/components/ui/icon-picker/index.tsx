@@ -3,20 +3,21 @@ import React from 'react'
 import { Modal, View, Text, Pressable, ScrollView } from 'react-native'
 import { styles } from './styles'
 import { IconX } from '@tabler/icons-react-native'
-import { tablerIcons } from '@/utils/icons-list'
+import { categoriesIcons } from '@/utils/icons-list'
+
 
 type Props = {
   visible: boolean
   onClose: () => void
-  onSelect: (iconName: string) => void
-  selectedIcon: string | null
+  onSelect: (iconId: string) => void
+  selectedIconId: string | null
 }
 
 export function IconPickerModal({
   visible,
   onClose,
   onSelect,
-  selectedIcon,
+  selectedIconId,
 }: Props) {
   return (
     <Modal visible={visible} transparent animationType='fade'>
@@ -30,14 +31,14 @@ export function IconPickerModal({
           </View>
 
           <ScrollView contentContainerStyle={styles.iconGrid}>
-            {tablerIcons.map(({ name, component: Icon }) => (
+            {Object.entries(categoriesIcons).map(([iconId, Icon]) => (
               <Pressable
-                key={name}
+                key={iconId}
                 style={[
                   styles.iconButton,
-                  selectedIcon === name && styles.iconSelected,
+                  selectedIconId === iconId && styles.iconSelected,
                 ]}
-                onPress={() => onSelect(name)}
+                onPress={() => onSelect(iconId)}
               >
                 <Icon size={22} color='#000' />
               </Pressable>

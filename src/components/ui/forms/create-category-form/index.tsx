@@ -18,15 +18,13 @@ import React, { useState } from 'react'
 import { IconPickerModal } from '../../icon-picker'
 import { Pressable } from 'react-native'
 import { IconPencil, IconPhoto } from '@tabler/icons-react-native'
-import { tablerIcons } from '@/utils/icons-list'
+import { categoriesIcons } from '@/utils/icons-list'
 
 export function CreateCategoryForm() {
   const [iconModalVisible, setIconModalVisible] = useState(false)
-  const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
+  const [selectedIconId, setSelectedIconId] = useState<string | null>(null)
 
-  const IconNode = tablerIcons.find(
-    (icon) => icon.name === selectedIcon
-  )?.component
+  const SelectedIcon = selectedIconId ? categoriesIcons[selectedIconId] : null
   const { createCategory } = useCategory()
   const {
     control,
@@ -41,7 +39,7 @@ export function CreateCategoryForm() {
 
   const handleCreateCategory = (data: CreateCategoryFormData) => {
     try {
-      if (!IconNode) {
+      if (!selectedIconId) {
         alert('Selecione um ícone para a categoria.')
         return
       }
@@ -50,10 +48,11 @@ export function CreateCategoryForm() {
         id: uuidv4(),
         name: data.name,
         isCustom: true,
-        icon: IconNode,
+        iconId: selectedIconId!,
       }
 
       createCategory(category)
+      console.log('Nova categoria: ', category)
       router.back()
     } catch (error) {
       console.error('Erro ao criar categoria:', error)
@@ -64,9 +63,9 @@ export function CreateCategoryForm() {
     <View style={styles.formContainer}>
       <IconPickerModal
         visible={iconModalVisible}
-        selectedIcon={selectedIcon}
+        selectedIconId={selectedIconId}
         onClose={() => setIconModalVisible(false)}
-        onSelect={(icon) => setSelectedIcon(icon)}
+        onSelect={(icon) => setSelectedIconId(icon)}
       />
       <View style={styles.formGroup}>
         <View style={styles.iconPickerWrapper}>
@@ -74,8 +73,8 @@ export function CreateCategoryForm() {
             onPress={() => setIconModalVisible(true)}
             style={styles.iconCircle}
           >
-            {IconNode ? (
-              <IconNode size={40} color={colors.zinc[900]} />
+            {SelectedIcon ? (
+              <SelectedIcon size={40} color={colors.zinc[900]} />
             ) : (
               <IconPhoto size={40} color={colors.zinc[900]} />
             )}

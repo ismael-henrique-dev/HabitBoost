@@ -8,6 +8,7 @@ import { useCategory } from '@/contexts/category-context'
 import { HabitOptionsBottomSheet } from '../habit-opitions-botton-sheet'
 import { router } from 'expo-router'
 import dayjs from 'dayjs'
+import { categoriesIcons } from '@/utils/icons-list'
 
 type HabitCardProps = Habit & {
   selectedDate: string
@@ -88,17 +89,34 @@ export function HabitCard(props: HabitCardProps) {
 }
 
 function Category({ categoryId }: { categoryId: string }) {
-  console.log('Id da categoria: ', categoryId)
   const { categories } = useCategory()
+
+  const selectedCategory = categories.find((c) => c.id === categoryId)
+
+  console.log('Id da categororia selecionada: ', selectedCategory)
+
+  if (!selectedCategory) {
+    return (
+      <View style={styles.category}>
+        <Text>Sem categoria</Text>
+      </View>
+    )
+  }
+
+  const CategoryIcon = categoriesIcons[selectedCategory.iconId]
+
+  if (!CategoryIcon) {
+    return (
+      <View style={styles.category}>
+        <Text>Sem ícone</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.category}>
-      {categoryId &&
-        (() => {
-          const selectedCategory = categories.find((c) => c.id === categoryId)
-          return selectedCategory?.icon ? (
-            <selectedCategory.icon size={24} color={colors.zinc[900]} />
-          ) : null
-        })()}
+      <CategoryIcon size={24} color={colors.zinc[900]} />
     </View>
   )
 }
+

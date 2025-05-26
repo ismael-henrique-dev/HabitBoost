@@ -1,5 +1,5 @@
-import { useRef, useMemo, useCallback } from 'react'
-import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native'
+import { useRef, useCallback } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { BottomSheetModal, BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useCategory } from '@/contexts/category-context'
 import {
@@ -11,6 +11,8 @@ import {
 import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { router } from 'expo-router'
+import { categoriesIcons } from '@/utils/icons-list'
+
 
 type CategorySelectBottomSheetProps = {
   selectedCategoryId: string | null
@@ -24,12 +26,6 @@ export function CategorySelectBottomSheet({
   const { categories, deleteCategory } = useCategory()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
-  // const dimensions = useWindowDimensions()
-  // const snapPoints = useMemo(
-  //   () => [200, 700, dimensions.height - 100],
-  //   [dimensions.height]
-  // )
-
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
   }, [])
@@ -38,29 +34,27 @@ export function CategorySelectBottomSheet({
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
+  const selectedCategory = categories.find(
+    (c) => c.id === selectedCategoryId
+  )
+  const SelectedIcon = selectedCategory
+    ? categoriesIcons[selectedCategory.iconId]
+    : null
+
   return (
     <View>
       {/* Trigger */}
       <TouchableOpacity onPress={handleOpen} style={styles.trigger}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={styles.categoryIcon}>
-            {selectedCategoryId &&
-              (() => {
-                const selectedCategory = categories.find(
-                  (c) => c.id === selectedCategoryId
-                )
-                return selectedCategory?.icon ? (
-                  <selectedCategory.icon size={20} />
-                ) : null
-              })()}
-            {!selectedCategoryId && (
+            {SelectedIcon ? (
+              <SelectedIcon size={20} color={colors.zinc[900]} />
+            ) : (
               <IconCategory size={20} color={colors.zinc[900]} />
             )}
           </View>
           <Text style={styles.triggerText}>
-            {selectedCategoryId
-              ? categories.find((c) => c.id === selectedCategoryId)?.name
-              : 'Selecionar categoria'}
+            {selectedCategory ? selectedCategory.name : 'Selecionar categoria'}
           </Text>
         </View>
         <IconChevronRight color={colors.zinc[600]} />
@@ -92,30 +86,37 @@ export function CategorySelectBottomSheet({
           </View>
           <BottomSheetFlatList
             data={categories}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.categoryItem}
-                onPress={() => {
-                  onSelectCategory(item.id)
-                  handleClose()
-                }}
-              >
-                <View style={styles.categoryInfo}>
-                  <View style={styles.categoryIcon}>
-                    {item.icon && <item.icon size={24} />}
+            keyExtractor={(category) => category.id}
+            renderItem={({ item }) => {
+              const IconComponent = categoriesIcons[item.iconId]
+              return (
+                <TouchableOpacity
+                  style={styles.categoryItem}
+                  onPress={() => {
+                    onSelectCategory(item.id)
+                    handleClose()
+                  }}
+                >
+                  <View style={styles.categoryInfo}>
+                    <View style={styles.categoryIcon}>
+                      {IconComponent && (
+                        <IconComponent size={24} color={colors.zinc[900]} />
+                      )}
+                    </View>
+                    <Text style={styles.categoryName}>{item.name}</Text>
                   </View>
-                  <Text style={styles.categoryName}>{item.name}</Text>
-                </View>
-                {item.isCustom ? (
-                  <TouchableOpacity onPress={() => deleteCategory(item.id)}>
-                    <IconTrash size={20} color={colors.zinc[600]} />
-                  </TouchableOpacity>
-                ) : (
-                  <IconChevronRight size={20} color={colors.zinc[600]} />
-                )}
-              </TouchableOpacity>
-            )}
+                  {item.isCustom ? (
+                    <TouchableOpacity
+                      onPress={() => deleteCategory(item.id)}
+                    >
+                      <IconTrash size={20} color={colors.zinc[600]} />
+                    </TouchableOpacity>
+                  ) : (
+                    <IconChevronRight size={20} color={colors.zinc[600]} />
+                  )}
+                </TouchableOpacity>
+              )
+            }}
           />
         </View>
       </BottomSheetModal>
