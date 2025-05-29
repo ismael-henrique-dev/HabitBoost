@@ -89,7 +89,7 @@ export function LoginScreen() {
           {errors.password && (
             <ErrorMenssage>{errors.password.message}</ErrorMenssage>
           )}
-          <Link href='/' style={styles.forgotPassword}>
+          <Link href='/send-email' style={styles.forgotPassword}>
             Esqueci a senha
           </Link>
           <Button

@@ -4,28 +4,14 @@ import { TouchableOpacity, View, Text } from 'react-native'
 import { styles } from './styles'
 import { router } from 'expo-router'
 import { useNotifications } from 'react-native-notificated'
+import { FiltersBottomSheet } from '../filters-bottom-sheet'
 
 export function HeaderHomeActions() {
   const { notify } = useNotifications()
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-      onPress={() =>
-        notify('custom', {
-          params: {
-            customTitle: 'Vou implementar ainda.',
-            type: 'success'
-          },
-          config: {
-            duration: 2000,
-          },
-        })
-      }
-        style={styles.filterButton}
-      >
-        <IconFilter size={24} color={colors.zinc[900]} />
-      </TouchableOpacity>
+      <FiltersBottomSheet />
 
       <TouchableOpacity
         onPress={() => router.navigate('/create-habit')}
