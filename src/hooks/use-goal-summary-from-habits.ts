@@ -3,13 +3,15 @@ import { Habit } from '@/types/habit'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import 'dayjs/locale/pt-br'
+import { useGoal } from '@/contexts/goal-context'
 
 dayjs.extend(isBetween)
 dayjs.locale('pt-br')
 
 export function useGoalSummaryFromHabits(habits: Habit[]) {
+  const { goals } = useGoal()
+
   const summary = useMemo(() => {
-    const allGoals = habits.flatMap(habit => habit.goals ?? [])
 
     const now = dayjs()
     const startOfThisMonth = now.startOf('month')
@@ -17,12 +19,22 @@ export function useGoalSummaryFromHabits(habits: Habit[]) {
     const startOfLastMonth = now.subtract(1, 'month').startOf('month')
     const endOfLastMonth = now.subtract(1, 'month').endOf('month')
 
-    const goalsThisMonth = allGoals.filter(goal =>
-      dayjs(goal.createdAt).isBetween(startOfThisMonth, endOfThisMonth, 'day', '[]')
+    const goalsThisMonth = goals.filter((goal) =>
+      dayjs(goal.createdAt).isBetween(
+        startOfThisMonth,
+        endOfThisMonth,
+        'day',
+        '[]'
+      )
     )
 
-    const goalsLastMonth = allGoals.filter(goal =>
-      dayjs(goal.createdAt).isBetween(startOfLastMonth, endOfLastMonth, 'day', '[]')
+    const goalsLastMonth = goals.filter((goal) =>
+      dayjs(goal.createdAt).isBetween(
+        startOfLastMonth,
+        endOfLastMonth,
+        'day',
+        '[]'
+      )
     )
 
     const totalThisMonth = goalsThisMonth.length

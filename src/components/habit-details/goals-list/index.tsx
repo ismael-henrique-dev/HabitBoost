@@ -1,18 +1,24 @@
 import { Habit } from '@/types/habit'
 import { GoalCard } from '../goal-card'
+import { useGoal } from '@/contexts/goal-context'
 
 type GoalsListProps = {
   habit: Habit
 }
 
 export function GoalsList({ habit }: GoalsListProps) {
-  if (!habit || !habit.goals || habit.goals.length === 0) {
+  const { goals } = useGoal()
+
+  // Filtrar metas relacionadas a este hábito
+  const filteredGoals = goals.filter((goal) => goal.habitId === habit.id)
+
+  if (filteredGoals.length === 0) {
     return null
   }
 
   return (
     <>
-      {habit.goals.map((goal) => (
+      {filteredGoals.map((goal) => (
         <GoalCard
           key={goal.id}
           goalId={goal.id}

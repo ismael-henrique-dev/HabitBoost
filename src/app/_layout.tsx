@@ -23,17 +23,16 @@ import {
 } from 'react-native-reanimated'
 import { ToastSuccess } from '@/components/ui/toast'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import { SettingsProvider } from '@/contexts/settings-context'      
-import { useSettings } from '@/hooks/use-settings'                   
+import { SettingsProvider } from '@/contexts/settings-context'
+import { useSettings } from '@/hooks/use-settings'
+import { GoalProvider } from '@/contexts/goal-context'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
   strict: false,
 })
 
-export {
-  ErrorBoundary,
-} from 'expo-router'
+export { ErrorBoundary } from 'expo-router'
 
 export const unstable_settings = {
   initialRouteName: '(tabs)',
@@ -101,14 +100,16 @@ function InnerRoutes() {
     <CategoryProvider>
       <NotificationsProvider>
         <HabitProvider>
-          <BottomSheetModalProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(welcome)" />
-              <Stack.Screen name="(habit-management)" />
-            </Stack>
-          </BottomSheetModalProvider>
+          <GoalProvider>
+            <BottomSheetModalProvider>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name='(tabs)' />
+                <Stack.Screen name='(auth)' />
+                <Stack.Screen name='(welcome)' />
+                <Stack.Screen name='(habit-management)' />
+              </Stack>
+            </BottomSheetModalProvider>
+          </GoalProvider>
         </HabitProvider>
       </NotificationsProvider>
     </CategoryProvider>

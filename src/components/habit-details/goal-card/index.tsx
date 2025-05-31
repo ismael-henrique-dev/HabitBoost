@@ -1,9 +1,10 @@
-import { useHabit } from '@/contexts/habit-context'
+
 import { colors } from '@/styles/theme'
 import { IconTargetArrow } from '@tabler/icons-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import { GoalOptionsBottomSheet } from '../goal-options-bottom-sheet'
+import { useGoal } from '@/contexts/goal-context'
 
 type GoalCardProps = {
   title: string
@@ -14,7 +15,7 @@ type GoalCardProps = {
 }
 
 export function GoalCard(props: GoalCardProps) {
-  const { completeGoal } = useHabit()
+  const { completeGoal } = useGoal()
 
   const progressPercentage =
     props.targetCount > 0 ? (props.currentCount / props.targetCount) * 100 : 0
@@ -23,7 +24,7 @@ export function GoalCard(props: GoalCardProps) {
 
   return (
     <TouchableOpacity
-      onPress={() => completeGoal(props.habitId, props.goalId)}
+      onPress={() => completeGoal(props.goalId)}
       disabled={isDisabled}
     >
       <View style={styles.goalCard}>

@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, TextInput, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { styles } from './styles'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -11,14 +11,13 @@ import { ErrorMenssage } from '../../error-menssage'
 import { Button } from '../../button'
 import { router, useLocalSearchParams } from 'expo-router'
 import { colors } from '@/styles/theme'
-import { useHabit } from '@/contexts/habit-context'
-import { Goal } from '@/types/goal'
-import { v4 as uuidv4 } from 'uuid';
-
+import { v4 as uuidv4 } from 'uuid'
+import { useGoal } from '@/contexts/goal-context'
 
 export function CreateGoalForm() {
-  const { addGoalToHabit } = useHabit()
+  const { createGoal } = useGoal()
   const { habitId } = useLocalSearchParams()
+
   const {
     control,
     handleSubmit,
@@ -33,22 +32,19 @@ export function CreateGoalForm() {
 
   const handleCreateGoal = (data: CreateGoalFormData) => {
     try {
-      console.log('Nova meta:', data)
-      console.log('Id da meta: ', habitId)
-
-      router.back()
-
-      const goal: Goal = {
+      const goal = {
         id: uuidv4(),
         createdAt: new Date(),
         currentCount: 0,
         targetCount: data.targetCount,
-        title: data.title
+        title: data.title,
+        habitId: habitId as string, // 🔥 relacionamento com o hábito
       }
 
-      addGoalToHabit(habitId as string, goal)
+      createGoal(goal) // ✅ Cria a meta via contexto
+      router.back()
     } catch (error) {
-      console.error('Erro ao criar hábito:', error)
+      console.error('Erro ao criar meta:', error)
     }
   }
 
@@ -69,8 +65,9 @@ export function CreateGoalForm() {
         />
         {errors.title && <ErrorMenssage>{errors.title.message}</ErrorMenssage>}
       </View>
+
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Quantas vezes realizará à atividade?</Text>
+        <Text style={styles.label}>Quantas vezes realizará a atividade?</Text>
         <Controller
           control={control}
           name='targetCount'
@@ -86,15 +83,17 @@ export function CreateGoalForm() {
             />
           )}
         />
-
         {errors.targetCount && (
           <ErrorMenssage>{errors.targetCount.message}</ErrorMenssage>
         )}
       </View>
 
       <Button variant='secundary' onPress={handleSubmit(handleCreateGoal)}>
-        <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
+        <Button.Title style={{ color: colors.zinc[50] }}>
+          Concluir
+        </Button.Title>
       </Button>
+
       <Button onPress={() => router.back()}>
         <Button.Title>Cancelar</Button.Title>
       </Button>

@@ -15,5 +15,6 @@ export function useAuth() {
 
   return {
     isLogged,
+    setIsLogged
   }
 }

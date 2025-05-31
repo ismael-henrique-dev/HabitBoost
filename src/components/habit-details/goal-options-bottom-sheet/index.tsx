@@ -1,9 +1,5 @@
 import { useRef, useCallback } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity
-} from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import {
   IconDotsVertical,
@@ -11,10 +7,9 @@ import {
   IconTrash,
 } from '@tabler/icons-react-native'
 import { colors } from '@/styles/theme'
-
-import { useHabit } from '@/contexts/habit-context'
 import { router } from 'expo-router'
 import { styles } from './styles'
+import { useGoal } from '@/contexts/goal-context'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -22,12 +17,11 @@ type CategorySelectBottomSheetProps = {
 }
 
 export function GoalOptionsBottomSheet({
-  habitId,
-  goalId
+  goalId,
 }: CategorySelectBottomSheetProps) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
-  const { deleteGoalFromHabit } = useHabit()
+  const { deleteGoal } = useGoal()
 
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -37,9 +31,9 @@ export function GoalOptionsBottomSheet({
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  function handleDeleteGoal(habitId: string, goalId: string) {
-    if (habitId && goalId) {
-      deleteGoalFromHabit(habitId, goalId)
+  function handleDeleteGoal(goalId: string) {
+    if (goalId) {
+      deleteGoal(goalId)
       // colocar toast aqui
     }
   }
@@ -71,7 +65,7 @@ export function GoalOptionsBottomSheet({
               onPress={() => {
                 router.navigate({
                   pathname: '/update-goal',
-                  params: { habitId: habitId, goalId: goalId },
+                  params: { goalId: goalId },
                 })
 
                 handleClose()
@@ -87,7 +81,7 @@ export function GoalOptionsBottomSheet({
             <TouchableOpacity
               style={styles.optionButton}
               onPress={() => {
-                handleDeleteGoal(habitId, goalId)
+                handleDeleteGoal(goalId)
                 handleClose()
               }}
             >

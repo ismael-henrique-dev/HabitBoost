@@ -1,8 +1,9 @@
+import { useGoal } from '@/contexts/goal-context'
 import { useHabit } from '@/contexts/habit-context'
-import dayjs from 'dayjs'
 
 export function useStatistics() {
   const { habits } = useHabit()
+  const { goals } = useGoal()
 
   const totalHabits = habits.length
 
@@ -10,23 +11,11 @@ export function useStatistics() {
     Object.values(habit.statusByDate || {}).includes('concluded')
   ).length
 
-  const totalGoals = habits.reduce(
-    (acc, habit) => acc + (habit.goals?.length || 0),
-    0
-  )
+  const totalGoals = goals.length
 
-  const totalGoalsCompleted = habits.reduce(
-    (acc, habit) =>
-      acc +
-      (habit.goals?.filter((goal) => goal.currentCount === goal.targetCount)
-        .length || 0),
-    0
-  )
-
-
- 
-
-
+  const totalGoalsCompleted = goals.filter(
+    (goal) => goal.currentCount === goal.targetCount
+  ).length
 
   return {
     totalHabits,
