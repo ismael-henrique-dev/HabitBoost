@@ -7,6 +7,7 @@ import { WarningCard } from '@/components/ui/warning-card'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui'
 import { colors } from '@/styles/theme'
+import { router } from 'expo-router'
 
 export default function ProfileScreen() {
   const { isLogged } = useAuth()
@@ -25,7 +26,7 @@ export default function ProfileScreen() {
         ) : (
           <View>
             <WarningCard warningMessage='Para salvar suas configurações e acessar o perfil em diferentes dispositivos, faça login com sua conta.' />
-            <Button variant='secundary' style={{ marginTop: 20 }}>
+            <Button onPress={() => router.navigate('/login')} variant='secundary' style={{ marginTop: 20 }}>
               <Button.Title
                 style={{
                   color: colors.zinc[50],

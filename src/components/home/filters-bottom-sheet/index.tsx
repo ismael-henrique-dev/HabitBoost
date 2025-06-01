@@ -1,24 +1,32 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import { BottomSheetModal, BottomSheetFlatList } from '@gorhom/bottom-sheet'
+import {
+  BottomSheetModal,
+  BottomSheetFlatList,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet'
 import { useCategory } from '@/contexts/category-context'
 import {
-  IconFilter
+  IconCalendar,
+  IconCheck,
+  IconCircleX,
+  IconHourglass,
+  IconCircleOff,
+  IconFilter,
 } from '@tabler/icons-react-native'
 import { colors } from '@/styles/theme'
-
-import { router } from 'expo-router'
-import { categoriesIcons } from '@/utils/icons-list'
 import { styles } from './styles'
-
-type CategorySelectBottomSheetProps = {
-  selectedCategoryId: string | null
-  onSelectCategory: (id: string) => void
-}
+import { HabitStatus } from '@/types/habit'
+import { categoriesIcons } from '@/utils/icons-list'
 
 export function FiltersBottomSheet() {
-  const { categories, deleteCategory } = useCategory()
+  const { categories } = useCategory()
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedStatus, setSelectedStatus] = useState<HabitStatus | null>(null)
+  const [selectedDate, setSelectedDate] = useState<boolean>(false)
 
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -28,15 +36,34 @@ export function FiltersBottomSheet() {
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  // const selectedCategory = categories.find((c) => c.id === selectedCategoryId)
-  // const SelectedIcon = selectedCategory
-  //   ? categoriesIcons[selectedCategory.iconId]
-  //   : null
+  const handleClearFilters = () => {
+    setSelectedCategory(null)
+    setSelectedStatus(null)
+    setSelectedDate(false)
+  }
+
+  const statusData = [
+    {
+      id: 'concluded',
+      label: 'Concluídos',
+      icon: <IconCheck size={18} color={colors.zinc[600]} />,
+    },
+    {
+      id: 'unstarted',
+      label: 'A fazer',
+      icon: <IconHourglass size={18} color={colors.zinc[600]} />,
+    },
+    {
+      id: 'missed',
+      label: 'Não concluído',
+      icon: <IconCircleOff size={18} color={colors.zinc[600]} />,
+    },
+  ] as { id: HabitStatus; label: string; icon: React.ReactNode }[]
 
   return (
     <View>
       {/* Trigger */}
-      <TouchableOpacity onPress={handleOpen} style={styles.filterButton}>
+      <TouchableOpacity onPress={handleOpen} style={styles.trigger}>
         <IconFilter size={24} color={colors.zinc[900]} />
       </TouchableOpacity>
 
@@ -47,54 +74,128 @@ export function FiltersBottomSheet() {
         backgroundStyle={styles.bottomSheetBackgroundStyle}
         handleIndicatorStyle={styles.handleIndicatorStyle}
         style={styles.bottomSheetStyle}
-        enableOverDrag={true}
-        enablePanDownToClose={true}
       >
         <View style={styles.sheetContent}>
+          {/* Header */}
           <View style={styles.sheetHeader}>
-            <Text style={styles.sheetTitle}>Categorias</Text>
+            <Text style={styles.sheetTitle}>Filtros</Text>
             <TouchableOpacity
-              onPress={() => {
-                handleClose()
-                router.navigate('/create-category')
-              }}
+              onPress={handleClearFilters}
               style={styles.newButton}
             >
               <Text style={styles.newButtonText}>Limpar filtros</Text>
-        
             </TouchableOpacity>
           </View>
-          {/* <BottomSheetView>
-            <TouchableOpacity style={styles.selectedButtonCategory}>
-              <IconCalendar color={colors.zinc[600]} />
-              <Text>Data</Text>
-            </TouchableOpacity>
-          </BottomSheetView> */}
-          <BottomSheetFlatList
-            data={categories}
-            keyExtractor={(category) => category.id}
-            renderItem={({ item }) => {
-              const IconComponent = categoriesIcons[item.iconId]
-              return (
-                <TouchableOpacity
-                  style={styles.categoryItem}
-                  onPress={() => {
-                    // onSelectCategory(item.id)
-                    handleClose()
-                  }}
-                >
-                  <View style={styles.categoryInfo}>
-                    <View style={styles.categoryIcon}>
+
+          <BottomSheetView style={styles.bottomSheetContainer}>
+            {/* Data */}
+            <Text style={styles.filterItemLabel}>Data:</Text>
+            <BottomSheetView>
+              <TouchableOpacity
+                onPress={() => setSelectedDate(!selectedDate)}
+                style={[
+                  styles.categoryItem,
+                  selectedDate && {
+                    backgroundColor: colors.lime[500],
+                    borderWidth: 0,
+                  },
+                ]}
+              >
+                <IconCalendar color={colors.zinc[600]} />
+                <Text>Data</Text>
+              </TouchableOpacity>
+            </BottomSheetView>
+
+            {/* Categoria */}
+            <Text style={styles.filterItemLabel}>Categoria:</Text>
+            <BottomSheetFlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={categories}
+              keyExtractor={(category) => category.id}
+              contentContainerStyle={{ paddingVertical: 4 }}
+              renderItem={({ item }) => {
+                const IconComponent = categoriesIcons[item.iconId]
+                const isSelected = selectedCategory === item.id
+
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      setSelectedCategory(isSelected ? null : item.id)
+                    }
+                    style={[
+                      styles.categoryItem,
+                      isSelected && {
+                        backgroundColor: colors.lime[500],
+                        borderWidth: 0,
+                      },
+                    ]}
+                  >
+                    <View style={styles.categoryInfo}>
                       {IconComponent && (
-                        <IconComponent size={24} color={colors.zinc[900]} />
+                        <IconComponent
+                          size={20}
+                          color={colors.zinc[600]}
+                        />
                       )}
+                      <Text style={styles.categoryName}>
+                        {item.name}
+                      </Text>
                     </View>
-                    <Text style={styles.categoryName}>{item.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              )
-            }}
-          />
+                    {isSelected && (
+                      <TouchableOpacity
+                        onPress={() => setSelectedCategory(null)}
+                      >
+                        <IconCircleX size={16} color={colors.zinc[900]} />
+                      </TouchableOpacity>
+                    )}
+                  </TouchableOpacity>
+                )
+              }}
+            />
+
+            {/* Status */}
+            <Text style={styles.filterItemLabel}>Status:</Text>
+            <BottomSheetFlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={statusData}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={{ paddingVertical: 4 }}
+              renderItem={({ item }) => {
+                const isSelected = selectedStatus === item.id
+
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      setSelectedStatus(isSelected ? null : item.id)
+                    }
+                    style={[
+                      styles.categoryItem,
+                      isSelected && {
+                        backgroundColor: colors.lime[500],
+                        borderWidth: 0,
+                      },
+                    ]}
+                  >
+                    <View style={styles.categoryInfo}>
+                      {item.icon}
+                      <Text style={styles.categoryName}>
+                        {item.label}
+                      </Text>
+                    </View>
+                    {isSelected && (
+                      <TouchableOpacity
+                        onPress={() => setSelectedStatus(null)}
+                      >
+                        <IconCircleX size={16} color={colors.zinc[900]} />
+                      </TouchableOpacity>
+                    )}
+                  </TouchableOpacity>
+                )
+              }}
+            />
+          </BottomSheetView>
         </View>
       </BottomSheetModal>
     </View>

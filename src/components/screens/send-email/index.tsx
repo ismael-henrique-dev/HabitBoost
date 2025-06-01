@@ -36,11 +36,12 @@ export function SendEmailScreen() {
   async function handleSendEmail(data: SendEmailFormData) {
     try {
       setIsLoading(true)
-      const response = await sendEmail(data)
 
       console.log(data)
+      const response = await sendEmail(data)
 
-      await AsyncStorage.setItem('@token', response.token)
+      console.log(response)
+
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)

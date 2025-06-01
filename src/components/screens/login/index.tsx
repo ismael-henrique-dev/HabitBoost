@@ -13,9 +13,11 @@ import { login } from '@/services/http/auth/login'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAuth } from '@/hooks/use-auth'
 
 export function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
+  const { setIsLogged } = useAuth()
 
   const {
     control,
@@ -34,10 +36,11 @@ export function LoginScreen() {
       setIsLoading(true)
       const response = await login(data)
 
-      
       console.log(data)
 
       await AsyncStorage.setItem('@token', response.token)
+      setIsLogged(true)
+      router.navigate('/profile')
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)

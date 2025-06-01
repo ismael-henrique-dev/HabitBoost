@@ -1,13 +1,13 @@
 import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
-import { RegisterFormDataWithoutConfirmPassword } from '@/validators/auth/register'
+import { SendEmailFormData } from '@/validators/auth/send-code'
 
 export async function sendEmail(
-  data: RegisterFormDataWithoutConfirmPassword
+  data: SendEmailFormData
 ): Promise<void> {
   try {
-    const response = await api.post<void>('user/register', data)
-    console.log('Register response: ', response.data)
+    const response = await api.post<void>('user/recover/sendCode', data)
+    console.log('Forgot password response: ', response.data)
 
     return response.data
   } catch (error) {

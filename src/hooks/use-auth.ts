@@ -13,8 +13,17 @@ export function useAuth() {
     checkToken()
   }, [])
 
+  async function logout() {
+    const token = await AsyncStorage.getItem('@token')
+
+    if(token) {
+      await AsyncStorage.removeItem('@token')
+    }
+  }
+
   return {
     isLogged,
-    setIsLogged
+    setIsLogged,
+    logout
   }
 }

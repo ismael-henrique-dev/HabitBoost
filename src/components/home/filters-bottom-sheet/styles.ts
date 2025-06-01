@@ -1,16 +1,8 @@
-import { colors, fontFamily } from "@/styles/theme";
-import { StyleSheet } from "react-native";
-
+import { colors, fontFamily } from '@/styles/theme'
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
-  selectedButtonCategory: {
-    flexDirection: 'row',
-    gap: 8,
-    // borderRadius: 12,
-    // borderWidth: 1,
-    // borderColor: colors.zinc[600]
-  },
-  filterButton: {
+  trigger: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -18,21 +10,6 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderRadius: 12,
-  },
-  trigger: {
-    width: '100%',
-    paddingHorizontal: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.zinc[200],
-    borderRadius: 12,
-    height: 56,
-  },
-  triggerText: {
-    color: colors.zinc[600],
-    fontSize: 16,
-    fontFamily: fontFamily.regular,
   },
   bottomSheetBackgroundStyle: {
     backgroundColor: colors.zinc[50],
@@ -66,84 +43,28 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fontFamily.semiBold,
   },
-  clearButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 8,
-    backgroundColor: colors.zinc[200],
+  bottomSheetContainer: {
+    gap: 12,
   },
-  clearButtonText: {
-    color: colors.zinc[50],
-    fontFamily: fontFamily.semiBold,
+  filterItemLabel: {
     fontSize: 14,
-  },
-  section: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    color: colors.zinc[600],
     fontFamily: fontFamily.semiBold,
-    marginBottom: 12,
-  },
-  dateButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: colors.zinc[200],
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    height: 40,
-  },
-  dateButtonText: {
-    fontSize: 14,
-    color: colors.zinc[50],
-    fontFamily: fontFamily.semiBold,
-  },
-  chipsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.zinc[200],
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 999,
-  },
-  chipSelected: {
-    backgroundColor: colors.lime[500],
-  },
-  chipText: {
-    color: colors.zinc[50],
-    fontFamily: fontFamily.semiBold,
-    fontSize: 14,
-    marginLeft: 4,
-  },
-  chipTextSelected: {
-    color: colors.zinc[900],
   },
   categoryItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 12,
+    marginRight: 12,
+    gap: 12,
   },
   categoryInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  categoryIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.lime[500],
-    marginRight: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 8,
   },
   categoryName: {
     fontSize: 16,
@@ -166,4 +87,3 @@ export const styles = StyleSheet.create({
     lineHeight: 29,
   },
 })
-
