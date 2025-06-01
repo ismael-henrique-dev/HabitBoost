@@ -7,7 +7,6 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useCategory } from '@/contexts/category-context'
 import {
-  IconCalendar,
   IconCheck,
   IconCircleX,
   IconHourglass,
@@ -18,6 +17,8 @@ import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { HabitStatus } from '@/types/habit'
 import { categoriesIcons } from '@/utils/icons-list'
+import { useHabit } from '@/contexts/habit-context'
+import { router } from 'expo-router'
 
 export function FiltersBottomSheet() {
   const { categories } = useCategory()
@@ -26,7 +27,6 @@ export function FiltersBottomSheet() {
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<HabitStatus | null>(null)
-  const [selectedDate, setSelectedDate] = useState<boolean>(false)
 
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -36,13 +36,7 @@ export function FiltersBottomSheet() {
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  const handleClearFilters = () => {
-    setSelectedCategory(null)
-    setSelectedStatus(null)
-    setSelectedDate(false)
-  }
-
-  const statusData = [
+  const statusData = [ // jogar isso em outro lugar
     {
       id: 'concluded',
       label: 'Concluídos',
@@ -59,6 +53,15 @@ export function FiltersBottomSheet() {
       icon: <IconCircleOff size={18} color={colors.zinc[600]} />,
     },
   ] as { id: HabitStatus; label: string; icon: React.ReactNode }[]
+
+  const handleClearFilters = () => {
+    setSelectedCategory(null)
+    setSelectedStatus(null)
+    router.setParams({
+      categoryId: null,
+      status: null,
+    })
+  }
 
   return (
     <View>
@@ -88,24 +91,6 @@ export function FiltersBottomSheet() {
           </View>
 
           <BottomSheetView style={styles.bottomSheetContainer}>
-            {/* Data */}
-            <Text style={styles.filterItemLabel}>Data:</Text>
-            <BottomSheetView>
-              <TouchableOpacity
-                onPress={() => setSelectedDate(!selectedDate)}
-                style={[
-                  styles.categoryItem,
-                  selectedDate && {
-                    backgroundColor: colors.lime[500],
-                    borderWidth: 0,
-                  },
-                ]}
-              >
-                <IconCalendar color={colors.zinc[600]} />
-                <Text>Data</Text>
-              </TouchableOpacity>
-            </BottomSheetView>
-
             {/* Categoria */}
             <Text style={styles.filterItemLabel}>Categoria:</Text>
             <BottomSheetFlatList
@@ -120,9 +105,11 @@ export function FiltersBottomSheet() {
 
                 return (
                   <TouchableOpacity
-                    onPress={() =>
-                      setSelectedCategory(isSelected ? null : item.id)
-                    }
+                    onPress={() => {
+                      const newCategoryId = isSelected ? null : item.id
+                      setSelectedCategory(newCategoryId)
+                      router.setParams({ categoryId: newCategoryId })
+                    }}
                     style={[
                       styles.categoryItem,
                       isSelected && {
@@ -133,14 +120,9 @@ export function FiltersBottomSheet() {
                   >
                     <View style={styles.categoryInfo}>
                       {IconComponent && (
-                        <IconComponent
-                          size={20}
-                          color={colors.zinc[600]}
-                        />
+                        <IconComponent size={20} color={colors.zinc[600]} />
                       )}
-                      <Text style={styles.categoryName}>
-                        {item.name}
-                      </Text>
+                      <Text style={styles.categoryName}>{item.name}</Text>
                     </View>
                     {isSelected && (
                       <TouchableOpacity
@@ -167,9 +149,11 @@ export function FiltersBottomSheet() {
 
                 return (
                   <TouchableOpacity
-                    onPress={() =>
-                      setSelectedStatus(isSelected ? null : item.id)
-                    }
+                    onPress={() => {
+                      const newStatus = isSelected ? null : item.id
+                      setSelectedStatus(newStatus)
+                      router.setParams({ status: newStatus })
+                    }}
                     style={[
                       styles.categoryItem,
                       isSelected && {
@@ -180,14 +164,10 @@ export function FiltersBottomSheet() {
                   >
                     <View style={styles.categoryInfo}>
                       {item.icon}
-                      <Text style={styles.categoryName}>
-                        {item.label}
-                      </Text>
+                      <Text style={styles.categoryName}>{item.label}</Text>
                     </View>
                     {isSelected && (
-                      <TouchableOpacity
-                        onPress={() => setSelectedStatus(null)}
-                      >
+                      <TouchableOpacity onPress={() => setSelectedStatus(null)}>
                         <IconCircleX size={16} color={colors.zinc[900]} />
                       </TouchableOpacity>
                     )}
