@@ -1,13 +1,21 @@
 import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
-import { SendEmailFormData } from '@/validators/auth/send-email'
 
-export async function sendEmail(data: SendEmailFormData): Promise<void> {
+type SendCodeResponse = {
+  token: string
+}
+
+export async function sendCode(code: string): Promise<SendCodeResponse> {
   try {
-    const response = await api.post<void>('user/recover/sendCode', data, {
-      withCredentials: true,
-    })
-    console.log('Forgot password response: ', response.data)
+    console.log(code)
+    const response = await api.patch<SendCodeResponse>(
+      'user/recover/validate',
+      {
+        code: code,
+      },
+      { withCredentials: true}
+    )
+    console.log('token: ', response.data)
 
     return response.data
   } catch (error) {

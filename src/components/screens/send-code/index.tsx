@@ -1,48 +1,46 @@
 import { Input, Button } from '@/components/ui'
 import { colors } from '@/styles/theme'
-import { IconLock, IconMail } from '@tabler/icons-react-native'
-import { Link, router } from 'expo-router'
+import { IconKey } from '@tabler/icons-react-native'
+import { router } from 'expo-router'
 import { useState } from 'react'
 import { View, Text } from 'react-native'
 import { Image } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import { LoginFormData, loginFormSchema } from '@/validators/auth/login'
-import { login } from '@/services/http/auth/login'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
 import { getErrorMessage } from '@/utils/get-error-menssage'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { styles } from './styles'
+import { sendCode } from '@/services/http/auth/send-code'
 import {
-  SendEmailFormData,
-  sendEmailFormSchema,
-} from '@/validators/auth/send-email'
-import { sendEmail } from '@/services/http/auth/send-email'
+  SendCodeFormData,
+  sendCodeFormSchema,
+} from '@/validators/auth/send-code'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function SendEmailScreen() {
+export function SendCodeScreen() {
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<SendEmailFormData>({
-    resolver: zodResolver(sendEmailFormSchema),
+  } = useForm<SendCodeFormData>({
+    resolver: zodResolver(sendCodeFormSchema),
     defaultValues: {
-      email: '',
+      code: '',
     },
   })
 
-  async function handleSendEmail(data: SendEmailFormData) {
+  async function handleSendCode(data: SendCodeFormData) {
     try {
       setIsLoading(true)
-      await AsyncStorage.setItem('email', data.email)
 
       console.log(data)
-      const response = await sendEmail(data)
+      const response = await sendCode(data.code)
+      await AsyncStorage.setItem('token', response.token)
 
       console.log(response)
-      router.navigate('/send-code')
+      router.navigate('/new-password')
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)
@@ -61,8 +59,7 @@ export function SendEmailScreen() {
         <View>
           <Text style={styles.title}>Recuperação de senha</Text>
           <Text style={styles.subTitle}>
-            Digite o email que você usou para se cadastrar no app, será enviado
-            um código para ele.
+            Digite o código que foi enviado no seu email.
           </Text>
         </View>
         <View style={styles.formContainer}>
@@ -70,22 +67,20 @@ export function SendEmailScreen() {
             control={control}
             render={({ field: { onChange, value } }) => (
               <Input
-                placeholder='Digite seu email'
+                placeholder='Código de verificação'
                 keyboardType='email-address'
                 value={value}
                 onChangeText={onChange}
               >
-                <Input.Icon icon={IconMail} />
+                <Input.Icon icon={IconKey} />
               </Input>
             )}
-            name='email'
+            name='code'
           />
-          {errors.email && (
-            <ErrorMenssage>{errors.email.message}</ErrorMenssage>
-          )}
+          {errors.code && <ErrorMenssage>{errors.code.message}</ErrorMenssage>}
           <Button
             variant='secundary'
-            onPress={handleSubmit(handleSendEmail)}
+            onPress={handleSubmit(handleSendCode)}
             disabled={isLoading && isValid}
             isLoading={isLoading}
           >

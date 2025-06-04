@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   subTitle: {
     fontSize: 16,
     fontFamily: fontFamily.regular,
-    color: colors.zinc[600]
+    color: colors.zinc[600],
   },
   formContainer: {
     gap: 20,

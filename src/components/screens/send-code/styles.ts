@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'left',
   },
-  subTitle: {
+    subTitle: {
     fontSize: 16,
     fontFamily: fontFamily.regular,
     color: colors.zinc[600]
@@ -33,5 +33,5 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
-  logo: { width: 240, height: 40 },
+  logo: { width: 240, height: 40 }
 })

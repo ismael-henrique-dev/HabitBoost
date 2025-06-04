@@ -1,12 +1,17 @@
 import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
-import { SendEmailFormData } from '@/validators/auth/send-email'
 
-export async function sendEmail(data: SendEmailFormData): Promise<void> {
+type NewPasswordData = {
+  newPassword: string
+  email: string
+  token: string
+}
+
+export async function newPassword(
+  data: NewPasswordData
+): Promise<void> {
   try {
-    const response = await api.post<void>('user/recover/sendCode', data, {
-      withCredentials: true,
-    })
+    const response = await api.patch<void>('user/recover ', data)
     console.log('Forgot password response: ', response.data)
 
     return response.data

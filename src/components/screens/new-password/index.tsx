@@ -1,48 +1,49 @@
 import { Input, Button } from '@/components/ui'
 import { colors } from '@/styles/theme'
-import { IconLock, IconMail } from '@tabler/icons-react-native'
-import { Link, router } from 'expo-router'
+import { IconKey } from '@tabler/icons-react-native'
+import { router } from 'expo-router'
 import { useState } from 'react'
 import { View, Text } from 'react-native'
 import { Image } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import { LoginFormData, loginFormSchema } from '@/validators/auth/login'
-import { login } from '@/services/http/auth/login'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
 import { getErrorMessage } from '@/utils/get-error-menssage'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { styles } from './styles'
+import { newPassword } from '@/services/http/auth/new-password'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
-  SendEmailFormData,
-  sendEmailFormSchema,
-} from '@/validators/auth/send-email'
-import { sendEmail } from '@/services/http/auth/send-email'
+  NewPasswordFormData,
+  newPasswordFormSchema,
+} from '@/validators/auth/new-password'
 
-export function SendEmailScreen() {
+export function NewPasswordScreen() {
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<SendEmailFormData>({
-    resolver: zodResolver(sendEmailFormSchema),
-    defaultValues: {
-      email: '',
-    },
+  } = useForm<NewPasswordFormData>({
+    resolver: zodResolver(newPasswordFormSchema),
+    defaultValues: {},
   })
 
-  async function handleSendEmail(data: SendEmailFormData) {
+  async function handleNewPassword(data: NewPasswordFormData) {
     try {
       setIsLoading(true)
-      await AsyncStorage.setItem('email', data.email)
 
       console.log(data)
-      const response = await sendEmail(data)
+      const email = await AsyncStorage.getItem('email')
+      const token = await AsyncStorage.getItem('token')
+      const response = await newPassword({
+        email: email as string,
+        newPassword: data.password,
+        token: token as string,
+      })
 
       console.log(response)
-      router.navigate('/send-code')
+      router.navigate('/login')
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)
@@ -59,33 +60,47 @@ export function SendEmailScreen() {
           style={styles.logo}
         />
         <View>
-          <Text style={styles.title}>Recuperação de senha</Text>
-          <Text style={styles.subTitle}>
-            Digite o email que você usou para se cadastrar no app, será enviado
-            um código para ele.
-          </Text>
+          <Text style={styles.title}>Nova senha</Text>
+          <Text style={styles.subTitle}>Crie uma nova senha.</Text>
         </View>
         <View style={styles.formContainer}>
           <Controller
             control={control}
             render={({ field: { onChange, value } }) => (
               <Input
-                placeholder='Digite seu email'
+                placeholder='Digite uma nova senha'
                 keyboardType='email-address'
                 value={value}
                 onChangeText={onChange}
               >
-                <Input.Icon icon={IconMail} />
+                <Input.Icon icon={IconKey} />
               </Input>
             )}
-            name='email'
+            name='password'
           />
-          {errors.email && (
-            <ErrorMenssage>{errors.email.message}</ErrorMenssage>
+          {errors.password && (
+            <ErrorMenssage>{errors.password.message}</ErrorMenssage>
+          )}{' '}
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder='Confirmar nova senha'
+                keyboardType='email-address'
+                value={value}
+                onChangeText={onChange}
+              >
+                <Input.Icon icon={IconKey} />
+              </Input>
+            )}
+            name='confirmPassword'
+          />
+          {errors.confirmPassword && (
+            <ErrorMenssage>{errors.confirmPassword.message}</ErrorMenssage>
           )}
           <Button
             variant='secundary'
-            onPress={handleSubmit(handleSendEmail)}
+            onPress={handleSubmit(handleNewPassword)}
             disabled={isLoading && isValid}
             isLoading={isLoading}
           >
