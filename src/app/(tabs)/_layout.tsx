@@ -3,6 +3,7 @@ import { Tabs } from 'expo-router'
 import {
   IconCalendar,
   IconChartBar,
+  IconCode,
   IconTrophy,
   IconUser,
 } from '@tabler/icons-react-native'
@@ -64,7 +65,7 @@ export default function TabLayout() {
               case 'profile':
                 return <IconUser {...iconProps} />
               default:
-                return null
+                return <IconCode {...iconProps} />
             }
           },
         })}

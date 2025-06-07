@@ -1,10 +1,16 @@
-
 import { colors } from '@/styles/theme'
 import { IconTargetArrow } from '@tabler/icons-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import { GoalOptionsBottomSheet } from '../goal-options-bottom-sheet'
 import { useGoal } from '@/contexts/goal-context'
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated'
+import { useEffect } from 'react'
+import { DimensionValue } from 'react-native'
 
 type GoalCardProps = {
   title: string
@@ -21,6 +27,21 @@ export function GoalCard(props: GoalCardProps) {
     props.targetCount > 0 ? (props.currentCount / props.targetCount) * 100 : 0
 
   const isDisabled = props.currentCount === props.targetCount
+  const animatedWidth = useSharedValue(`${progressPercentage}%`)
+
+  useEffect(() => {
+    animatedWidth.value = withTiming(`${progressPercentage}%`, {
+      duration: 300,
+    })
+  }, [progressPercentage])
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width:
+      typeof animatedWidth.value === 'string' ||
+      typeof animatedWidth.value === 'number'
+        ? (animatedWidth.value as DimensionValue)
+        : undefined,
+  }))
 
   return (
     <TouchableOpacity
@@ -30,7 +51,10 @@ export function GoalCard(props: GoalCardProps) {
       <View style={styles.goalCard}>
         <View style={styles.goalHeader}>
           <Text style={styles.goalTitle}>{props.title}</Text>
-          <GoalOptionsBottomSheet goalId={props.goalId} habitId={props.habitId} />
+          <GoalOptionsBottomSheet
+            goalId={props.goalId}
+            habitId={props.habitId}
+          />
         </View>
         <View
           style={{
@@ -41,12 +65,7 @@ export function GoalCard(props: GoalCardProps) {
         >
           <View style={styles.progressBarContainer}>
             <View style={styles.progressBarBackground}>
-              <View
-                style={[
-                  styles.progressBarFill,
-                  { width: `${progressPercentage}%` },
-                ]}
-              />
+              <Animated.View style={[styles.progressBarFill, animatedStyle]} />
             </View>
             <Text style={styles.goalProgress}>
               {props.currentCount}/{props.targetCount}

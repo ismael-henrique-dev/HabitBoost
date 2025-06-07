@@ -73,7 +73,7 @@ export function FiltersBottomSheet() {
       {/* BottomSheetModal */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        snapPoints={[440]}
+        snapPoints={['45%']}
         backgroundStyle={styles.bottomSheetBackgroundStyle}
         handleIndicatorStyle={styles.handleIndicatorStyle}
         style={styles.bottomSheetStyle}

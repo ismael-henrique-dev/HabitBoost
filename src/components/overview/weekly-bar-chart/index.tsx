@@ -5,16 +5,6 @@ import { styles } from './styles'
 import { useWeeklyChartData } from '@/hooks/use-weekly-chart-data'
 import { useHabit } from '@/contexts/habit-context'
 
-type DayData = {
-  day: string
-  value: number
-  max: number
-}
-
-type WeeklyBarChartProps = {
-  data: DayData[]
-}
-
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 import { IconInfoCircle, IconX } from '@tabler/icons-react-native'
@@ -110,7 +100,7 @@ function ModalContent({ setModalVisible }: ModalContentProps) {
   return (
     <View style={styles.modalContent}>
       <View style={styles.modalHeader}>
-        <Text style={styles.modalTitle}>Como este gráfico funciona?</Text>{' '}
+        <Text style={styles.modalTitle}>Como este gráfico funciona?</Text>
         <IconX
           color={colors.zinc[900]}
           size={24}

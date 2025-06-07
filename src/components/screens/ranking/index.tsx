@@ -23,15 +23,15 @@ export function RankingScreen() {
   const [rankingData, setRankingData] = useState<RankingData | null>(null)
   const { isLogged } = useAuth()
   const { totalGoalsCompleted } = useStatistics()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await getRankingData()
-      console.log('Ranking data', response)
-
       if (response) {
         setRankingData({ data: response.topUsers })
       }
+      setLoading(false)
     }
 
     fetchData()
@@ -56,13 +56,15 @@ export function RankingScreen() {
               icon={IconTrophy}
               title='Metas para você ser o vencedor'
               value={goalsToBeTheWinner}
+              loading={loading}
             />
             <RankingCard
               icon={IconTargetArrow}
               title='Metas concluídas por você'
               value={totalGoalsCompleted}
+              loading={loading}
             />
-            <Podium data={podiumData} />
+            <Podium data={podiumData} loading={loading} />
           </>
         ) : (
           <>

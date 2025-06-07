@@ -12,9 +12,9 @@ export function GoalsList({ habit }: GoalsListProps) {
   // Filtrar metas relacionadas a este hábito
   const filteredGoals = goals.filter((goal) => goal.habitId === habit.id)
 
-  if (filteredGoals.length === 0) {
-    return null
-  }
+  // if (filteredGoals.length === 0) {
+  //   return null
+  // }
 
   return (
     <>
