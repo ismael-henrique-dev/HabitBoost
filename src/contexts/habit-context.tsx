@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
 import dayjs from 'dayjs'
-import { createHabitOnServer } from '@/services/http/habits/create-habit'
 
 type HabitContextData = {
   habits: Habit[]
@@ -12,13 +11,6 @@ type HabitContextData = {
   deleteHabit: (id: string) => void
   completeHabit: (id: string) => void
   setSelectedDate: (date: Date) => void
-}
-
-type FilterParams = {
-  habits: Habit[]
-  selectedCategory: string | null
-  selectedStatus: HabitStatus | null
-  selectedDate: Date
 }
 
 const HabitContext = createContext<HabitContextData>({} as HabitContextData)
@@ -33,8 +25,6 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
       setHabits(updatedHabits)
 
       await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
-
-  
     } catch (error) {
       console.log('Erro ao criar hábito', error)
     }
@@ -44,7 +34,26 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     async function loadHabits() {
       const storedHabits = await AsyncStorage.getItem('@habitsList')
       if (storedHabits) {
-        setHabits(JSON.parse(storedHabits))
+        const habitsArray: Habit[] = JSON.parse(storedHabits)
+        const today = dayjs().startOf('day')
+
+        // Atualiza status para 'missed' se não foi concluído em dias anteriores
+        const updatedHabits = habitsArray.map((habit) => {
+          const statusByDate = { ...habit.statusByDate }
+          Object.keys(statusByDate || {}).forEach((date) => {
+            if (
+              dayjs(date).isBefore(today) &&
+              statusByDate[date] === 'unstarted'
+            ) {
+              statusByDate[date] = 'missed'
+            }
+          })
+          return { ...habit, statusByDate }
+        })
+
+        setHabits(updatedHabits)
+        // Atualiza o AsyncStorage também, se desejar persistir a mudança
+        await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
       }
     }
 

@@ -34,8 +34,6 @@ export function CreateHabitForm() {
       days: {},
       title: '',
       category: '',
-      description: '',
-      reminderTime: '',
     },
   })
 
@@ -83,15 +81,16 @@ export function CreateHabitForm() {
       const newHabit = {
         id: uuidv4(),
         days: selectedDays,
-        statusByDate: statusByDate,
-        description: data.description,
-        reminderTime: data.reminderTime,
-        categoryId: data.category,
+        statusByDate,
         title: data.title,
+        categoryId: data.category,
         createdAt: new Date(),
         updatedAt: null,
+        ...(data.description && { description: data.description }),
+        ...(data.reminderTime && { reminderTime: data.reminderTime }),
       }
 
+      console.log('Novo hábito: ' + newHabit)
       createHabit(newHabit)
       await createHabitOnServer(newHabit)
 

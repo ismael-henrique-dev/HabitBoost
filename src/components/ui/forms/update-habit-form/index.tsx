@@ -34,8 +34,8 @@ export function UpdateHabitForm() {
       }, {} as Record<string, { selected: boolean }>),
       title: habit?.title ?? '',
       category: habit?.categoryId ?? '',
-      description: '',
-      reminderTime: '',
+      description: habit?.description ?? '',
+      reminderTime: habit?.reminderTime ?? '',
     },
   })
 
@@ -53,8 +53,8 @@ export function UpdateHabitForm() {
         const updatedHabit: Habit = {
           ...habit,
           days: selectedDays,
-          description: data.description,
-          reminderTime: data.reminderTime,
+          ...(data.description && { description: data.description }),
+          ...(data.reminderTime && { reminderTime: data.reminderTime }),
           categoryId: data.category,
           title: data.title,
           updatedAt: new Date(),
@@ -63,6 +63,7 @@ export function UpdateHabitForm() {
         console.log('habito atualizado: ', updatedHabit)
 
         updateHabit(habitId as string, updatedHabit)
+
         await updateHabitOnServer(habitId as string, updatedHabit)
       }
 

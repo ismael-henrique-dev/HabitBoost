@@ -7,7 +7,11 @@ export async function updateHabitOnServer(habitId: string, data: Habit) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.put(`update/habit/${habitId}`, data)
+      const response = await api.put(`update/habit/${habitId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       console.log('Create habit response: ', response.data)
 
       return response.data
