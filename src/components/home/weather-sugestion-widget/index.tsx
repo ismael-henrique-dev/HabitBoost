@@ -4,10 +4,17 @@ import {
   IconSun,
   IconX,
 } from '@tabler/icons-react-native'
-import { Alert, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+  Animated,
+  Easing,
+} from 'react-native'
 import { styles } from './styles'
 import * as Location from 'expo-location'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getSuggestionByWeather } from '@/utils/get-suggestion-by-weather'
@@ -25,55 +32,152 @@ export function WeatherSuggestionWidget() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [permissionLocationStatus, setPermissionLocationStatus] = useState('')
-  const { settings, updateSetting } = useSettings()
+  const [loading, setLoading] = useState(false)
+  const { updateSetting } = useSettings()
+  const opacity = useRef(new Animated.Value(1)).current
 
-  async function getCurrentLocation() {
-    let { status } = await Location.requestForegroundPermissionsAsync()
-    console.log(status)
-    if (status !== 'granted') {
-      Alert.alert('', 'Permissão negada.')
-      return
+  useEffect(() => {
+    if (loading) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(opacity, {
+            toValue: 0.4,
+            duration: 700,
+            useNativeDriver: true,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        ])
+      ).start()
     }
+  }, [loading, opacity])
 
-    await AsyncStorage.setItem('@locationStatus', status)
-    let loc = await Location.getCurrentPositionAsync({})
-
-    setLocation(loc)
-  }
-
+  // Atualizada para salvar clima, localização e timestamp
   async function getWeatherCurrentStatus(lat: number, lon: number) {
+    setLoading(true)
     try {
       const response = await axios.get<WeatherData>(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=pt_br`
       )
       setWeather(response.data)
+      await AsyncStorage.setItem(
+        '@weatherData',
+        JSON.stringify({
+          weather: response.data,
+          timestamp: Date.now(),
+          location: { lat, lon },
+        })
+      )
     } catch (error) {
       console.error('Erro ao obter clima:', error)
     }
+    setLoading(false)
   }
 
-  useEffect(() => {
-    if (location) {
-      const { latitude, longitude } = location.coords
-      getWeatherCurrentStatus(latitude, longitude)
+  // Só pede permissão se nunca foi salva
+  async function getCurrentLocation() {
+    setLoading(true)
+    let { status } = await Location.requestForegroundPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert('', 'Permissão negada.')
+      setLoading(false)
+      return
     }
-    console.log(weather)
-  }, [location])
 
+    await AsyncStorage.setItem('@locationStatus', status)
+    let loc = await Location.getCurrentPositionAsync({})
+    setLocation(loc)
+    setLoading(false)
+  }
+
+  // Carrega clima salvo e só busca se necessário
   useEffect(() => {
-    async function getStoredLocationPermition() {
+    async function loadWeatherFromStorage() {
       const storedPermissionLocationStatus = await AsyncStorage.getItem(
         '@locationStatus'
       )
       if (storedPermissionLocationStatus) {
         setPermissionLocationStatus(storedPermissionLocationStatus)
       }
-    }
 
-    getStoredLocationPermition()
+      const storedWeather = await AsyncStorage.getItem('@weatherData')
+      if (storedWeather) {
+        const { weather, timestamp, location } = JSON.parse(storedWeather)
+        // 30 minutos = 1800000 ms
+        if (Date.now() - timestamp < 1800000) {
+          setWeather(weather)
+          setLocation({
+            coords: {
+              latitude: location.lat,
+              longitude: location.lon,
+            },
+          } as any)
+          return
+        }
+        // Se passou do tempo, busca novamente
+        if (location) {
+          getWeatherCurrentStatus(location.lat, location.lon)
+        }
+      }
+    }
+    loadWeatherFromStorage()
   }, [])
 
-  // vou melhorar isso
+  // Se a localização mudar, busca clima e salva
+  useEffect(() => {
+    if (location) {
+      const { latitude, longitude } = location.coords
+      getWeatherCurrentStatus(latitude, longitude)
+    }
+  }, [location])
+
+  // Skeleton animado enquanto carrega permissão ou clima
+  if (loading) {
+    return (
+      <Animated.View
+        style={[
+          styles.container,
+          { backgroundColor: colors.zinc[200], opacity },
+        ]}
+      >
+        <View style={styles.header}>
+          <View style={styles.headerGroup}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: 12,
+                backgroundColor: '#d0d0d0',
+              }}
+            />
+            <View
+              style={{
+                width: 120,
+                height: 18,
+                backgroundColor: '#d0d0d0',
+                borderRadius: 4,
+                marginLeft: 8,
+              }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            width: '100%',
+            height: 18,
+            backgroundColor: '#d0d0d0',
+            borderRadius: 4,
+            marginTop: 12,
+          }}
+        />
+      </Animated.View>
+    )
+  }
 
   if (permissionLocationStatus === 'granted' && weather) {
     const clima = weather.weather[0].main
@@ -99,9 +203,14 @@ export function WeatherSuggestionWidget() {
     )
   }
 
+  // Só pede permissão se nunca foi salva
   return (
     <TouchableOpacity
-      onPress={getCurrentLocation}
+      onPress={() => {
+        if (!permissionLocationStatus) {
+          getCurrentLocation()
+        }
+      }}
       style={[
         styles.container,
         {
@@ -112,7 +221,6 @@ export function WeatherSuggestionWidget() {
       <View style={styles.header}>
         <View style={styles.headerGroup}>
           <IconExclamationCircle size={24} color={colors.zinc[50]} />
-
           <Text style={styles.title}>{'Sugestões baseadas no clima'}</Text>
         </View>
         <TouchableOpacity onPress={() => updateSetting('weatherWidget', false)}>

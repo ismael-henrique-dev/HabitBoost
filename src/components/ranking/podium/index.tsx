@@ -42,26 +42,131 @@ export function Podium({ data, loading }: PodiumProps) {
       <View style={styles.podiumContainer}>
         <Animated.View style={[styles.podiumItem, { height: '95%', opacity }]}>
           <View style={[styles.circle, { backgroundColor: '#e0e0e0' }]} />
-          <View style={{ width: 60, height: 16, backgroundColor: '#e0e0e0', borderRadius: 4, marginTop: 8, marginBottom: 4, alignSelf: 'center' }} />
-          <View style={{ width: 40, height: 14, backgroundColor: '#e0e0e0', borderRadius: 4, alignSelf: 'center' }} />
-          <View style={[styles.bar, { height: '100%', backgroundColor: '#e0e0e0', justifyContent: 'center', alignItems: 'center' }]}>
-            <View style={{ width: 16, height: 16, backgroundColor: '#d0d0d0', borderRadius: 8 }} />
+          <View
+            style={{
+              width: 60,
+              height: 16,
+              backgroundColor: '#e0e0e0',
+              borderRadius: 4,
+              marginTop: 8,
+              marginBottom: 4,
+              alignSelf: 'center',
+            }}
+          />
+          <View
+            style={{
+              width: 40,
+              height: 14,
+              backgroundColor: '#e0e0e0',
+              borderRadius: 4,
+              alignSelf: 'center',
+            }}
+          />
+          <View
+            style={[
+              styles.bar,
+              {
+                height: '100%',
+                backgroundColor: '#e0e0e0',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <View
+              style={{
+                width: 16,
+                height: 16,
+                backgroundColor: '#d0d0d0',
+                borderRadius: 8,
+              }}
+            />
           </View>
         </Animated.View>
         <Animated.View style={[styles.podiumItem, { height: '105%', opacity }]}>
           <View style={[styles.circle, { backgroundColor: '#e0e0e0' }]} />
-          <View style={{ width: 60, height: 16, backgroundColor: '#e0e0e0', borderRadius: 4, marginTop: 8, marginBottom: 4, alignSelf: 'center' }} />
-          <View style={{ width: 40, height: 14, backgroundColor: '#e0e0e0', borderRadius: 4, alignSelf: 'center' }} />
-          <View style={[styles.bar, { height: '100%', backgroundColor: '#e0e0e0', justifyContent: 'center', alignItems: 'center' }]}>
-            <View style={{ width: 16, height: 16, backgroundColor: '#d0d0d0', borderRadius: 8 }} />
+          <View
+            style={{
+              width: 60,
+              height: 16,
+              backgroundColor: '#e0e0e0',
+              borderRadius: 4,
+              marginTop: 8,
+              marginBottom: 4,
+              alignSelf: 'center',
+            }}
+          />
+          <View
+            style={{
+              width: 40,
+              height: 14,
+              backgroundColor: '#e0e0e0',
+              borderRadius: 4,
+              alignSelf: 'center',
+            }}
+          />
+          <View
+            style={[
+              styles.bar,
+              {
+                height: '100%',
+                backgroundColor: '#e0e0e0',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <View
+              style={{
+                width: 16,
+                height: 16,
+                backgroundColor: '#d0d0d0',
+                borderRadius: 8,
+              }}
+            />
           </View>
         </Animated.View>
         <Animated.View style={[styles.podiumItem, { height: '100%', opacity }]}>
           <View style={[styles.circle, { backgroundColor: '#e0e0e0' }]} />
-          <View style={{ width: 60, height: 16, backgroundColor: '#e0e0e0', borderRadius: 4, marginTop: 8, marginBottom: 4, alignSelf: 'center' }} />
-          <View style={{ width: 40, height: 14, backgroundColor: '#e0e0e0', borderRadius: 4, alignSelf: 'center' }} />
-          <View style={[styles.bar, { height: '100%', backgroundColor: '#e0e0e0', justifyContent: 'center', alignItems: 'center' }]}>
-            <View style={{ width: 16, height: 16, backgroundColor: '#d0d0d0', borderRadius: 8 }} />
+          <View
+            style={{
+              width: 60,
+              height: 16,
+              backgroundColor: '#e0e0e0',
+              borderRadius: 4,
+              marginTop: 8,
+              marginBottom: 4,
+              alignSelf: 'center',
+            }}
+          />
+          <View
+            style={{
+              width: 40,
+              height: 14,
+              backgroundColor: '#e0e0e0',
+              borderRadius: 4,
+              alignSelf: 'center',
+            }}
+          />
+          <View
+            style={[
+              styles.bar,
+              {
+                height: '100%',
+                backgroundColor: '#e0e0e0',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <View
+              style={{
+                width: 16,
+                height: 16,
+                backgroundColor: '#d0d0d0',
+                borderRadius: 8,
+              }}
+            />
           </View>
         </Animated.View>
       </View>
@@ -73,7 +178,9 @@ export function Podium({ data, loading }: PodiumProps) {
       {/* Terceiro lugar */}
       <View style={[styles.podiumItem, { height: '95%' }]}>
         <View style={styles.circle}>
-          <Text style={styles.initials}>{getInitials(data.third?.username!)}</Text>
+          <Text style={styles.initials}>
+            {getInitials(data.third?.username!)}
+          </Text>
         </View>
         <Text style={styles.name}>{data.third?.username}</Text>
         <View style={styles.goalsInfo}>
@@ -87,7 +194,9 @@ export function Podium({ data, loading }: PodiumProps) {
       {/* Primeiro lugar */}
       <View style={[styles.podiumItem, { height: '105%' }]}>
         <View style={styles.circle}>
-            <Text style={styles.initials}>{getInitials(data.first?.username!)}</Text>
+          <Text style={styles.initials}>
+            {getInitials(data.first?.username!)}
+          </Text>
         </View>
         <Text style={styles.name}>{data.first?.username}</Text>
         <View style={styles.goalsInfo}>
@@ -101,7 +210,9 @@ export function Podium({ data, loading }: PodiumProps) {
       {/* Segundo lugar */}
       <View style={[styles.podiumItem, { height: '100%' }]}>
         <View style={styles.circle}>
-          <Text style={styles.initials}>{getInitials(data.second?.username!)}</Text>
+          <Text style={styles.initials}>
+            {getInitials(data.second?.username!)}
+          </Text>
         </View>
         <Text style={styles.name}>{data.second?.username}</Text>
         <View style={styles.goalsInfo}>
