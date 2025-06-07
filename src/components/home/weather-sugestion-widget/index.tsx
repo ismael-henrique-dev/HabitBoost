@@ -33,7 +33,7 @@ export function WeatherSuggestionWidget() {
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [permissionLocationStatus, setPermissionLocationStatus] = useState('')
   const [loading, setLoading] = useState(false)
-  const { updateSetting } = useSettings()
+  const { settings, updateSetting } = useSettings()
   const opacity = useRef(new Animated.Value(1)).current
 
   useEffect(() => {
@@ -95,9 +95,11 @@ export function WeatherSuggestionWidget() {
     setLoading(false)
   }
 
-  // Carrega clima salvo e só busca se necessário
+  // Carrega clima salvo e só busca se necessário E se o widget estiver ativo
   useEffect(() => {
     async function loadWeatherFromStorage() {
+      if (!settings.weatherWidget) return
+
       const storedPermissionLocationStatus = await AsyncStorage.getItem(
         '@locationStatus'
       )
@@ -126,15 +128,15 @@ export function WeatherSuggestionWidget() {
       }
     }
     loadWeatherFromStorage()
-  }, [])
+  }, [settings.weatherWidget])
 
-  // Se a localização mudar, busca clima e salva
+  // Se a localização mudar, busca clima e salva, mas só se o widget estiver ativo
   useEffect(() => {
-    if (location) {
+    if (settings.weatherWidget && location) {
       const { latitude, longitude } = location.coords
       getWeatherCurrentStatus(latitude, longitude)
     }
-  }, [location])
+  }, [location, settings.weatherWidget])
 
   // Skeleton animado enquanto carrega permissão ou clima
   if (loading) {
