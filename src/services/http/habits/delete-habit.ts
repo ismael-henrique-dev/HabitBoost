@@ -2,7 +2,7 @@ import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function deleteHabit(habitId: string) {
+export async function deleteHabitOnServer(habitId: string) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {

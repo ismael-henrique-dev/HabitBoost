@@ -18,6 +18,7 @@ import {
   DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
+import { createHabitOnServer } from '@/services/http/habits/create-habit'
 
 export function CreateHabitForm() {
   const [date, setDate] = useState(new Date())
@@ -51,7 +52,7 @@ export function CreateHabitForm() {
         hour12: false,
       })
 
-      setValue('reminderTime', timeString) 
+      setValue('reminderTime', timeString)
     }
   }
 
@@ -66,7 +67,7 @@ export function CreateHabitForm() {
     })
   }
 
-  const handleCreateHabit = (data: HabitFormData) => {
+  const handleCreateHabit = async (data: HabitFormData) => {
     try {
       console.log('Novo hábito:', data)
 
@@ -79,7 +80,7 @@ export function CreateHabitForm() {
         return acc
       }, {} as Record<string, 'unstarted'>)
 
-      createHabit({
+      const newHabit = {
         id: uuidv4(),
         days: selectedDays,
         statusByDate: statusByDate,
@@ -89,7 +90,10 @@ export function CreateHabitForm() {
         title: data.title,
         createdAt: new Date(),
         updatedAt: null,
-      })
+      }
+
+      createHabit(newHabit)
+      await createHabitOnServer(newHabit)
 
       router.navigate('/')
 

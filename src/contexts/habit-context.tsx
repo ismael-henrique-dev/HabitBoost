@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
 import dayjs from 'dayjs'
+import { createHabitOnServer } from '@/services/http/habits/create-habit'
 
 type HabitContextData = {
   habits: Habit[]
@@ -27,11 +28,13 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
   const [selectedDate, setSelectedDate] = useState(new Date())
 
   async function createHabit(habit: Habit) {
-    const updatedHabits = [...habits, habit]
-    setHabits(updatedHabits)
-
     try {
+      const updatedHabits = [...habits, habit]
+      setHabits(updatedHabits)
+
       await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+
+  
     } catch (error) {
       console.log('Erro ao criar hábito', error)
     }

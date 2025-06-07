@@ -14,6 +14,7 @@ import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { useHabit } from '@/contexts/habit-context'
 import { router } from 'expo-router'
+import { deleteHabitOnServer } from '@/services/http/habits/delete-habit'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -34,9 +35,10 @@ export function HabitOptionsBottomSheet({
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  function handleDeleteHabit(id: string) {
+  async function handleDeleteHabit(id: string) {
     if (id) {
       deleteHabit(id)
+      await deleteHabitOnServer(id)
       // colocar toast aqui
     }
   }

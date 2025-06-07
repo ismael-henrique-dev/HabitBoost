@@ -3,11 +3,11 @@ import { Habit } from '@/types/habit'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function updateHabit(data: Habit) {
+export async function updateHabitOnServer(habitId: string, data: Habit) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.put('update/habit', data)
+      const response = await api.put(`update/habit/${habitId}`, data)
       console.log('Create habit response: ', response.data)
 
       return response.data

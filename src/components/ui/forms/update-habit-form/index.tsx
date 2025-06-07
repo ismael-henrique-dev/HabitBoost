@@ -13,6 +13,7 @@ import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
 import { Habit } from '@/types/habit'
+import { updateHabitOnServer } from '@/services/http/habits/update-habit'
 
 export function UpdateHabitForm() {
   const { habitId } = useLocalSearchParams()
@@ -38,7 +39,7 @@ export function UpdateHabitForm() {
     },
   })
 
-  const handleUpdateHabit = (data: HabitFormData) => {
+  const handleUpdateHabit = async (data: HabitFormData) => {
     try {
       console.log('Atualização do hábito:', data)
 
@@ -62,6 +63,7 @@ export function UpdateHabitForm() {
         console.log('habito atualizado: ', updatedHabit)
 
         updateHabit(habitId as string, updatedHabit)
+        await updateHabitOnServer(habitId as string, updatedHabit)
       }
 
       router.navigate('/')
