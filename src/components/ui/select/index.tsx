@@ -12,7 +12,8 @@ import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { router } from 'expo-router'
 import { categoriesIcons } from '@/utils/icons-list'
-
+import { useAuth } from '@/hooks/use-auth'
+import { deleteCategoryOnServer } from '@/services/http/categories/delete-category'
 
 type CategorySelectBottomSheetProps = {
   selectedCategoryId: string | null
@@ -25,6 +26,16 @@ export function CategorySelectBottomSheet({
 }: CategorySelectBottomSheetProps) {
   const { categories, deleteCategory } = useCategory()
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const { isLogged } = useAuth()
+
+  const handleDeleteCategory = async (id: string) => {
+    if (isLogged) {
+      await deleteCategoryOnServer(id)
+      deleteCategory(id)
+    } else {
+      deleteCategory(id)
+    }
+  }
 
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -34,9 +45,7 @@ export function CategorySelectBottomSheet({
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  const selectedCategory = categories.find(
-    (c) => c.id === selectedCategoryId
-  )
+  const selectedCategory = categories.find((c) => c.id === selectedCategoryId)
   const SelectedIcon = selectedCategory
     ? categoriesIcons[selectedCategory.iconId]
     : null
@@ -107,7 +116,7 @@ export function CategorySelectBottomSheet({
                   </View>
                   {item.isCustom ? (
                     <TouchableOpacity
-                      onPress={() => deleteCategory(item.id)}
+                      onPress={() => handleDeleteCategory(item.id)}
                     >
                       <IconTrash size={20} color={colors.zinc[600]} />
                     </TouchableOpacity>

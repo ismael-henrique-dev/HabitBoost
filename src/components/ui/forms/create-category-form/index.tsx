@@ -19,8 +19,11 @@ import { IconPickerModal } from '../../icon-picker'
 import { Pressable } from 'react-native'
 import { IconPencil, IconPhoto } from '@tabler/icons-react-native'
 import { categoriesIcons } from '@/utils/icons-list'
+import { useAuth } from '@/hooks/use-auth'
+import { createCategoryOnServer } from '@/services/http/categories/create-category'
 
 export function CreateCategoryForm() {
+  const { isLogged } = useAuth()
   const [iconModalVisible, setIconModalVisible] = useState(false)
   const [selectedIconId, setSelectedIconId] = useState<string | null>(null)
 
@@ -37,7 +40,7 @@ export function CreateCategoryForm() {
     },
   })
 
-  const handleCreateCategory = (data: CreateCategoryFormData) => {
+  const handleCreateCategory = async (data: CreateCategoryFormData) => {
     try {
       if (!selectedIconId) {
         alert('Selecione um ícone para a categoria.')
@@ -51,7 +54,13 @@ export function CreateCategoryForm() {
         iconId: selectedIconId!,
       }
 
-      createCategory(category)
+      if (isLogged) {
+        await createCategoryOnServer(category)
+        createCategory(category)
+      } else {
+        createCategory(category)
+      }
+
       console.log('Nova categoria: ', category)
       router.back()
     } catch (error) {

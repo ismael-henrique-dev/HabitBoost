@@ -7,11 +7,21 @@ type CreateHabitResponse = {
   description: string
 }
 
-export async function createCategory(data: Category): Promise<CreateHabitResponse> {
+export async function createCategoryOnServer(
+  data: Category
+): Promise<CreateHabitResponse> {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.post<CreateHabitResponse>('category/create', data)
+      const response = await api.post<CreateHabitResponse>(
+        'category/create',
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       console.log('Create category response: ', response.data)
 
       return response.data

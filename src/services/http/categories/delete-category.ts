@@ -2,13 +2,15 @@ import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function deleteCategory(categoryId: string) {
+export async function deleteCategoryOnServer(categoryId: string) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.delete(
-        `category/delete/${categoryId}`
-      )
+      const response = await api.delete(`category/delete/${categoryId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       console.log('Categoria deletada com sucesso!')
     } else {
       throw new Error('Token não encontrado.')
