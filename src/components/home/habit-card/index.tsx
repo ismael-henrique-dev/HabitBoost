@@ -22,13 +22,19 @@ export function HabitCard(props: HabitCardProps) {
     Number(dateStr.split('-')[2])
   )
 
-  const isPendingStatus = ['unstarted', 'missed', 'pending'].includes(
+  const isPendingStatus = ['unstarted', 'missed'].includes(
     props.statusByDate?.[props.selectedDate]
   )
 
   function handleCompleteHabit() {
-    if (today !== props.selectedDate) {
-      Alert.alert('Aviso!', 'Você não pode completar esse hábito hoje.')
+    const isFutureDate = dayjs(props.selectedDate).isAfter(today)
+
+    if (isFutureDate) {
+      Alert.alert(
+        'Aviso!',
+        'Você não pode completar esse hábito em uma data futura.'
+      )
+      return
     }
 
     completeHabit(props.id)
@@ -77,7 +83,12 @@ export function HabitCard(props: HabitCardProps) {
           onPress={handleCompleteHabit}
         >
           <Text style={styles.buttonText}>
-            {isPendingStatus ? 'Completar' : 'Concluído'}
+            {/* {isPendingStatus ? 'Completar' : 'Concluído'} */}
+            {props.statusByDate[props.selectedDate] === 'missed' && 'Pendente'}
+            {props.statusByDate[props.selectedDate] === 'unstarted' &&
+              'Completar'}
+            {props.statusByDate[props.selectedDate] === 'concluded' &&
+              'Concluído'}
           </Text>
           {props.statusByDate?.[props.selectedDate] === 'concluded' && (
             <IconCheck size={24} color={colors.lime[500]} />
@@ -119,4 +130,3 @@ function Category({ categoryId }: { categoryId: string }) {
     </View>
   )
 }
-
