@@ -1,9 +1,14 @@
 import { api } from '@/services/api'
-import { Habit } from '@/types/habit'
+import { HabitStatus } from '@/types/habit'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function completeHabitOnServer(habitId: string, data: Habit) {
+type CompleteHabitData = {
+  date: string
+  status: HabitStatus
+}
+
+export async function completeHabitOnServer(habitId: string, data: CompleteHabitData) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {

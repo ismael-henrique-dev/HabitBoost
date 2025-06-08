@@ -9,12 +9,15 @@ import { HabitOptionsBottomSheet } from '../habit-opitions-botton-sheet'
 import { router } from 'expo-router'
 import dayjs from 'dayjs'
 import { categoriesIcons } from '@/utils/icons-list'
+import { useAuth } from '@/hooks/use-auth'
+import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
 
 type HabitCardProps = Habit & {
   selectedDate: string
 }
 
 export function HabitCard(props: HabitCardProps) {
+  const { isLogged } = useAuth()
   const { completeHabit } = useHabit()
   const today = dayjs().startOf('day').format('YYYY-MM-DD')
 
@@ -26,7 +29,7 @@ export function HabitCard(props: HabitCardProps) {
     props.statusByDate?.[props.selectedDate]
   )
 
-  function handleCompleteHabit() {
+  async function handleCompleteHabit() {
     const isFutureDate = dayjs(props.selectedDate).isAfter(today)
 
     if (isFutureDate) {
@@ -36,8 +39,16 @@ export function HabitCard(props: HabitCardProps) {
       )
       return
     }
-
     completeHabit(props.id, props.selectedDate)
+    // if (isLogged) {
+    //   await completeHabitOnServer(props.id, {
+    //     date: props.selectedDate,
+    //     status: props.statusByDate[props.selectedDate],
+    //   })
+    //   completeHabit(props.id, props.selectedDate)
+    // } else {
+    //   completeHabit(props.id, props.selectedDate)
+    // }
   }
 
   return (

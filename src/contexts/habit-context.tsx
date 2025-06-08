@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
 import dayjs from 'dayjs'
 import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
+import { useAuth } from '@/hooks/use-auth'
 
 type HabitContextData = {
   habits: Habit[]
@@ -19,6 +20,7 @@ const HabitContext = createContext<HabitContextData>({} as HabitContextData)
 export function HabitProvider({ children }: { children: React.ReactNode }) {
   const [habits, setHabits] = useState<Habit[]>([])
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const { isLogged } = useAuth()
 
   async function createHabit(habit: Habit) {
     try {
@@ -102,8 +104,12 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
           updatedAt: new Date(),
         }
 
-        // Envia o hábito atualizado para o servidor
-        completeHabitOnServer(habit.id, updatedHabit)
+        if (isLogged) {
+          completeHabitOnServer(habit.id, {
+            date: selectedDate,
+            status: updatedHabit.statusByDate[selectedDate],
+          })
+        }
 
         return updatedHabit
       }
