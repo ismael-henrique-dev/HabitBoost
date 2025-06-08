@@ -4,27 +4,29 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { api } from '@/services/api'
 import { colors } from '@/styles/theme'
 import { styles } from './styles'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function ConfirmEmailScreen() {
   const { token } = useLocalSearchParams()
 
   useEffect(() => {
-    if (token) {
-      console.log(token)
+    async function confirmEmail() {
+      if (!token) return
 
-      api
-        .patch('auth/validate/verifyToken', { token })
-        .then(() => {
-          alert('E-mail confirmado com sucesso!')
-          console.log(token)
-          router.navigate('/welcome')
-        })
-        .catch(() => {
-          alert('Token inválido ou expirado.')
-          console.log(token)
-          router.navigate('/')
-        })
+      try {
+        console.log(token)
+        await api.patch('auth/validate/verifyToken', { token })
+        alert('E-mail confirmado com sucesso!')
+        await AsyncStorage.setItem('@token', token as string)
+        router.navigate('/welcome')
+      } catch (error) {
+        console.log(token)
+        alert('Token inválido ou expirado.')
+        router.navigate('/')
+      }
     }
+
+    confirmEmail()
   }, [token])
 
   return (

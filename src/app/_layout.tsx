@@ -72,7 +72,6 @@ function RootLayoutNav() {
 
 // ② Só aqui, **dentro** do SettingsProvider, podemos chamar useSettings()
 function InnerRoutes() {
-  // const { settings } = useSettings()
   const { NotificationsProvider } = createNotifications({
     duration: 3000,
     notificationPosition: 'top',
@@ -88,13 +87,15 @@ function InnerRoutes() {
     isNotch: undefined,
   })
 
-  // useEffect(() => {
-  //   if (settings.firstTimeUser) {
-  //     router.replace('/welcome')
-  //   } else {
-  //     router.replace('/')  // ou '/home' se você tiver essa rota
-  //   }
-  // }, [settings.firstTimeUser])
+  const { settings, isLoaded, updateSetting } = useSettings()
+
+  useEffect(() => {
+    if (!isLoaded) return
+    if (settings.firstTimeUser) {
+      updateSetting('firstTimeUser', false)
+      router.replace('/welcome')
+    }
+  }, [isLoaded])
 
   return (
     <CategoryProvider>
