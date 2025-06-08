@@ -13,8 +13,11 @@ import {
   UpdateGoalFormData,
   updateGoalFormSchema,
 } from '@/validators/goals/update-goal'
+import { updateGoalOnServer } from '@/services/http/goals/update-goal'
+import { useAuth } from '@/hooks/use-auth'
 
 export function UpdateGoalForm() {
+  const { isLogged } = useAuth()
   const { updateGoal, goals } = useGoal()
   const { goalId } = useLocalSearchParams()
 
@@ -33,7 +36,7 @@ export function UpdateGoalForm() {
     },
   })
 
-  const handleUpdateGoal = (data: UpdateGoalFormData) => {
+  const handleUpdateGoal = async (data: UpdateGoalFormData) => {
     if (!goal) return
 
     const updatedGoal: Goal = {
@@ -44,7 +47,12 @@ export function UpdateGoalForm() {
       updatedAt: new Date(),
     }
 
-    updateGoal(goal.id, updatedGoal)
+    if (isLogged) {
+      await updateGoalOnServer(goal.id, updatedGoal)
+      updateGoal(goal.id, updatedGoal)
+    } else {
+      updateGoal(goal.id, updatedGoal)
+    }
     router.back()
   }
 

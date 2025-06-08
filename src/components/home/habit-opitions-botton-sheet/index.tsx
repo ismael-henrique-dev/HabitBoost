@@ -1,9 +1,5 @@
 import { useRef, useCallback } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity
-} from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import {
   IconDotsVertical,
@@ -15,6 +11,7 @@ import { styles } from './styles'
 import { useHabit } from '@/contexts/habit-context'
 import { router } from 'expo-router'
 import { deleteHabitOnServer } from '@/services/http/habits/delete-habit'
+import { useAuth } from '@/hooks/use-auth'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -24,6 +21,7 @@ export function HabitOptionsBottomSheet({
   habitId,
 }: CategorySelectBottomSheetProps) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const { isLogged } = useAuth()
 
   const { deleteHabit } = useHabit()
 
@@ -36,11 +34,13 @@ export function HabitOptionsBottomSheet({
   }, [])
 
   async function handleDeleteHabit(id: string) {
-    if (id) {
-      deleteHabit(id)
+    if (isLogged) {
       await deleteHabitOnServer(id)
-      // colocar toast aqui
+      deleteHabit(id)
+    } else {
+      deleteHabit(id)
     }
+    // colocar toast aqui
   }
 
   return (

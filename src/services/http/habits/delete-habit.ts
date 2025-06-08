@@ -6,9 +6,11 @@ export async function deleteHabitOnServer(habitId: string) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.delete(
-        `habit/delete/${habitId}`
-      )
+      const response = await api.delete(`habit/delete/${habitId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       console.log('Create habit response: ', response.data)
     } else {
       throw new Error('Token não encontrado.')

@@ -7,11 +7,21 @@ type CreateHabitResponse = {
   description: string
 }
 
-export async function createGoal(data: Goal): Promise<CreateHabitResponse> {
+export async function createGoalOnServer(
+  data: Goal
+): Promise<CreateHabitResponse> {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.post<CreateHabitResponse>('goal/create', data)
+      const response = await api.post<CreateHabitResponse>(
+        'goal/create',
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       console.log('Create habit response: ', response.data)
 
       return response.data

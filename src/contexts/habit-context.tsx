@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
 import dayjs from 'dayjs'
+import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
 
 type HabitContextData = {
   habits: Habit[]
@@ -9,7 +10,7 @@ type HabitContextData = {
   createHabit: (habit: Habit) => void
   updateHabit: (id: string, habit: Habit) => void
   deleteHabit: (id: string) => void
-  completeHabit: (id: string) => void
+  completeHabit: (id: string, selectedDate: string) => void
   setSelectedDate: (date: Date) => void
 }
 
@@ -83,23 +84,28 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
   }
 
-  async function completeHabit(id: string) {
-    const today = dayjs().startOf('day').format('YYYY-MM-DD')
+  async function completeHabit(id: string, selectedDate: string) {
+    const date = dayjs(selectedDate).startOf('day').format('YYYY-MM-DD')
 
     const updatedHabits = habits.map((habit) => {
       if (habit.id === id) {
-        const currentStatus = habit.statusByDate?.[today] ?? 'unstarted'
+        const currentStatus = habit.statusByDate?.[date] ?? 'unstarted'
         const newStatus: HabitStatus =
           currentStatus === 'concluded' ? 'unstarted' : 'concluded'
 
-        return {
+        const updatedHabit = {
           ...habit,
           statusByDate: {
             ...habit.statusByDate,
-            [today]: newStatus,
+            [date]: newStatus,
           },
           updatedAt: new Date(),
         }
+
+        // Envia o hábito atualizado para o servidor
+        completeHabitOnServer(habit.id, updatedHabit)
+
+        return updatedHabit
       }
       return habit
     })
@@ -109,7 +115,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     try {
       await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
     } catch (error) {
-      console.log('Erro ao atualizar hábito', error)
+      console.log('Erro ao atualizar hábito localmente:', error)
     }
   }
 

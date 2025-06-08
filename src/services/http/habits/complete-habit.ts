@@ -1,17 +1,20 @@
 import { api } from '@/services/api'
+import { Habit } from '@/types/habit'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function deleteGoalOnServer(goalId: string) {
+export async function completeHabitOnServer(habitId: string, data: Habit) {
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.delete(`goal/delete/${goalId}`, {
+      const response = await api.patch(`update/habit/status/${habitId}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       console.log('Create habit response: ', response.data)
+
+      return response.data
     } else {
       throw new Error('Token não encontrado.')
     }

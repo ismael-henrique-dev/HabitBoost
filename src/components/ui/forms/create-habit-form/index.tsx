@@ -19,8 +19,10 @@ import {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
 import { createHabitOnServer } from '@/services/http/habits/create-habit'
+import { useAuth } from '@/hooks/use-auth'
 
 export function CreateHabitForm() {
+  const { isLogged } = useAuth()
   const [date, setDate] = useState(new Date())
   const { createHabit } = useHabit()
   const {
@@ -91,8 +93,13 @@ export function CreateHabitForm() {
       }
 
       console.log('Novo hábito: ' + newHabit)
-      createHabit(newHabit)
-      await createHabitOnServer(newHabit)
+
+      if (isLogged) {
+        await createHabitOnServer(newHabit)
+        createHabit(newHabit)
+      } else {
+        createHabit(newHabit)
+      }
 
       router.navigate('/')
 

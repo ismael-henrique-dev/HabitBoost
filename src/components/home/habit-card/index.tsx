@@ -37,7 +37,7 @@ export function HabitCard(props: HabitCardProps) {
       return
     }
 
-    completeHabit(props.id)
+    completeHabit(props.id, props.selectedDate)
   }
 
   return (

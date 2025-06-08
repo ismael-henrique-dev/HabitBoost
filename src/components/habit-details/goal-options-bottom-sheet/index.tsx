@@ -10,6 +10,8 @@ import { colors } from '@/styles/theme'
 import { router } from 'expo-router'
 import { styles } from './styles'
 import { useGoal } from '@/contexts/goal-context'
+import { useAuth } from '@/hooks/use-auth'
+import { deleteGoalOnServer } from '@/services/http/goals/delete-goal'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -22,6 +24,7 @@ export function GoalOptionsBottomSheet({
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   const { deleteGoal } = useGoal()
+  const { isLogged } = useAuth()
 
   const handleOpen = useCallback(() => {
     bottomSheetModalRef.current?.present()
@@ -31,10 +34,13 @@ export function GoalOptionsBottomSheet({
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  function handleDeleteGoal(goalId: string) {
+  async function handleDeleteGoal(goalId: string) {
     if (goalId) {
       deleteGoal(goalId)
       // colocar toast aqui
+      if (isLogged) {
+        await deleteGoalOnServer(goalId)
+      }
     }
   }
 

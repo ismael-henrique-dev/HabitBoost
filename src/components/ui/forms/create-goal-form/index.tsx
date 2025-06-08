@@ -13,8 +13,12 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { v4 as uuidv4 } from 'uuid'
 import { useGoal } from '@/contexts/goal-context'
+import { Goal } from '@/types/goal'
+import { createGoalOnServer } from '@/services/http/goals/create-goal'
+import { useAuth } from '@/hooks/use-auth'
 
 export function CreateGoalForm() {
+  const { isLogged } = useAuth()
   const { createGoal } = useGoal()
   const { habitId } = useLocalSearchParams()
 
@@ -30,18 +34,23 @@ export function CreateGoalForm() {
     },
   })
 
-  const handleCreateGoal = (data: CreateGoalFormData) => {
+  const handleCreateGoal = async (data: CreateGoalFormData) => {
     try {
-      const goal = {
+      const goal: Goal = {
         id: uuidv4(),
         createdAt: new Date(),
         currentCount: 0,
         targetCount: data.targetCount,
         title: data.title,
-        habitId: habitId as string, // 🔥 relacionamento com o hábito
+        habitId: habitId as string, // relacionamento com o hábito
       }
 
-      createGoal(goal) // ✅ Cria a meta via contexto
+      if (isLogged) {
+        await createGoalOnServer(goal)
+        createGoal(goal)
+      } else {
+        createGoal(goal)
+      }
       router.back()
     } catch (error) {
       console.error('Erro ao criar meta:', error)
@@ -89,9 +98,7 @@ export function CreateGoalForm() {
       </View>
 
       <Button variant='secundary' onPress={handleSubmit(handleCreateGoal)}>
-        <Button.Title style={{ color: colors.zinc[50] }}>
-          Concluir
-        </Button.Title>
+        <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
       </Button>
 
       <Button onPress={() => router.back()}>
