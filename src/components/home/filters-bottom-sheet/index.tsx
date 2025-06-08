@@ -1,10 +1,6 @@
 import { useRef, useCallback, useState } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import {
-  BottomSheetModal,
-  BottomSheetFlatList,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useCategory } from '@/contexts/category-context'
 import {
   IconCheck,
@@ -17,7 +13,6 @@ import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { HabitStatus } from '@/types/habit'
 import { categoriesIcons } from '@/utils/icons-list'
-import { useHabit } from '@/contexts/habit-context'
 import { router } from 'expo-router'
 
 export function FiltersBottomSheet() {
@@ -36,7 +31,7 @@ export function FiltersBottomSheet() {
     bottomSheetModalRef.current?.dismiss()
   }, [])
 
-  const statusData = [ // jogar isso em outro lugar
+  const statusData = [
     {
       id: 'concluded',
       label: 'Concluídos',
@@ -65,21 +60,19 @@ export function FiltersBottomSheet() {
 
   return (
     <View>
-      {/* Trigger */}
       <TouchableOpacity onPress={handleOpen} style={styles.trigger}>
         <IconFilter size={24} color={colors.zinc[900]} />
       </TouchableOpacity>
 
-      {/* BottomSheetModal */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        snapPoints={['45%']}
+        snapPoints={['40%', '40%']}
+        index={1}
         backgroundStyle={styles.bottomSheetBackgroundStyle}
         handleIndicatorStyle={styles.handleIndicatorStyle}
         style={styles.bottomSheetStyle}
       >
         <View style={styles.sheetContent}>
-          {/* Header */}
           <View style={styles.sheetHeader}>
             <Text style={styles.sheetTitle}>Filtros</Text>
             <TouchableOpacity
@@ -90,21 +83,20 @@ export function FiltersBottomSheet() {
             </TouchableOpacity>
           </View>
 
-          <BottomSheetView style={styles.bottomSheetContainer}>
+          <BottomSheetScrollView style={styles.bottomSheetContainer}>
             {/* Categoria */}
             <Text style={styles.filterItemLabel}>Categoria:</Text>
-            <BottomSheetFlatList
+            <BottomSheetScrollView
               horizontal
-              showsHorizontalScrollIndicator={false}
-              data={categories}
-              keyExtractor={(category) => category.id}
-              contentContainerStyle={{ paddingVertical: 4 }}
-              renderItem={({ item }) => {
+              contentContainerStyle={{ paddingVertical: 12 }}
+            >
+              {categories.map((item) => {
                 const IconComponent = categoriesIcons[item.iconId]
                 const isSelected = selectedCategory === item.id
 
                 return (
                   <TouchableOpacity
+                    key={item.id}
                     onPress={() => {
                       const newCategoryId = isSelected ? null : item.id
                       setSelectedCategory(newCategoryId)
@@ -133,22 +125,21 @@ export function FiltersBottomSheet() {
                     )}
                   </TouchableOpacity>
                 )
-              }}
-            />
+              })}
+            </BottomSheetScrollView>
 
             {/* Status */}
             <Text style={styles.filterItemLabel}>Status:</Text>
-            <BottomSheetFlatList
+            <BottomSheetScrollView
               horizontal
-              showsHorizontalScrollIndicator={false}
-              data={statusData}
-              keyExtractor={(item) => item.id}
-              contentContainerStyle={{ paddingVertical: 4 }}
-              renderItem={({ item }) => {
+              contentContainerStyle={{ paddingVertical: 12 }}
+            >
+              {statusData.map((item) => {
                 const isSelected = selectedStatus === item.id
 
                 return (
                   <TouchableOpacity
+                    key={item.id}
                     onPress={() => {
                       const newStatus = isSelected ? null : item.id
                       setSelectedStatus(newStatus)
@@ -173,9 +164,9 @@ export function FiltersBottomSheet() {
                     )}
                   </TouchableOpacity>
                 )
-              }}
-            />
-          </BottomSheetView>
+              })}
+            </BottomSheetScrollView>
+          </BottomSheetScrollView>
         </View>
       </BottomSheetModal>
     </View>

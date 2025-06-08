@@ -14,7 +14,7 @@ type ActionItemProps = {
 
 export function ActionItem({ icon: Icon, label, ...rest }: ActionItemProps) {
   return (
-    <TouchableOpacity {...rest}>
+    <TouchableOpacity style={{borderRadius: 8}} {...rest}>
       <View
         style={styles.container}
       >
