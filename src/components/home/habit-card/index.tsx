@@ -9,8 +9,9 @@ import { HabitOptionsBottomSheet } from '../habit-opitions-botton-sheet'
 import { router } from 'expo-router'
 import dayjs from 'dayjs'
 import { categoriesIcons } from '@/utils/icons-list'
-import { useAuth } from '@/hooks/use-auth'
+
 import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
+import { useAuth } from '@/contexts/auth-context'
 
 type HabitCardProps = Habit & {
   selectedDate: string

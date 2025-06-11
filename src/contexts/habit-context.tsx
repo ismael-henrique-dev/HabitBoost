@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Habit, HabitStatus } from '@/types/habit'
 import dayjs from 'dayjs'
 import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from './auth-context'
+
 
 type HabitContextData = {
   habits: Habit[]

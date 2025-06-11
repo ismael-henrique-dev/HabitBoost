@@ -26,6 +26,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { SettingsProvider } from '@/contexts/settings-context'
 import { useSettings } from '@/hooks/use-settings'
 import { GoalProvider } from '@/contexts/goal-context'
+import { AuthProvider } from '@/contexts/auth-context'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -98,21 +99,23 @@ function InnerRoutes() {
   }, [isLoaded])
 
   return (
-    <CategoryProvider>
-      <NotificationsProvider>
-        <HabitProvider>
-          <GoalProvider>
-            <BottomSheetModalProvider>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name='(tabs)' />
-                <Stack.Screen name='(auth)' />
-                <Stack.Screen name='(welcome)' />
-                <Stack.Screen name='(habit-management)' />
-              </Stack>
-            </BottomSheetModalProvider>
-          </GoalProvider>
-        </HabitProvider>
-      </NotificationsProvider>
-    </CategoryProvider>
+    <AuthProvider>
+      <CategoryProvider>
+        <NotificationsProvider>
+          <HabitProvider>
+            <GoalProvider>
+              <BottomSheetModalProvider>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name='(tabs)' />
+                  <Stack.Screen name='(auth)' />
+                  <Stack.Screen name='(welcome)' />
+                  <Stack.Screen name='(habit-management)' />
+                </Stack>
+              </BottomSheetModalProvider>
+            </GoalProvider>
+          </HabitProvider>
+        </NotificationsProvider>
+      </CategoryProvider>
+    </AuthProvider>
   )
 }

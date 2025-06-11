@@ -12,8 +12,9 @@ import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import { router } from 'expo-router'
 import { categoriesIcons } from '@/utils/icons-list'
-import { useAuth } from '@/hooks/use-auth'
+
 import { deleteCategoryOnServer } from '@/services/http/categories/delete-category'
+import { useAuth } from '@/contexts/auth-context'
 
 type CategorySelectBottomSheetProps = {
   selectedCategoryId: string | null

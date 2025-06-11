@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { Category } from '@/types/category'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useAuth } from '@/hooks/use-auth'
+
 import { getCategories } from '@/services/http/categories/get-categories'
 import { defaultCategories } from '@/utils/default-categories'
+import { useAuth } from './auth-context'
 
 type CategoryContextData = {
   categories: Category[]

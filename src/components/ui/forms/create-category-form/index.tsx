@@ -19,8 +19,9 @@ import { IconPickerModal } from '../../icon-picker'
 import { Pressable } from 'react-native'
 import { IconPencil, IconPhoto } from '@tabler/icons-react-native'
 import { categoriesIcons } from '@/utils/icons-list'
-import { useAuth } from '@/hooks/use-auth'
+
 import { createCategoryOnServer } from '@/services/http/categories/create-category'
+import { useAuth } from '@/contexts/auth-context'
 
 export function CreateCategoryForm() {
   const { isLogged } = useAuth()

@@ -14,7 +14,8 @@ import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
 import { Habit } from '@/types/habit'
 import { updateHabitOnServer } from '@/services/http/habits/update-habit'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/auth-context'
+
 
 export function UpdateHabitForm() {
   const { isLogged } = useAuth()

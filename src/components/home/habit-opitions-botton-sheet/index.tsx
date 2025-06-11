@@ -11,7 +11,8 @@ import { styles } from './styles'
 import { useHabit } from '@/contexts/habit-context'
 import { router } from 'expo-router'
 import { deleteHabitOnServer } from '@/services/http/habits/delete-habit'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/auth-context'
+
 
 type CategorySelectBottomSheetProps = {
   habitId: string

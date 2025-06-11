@@ -13,7 +13,7 @@ import { login } from '@/services/http/auth/login'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/auth-context'
 
 export function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)

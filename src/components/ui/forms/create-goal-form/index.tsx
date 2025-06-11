@@ -15,7 +15,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { useGoal } from '@/contexts/goal-context'
 import { Goal } from '@/types/goal'
 import { createGoalOnServer } from '@/services/http/goals/create-goal'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/auth-context'
+
 
 export function CreateGoalForm() {
   const { isLogged } = useAuth()

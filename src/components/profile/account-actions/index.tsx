@@ -7,12 +7,11 @@ import {
 } from '@tabler/icons-react-native'
 import { ActionItem } from './action-item'
 import { styles } from './styles'
-import { router } from 'expo-router'
-import { useAuth } from '@/hooks/use-auth'
 import { useState } from 'react'
 import { colors } from '@/styles/theme'
 import { Button } from '@/components/ui'
 import { deleteUserOnServer } from '@/services/http/user/delete-user'
+import { useAuth } from '@/contexts/auth-context'
 
 export function AccountActions() {
   const [modalVisible, setModalVisible] = useState(false)
@@ -21,7 +20,6 @@ export function AccountActions() {
   async function hableLogout() {
     await logout()
     setIsLogged(false)
-    router.navigate('/')
   }
 
   async function handleDeleteUserAccount() {

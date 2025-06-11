@@ -7,9 +7,14 @@ import {
 } from '@/services/http/user/get-profile'
 import { getInitials } from '@/utils/get-initials'
 
+
 type UserData = Pick<GetProfileResponse, 'data'>
 
-export function UserInfoCard() {
+type UserInfoCardProps = {
+  isLogged: boolean
+}
+
+export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
   const [userData, setUserData] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const opacity = useRef(new Animated.Value(1)).current
@@ -33,7 +38,7 @@ export function UserInfoCard() {
         ])
       ).start()
     }
-  }, [loading, opacity])
+  }, [loading, opacity, userIsLogged])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,8 +48,16 @@ export function UserInfoCard() {
       }
       setLoading(false)
     }
-    fetchData()
-  }, [])
+
+    if (userIsLogged) {
+      fetchData()
+    }
+
+    if (!userIsLogged) {
+      setUserData(null)
+      setLoading(false)
+    }
+  }, [userIsLogged])
 
   if (loading) {
     return (

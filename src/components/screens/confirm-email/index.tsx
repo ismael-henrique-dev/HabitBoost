@@ -6,6 +6,11 @@ import { colors } from '@/styles/theme'
 import { styles } from './styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+
+type ConfirmEmailResponse = {
+  token: string
+}
+
 export function ConfirmEmailScreen() {
   const { token } = useLocalSearchParams()
 
@@ -14,10 +19,10 @@ export function ConfirmEmailScreen() {
       if (!token) return
 
       try {
-        console.log(token)
-        await api.patch('auth/validate/verifyToken', { token })
+       
+        const response = await api.patch<ConfirmEmailResponse>('auth/validate/verifyToken', { token })
         alert('E-mail confirmado com sucesso!')
-        await AsyncStorage.setItem('@token', token as string)
+        await AsyncStorage.setItem('@token', response.data.token as string)
         router.navigate('/welcome')
       } catch (error) {
         console.log(token)

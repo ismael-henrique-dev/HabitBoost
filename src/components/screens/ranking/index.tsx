@@ -3,7 +3,6 @@ import { styles } from './styles'
 import { RankingCard } from '@/components/ranking/ranking-card'
 import { IconTargetArrow, IconTrophy } from '@tabler/icons-react-native'
 import { Podium } from '@/components/ranking/podium'
-import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { colors } from '@/styles/theme'
 import { WarningCard } from '@/components/ui/warning-card'
@@ -14,6 +13,7 @@ import {
   RankingUser,
 } from '@/services/http/ranking/get-ranking-data'
 import { useStatistics } from '@/hooks/use-statistics'
+import { useAuth } from '@/contexts/auth-context'
 
 type RankingData = {
   data: RankingUser[]

@@ -10,8 +10,9 @@ import { colors } from '@/styles/theme'
 import { router } from 'expo-router'
 import { styles } from './styles'
 import { useGoal } from '@/contexts/goal-context'
-import { useAuth } from '@/hooks/use-auth'
+
 import { deleteGoalOnServer } from '@/services/http/goals/delete-goal'
+import { useAuth } from '@/contexts/auth-context'
 
 type CategorySelectBottomSheetProps = {
   habitId: string

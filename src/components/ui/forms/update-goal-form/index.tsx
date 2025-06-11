@@ -14,7 +14,8 @@ import {
   updateGoalFormSchema,
 } from '@/validators/goals/update-goal'
 import { updateGoalOnServer } from '@/services/http/goals/update-goal'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/auth-context'
+
 
 export function UpdateGoalForm() {
   const { isLogged } = useAuth()

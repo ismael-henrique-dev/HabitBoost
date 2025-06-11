@@ -19,7 +19,8 @@ import {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
 import { createHabitOnServer } from '@/services/http/habits/create-habit'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/auth-context'
+
 
 export function CreateHabitForm() {
   const { isLogged } = useAuth()
