@@ -12,6 +12,7 @@ import { colors } from '@/styles/theme'
 import { Button } from '@/components/ui'
 import { deleteUserOnServer } from '@/services/http/user/delete-user'
 import { useAuth } from '@/contexts/auth-context'
+import { router } from 'expo-router'
 
 export function AccountActions() {
   const [modalVisible, setModalVisible] = useState(false)
@@ -48,7 +49,7 @@ export function AccountActions() {
           />
         </View>
       </Modal>
-      <ActionItem icon={IconUserEdit} label='Alterar dados cadastrais' />
+      <ActionItem icon={IconUserEdit} label='Alterar dados cadastrais' onPress={() => router.navigate('/update-user-data')} />
       <ActionItem
         icon={IconTrash}
         label='Deletar conta'

@@ -2,9 +2,22 @@ import { colors, fontFamily } from '@/styles/theme'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
-  userInfoContainer: {
-    alignItems: 'center',
-    gap: 8,
+  formContainer: {
+    gap: 20,
+    backgroundColor: colors.zinc[50],
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    marginVertical: 20,
+    borderRadius: 24,
+    alignItems: 'center'
+  },
+  formGroup: {
+    gap: 12,
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: fontFamily.medium,
+    color: colors.zinc[900],
   },
   userInfoAvatar: {
     width: 72,
@@ -18,19 +31,6 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     fontSize: 24,
     color: colors.zinc[50],
-  },
-  userInfoTextContainer: {
-    alignItems: 'center',
-  },
-  userInfoUsernameText: {
-    fontFamily: fontFamily.semiBold,
-    fontSize: 24,
-    color: colors.zinc[900],
-  },
-  userInfoUserEmailText: {
-    fontFamily: fontFamily.regular,
-    fontSize: 12,
-    color: colors.zinc[600],
   },
   userAvatarImage: {
     width: 72,

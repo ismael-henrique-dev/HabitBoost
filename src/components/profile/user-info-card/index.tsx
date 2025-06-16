@@ -1,4 +1,4 @@
-import { Text, View, Animated, Easing } from 'react-native'
+import { Text, View, Animated, Easing, Image } from 'react-native'
 import { styles } from './styles'
 import { useEffect, useState, useRef } from 'react'
 import {
@@ -6,9 +6,9 @@ import {
   GetProfileResponse,
 } from '@/services/http/user/get-profile'
 import { getInitials } from '@/utils/get-initials'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
-type UserData = Pick<GetProfileResponse, 'data'>
+export type UserData = Pick<GetProfileResponse, 'data'>
 
 type UserInfoCardProps = {
   isLogged: boolean
@@ -20,8 +20,10 @@ export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
   const opacity = useRef(new Animated.Value(1)).current
 
   useEffect(() => {
+    let animation: Animated.CompositeAnimation
+
     if (loading) {
-      Animated.loop(
+      animation = Animated.loop(
         Animated.sequence([
           Animated.timing(opacity, {
             toValue: 0.4,
@@ -36,15 +38,21 @@ export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
             easing: Easing.inOut(Easing.ease),
           }),
         ])
-      ).start()
+      )
+      animation.start()
     }
-  }, [loading, opacity, userIsLogged])
+
+    return () => {
+      animation?.stop()
+    }
+  }, [loading])
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await getProfile()
       if (response) {
         setUserData(response)
+        await AsyncStorage.setItem('@userData', JSON.stringify(response))
       }
       setLoading(false)
     }
@@ -96,9 +104,18 @@ export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
   return (
     <View style={styles.userInfoContainer}>
       <View style={styles.userInfoAvatar}>
-        <Text style={styles.userInfoAvatarText}>
-          {getInitials(userData?.data.username!)}
-        </Text>
+        {userData?.data.imageUrl ? (
+          <Image
+            source={{
+              uri: 'https://lh3.googleusercontent.com/a/ACg8ocLeR6AGRjYVsdLpX4wYC9brG_z2EdZ2hHlh-MyJPGpQeuD1kFA=s96-c',
+            }}
+            style={styles.userAvatarImage}
+          />
+        ) : (
+          <Text style={styles.userInfoAvatarText}>
+            {userData ? getInitials(userData.data.username) : '...'}
+          </Text>
+        )}
       </View>
       <View style={styles.userInfoTextContainer}>
         <Text style={styles.userInfoUsernameText}>

@@ -9,7 +9,7 @@ import { colors } from '@/styles/theme'
 import { router } from 'expo-router'
 import { useAuth } from '@/contexts/auth-context'
 
-export default function ProfileScreen() {
+export function ProfileScreen() {
   const { isLogged } = useAuth()
 
   return (
