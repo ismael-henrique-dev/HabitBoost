@@ -32,7 +32,7 @@ export function UpdateGoalForm() {
     resolver: zodResolver(updateGoalFormSchema),
     defaultValues: {
       title: goal?.title ?? '',
-      currentCount: goal?.currentCount ?? 0,
+      currentCount: goal?.currentCount ?? 1,
       targetCount: goal?.targetCount ?? 1,
     },
   })

@@ -1,6 +1,11 @@
-// src/contexts/AuthContext.tsx
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type AuthContextType = {
@@ -25,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function logout() {
     await AsyncStorage.removeItem('@token')
+    await AsyncStorage.clear()
     setIsLogged(false)
   }
 

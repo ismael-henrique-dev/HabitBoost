@@ -5,7 +5,7 @@ export const updateGoalFormSchema = z
     title: z
       .string()
       .min(3, 'O nome da meta deve ter pelo menos 3 caracteres.'),
-    currentCount: z.number().min(1, 'A meta deve ter pelo menos 1 repetição.'),
+    currentCount: z.number().min(0),
     targetCount: z.number().min(1, 'A meta deve ter pelo menos 1 repetição.'),
   })
   .refine((data) => data.currentCount <= data.targetCount, {
