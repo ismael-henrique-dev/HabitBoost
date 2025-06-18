@@ -1,4 +1,5 @@
 import { Button } from '../../button'
+import { UpdateUsernameForm } from '../../forms/update-username-form'
 import { ModalBase } from '../modal-base'
 
 
@@ -22,7 +23,7 @@ export function UpdateUsernameModal({
           Informe seu nome de usuário atual abaixo:
         </ModalBase.HeaderSubtitle>
 
-        
+        <UpdateUsernameForm />
 
       
       </ModalBase.Content>
