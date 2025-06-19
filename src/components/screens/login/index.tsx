@@ -38,6 +38,8 @@ export function LoginScreen() {
 
       console.log(data)
 
+      await AsyncStorage.clear() // resolver esse problema de quandpo o user faz login para sua conta, a data é deletada
+
       await AsyncStorage.setItem('@token', response.token)
       setIsLogged(true)
       router.navigate('/profile')

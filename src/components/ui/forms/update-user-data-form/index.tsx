@@ -5,11 +5,16 @@ import { getInitials } from '@/utils/get-initials'
 import { UserData } from '@/components/profile/user-info-card'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { UpdateUsernameModal } from '../../modals/update-username-modal/update-username-modal'
+import { UpdateUsernameModal } from '../../modals/update-username-modal'
+import { UpdateUserEmailModal } from '../../modals/update-user-email-modal'
+import { UpdateUserPasswordModal } from '../../modals/update-user-password-modal'
 
 export function UpdateUserDataForm() {
   const [userData, setUserData] = useState<UserData | null>(null)
   const [showUserUpdateDataModal, setShowUserUpdateDataModal] = useState(false)
+  const [showUserUpdateEmailModal, setShowUserUpdateEmailModal] =
+    useState(false)
+  const [showUserUpdatePassword, setShowUserUpdatePassword] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,8 +55,13 @@ export function UpdateUserDataForm() {
         <UpdateUserInfo
           placeholder='Opcional'
           defaultValue={userData?.data.email}
+          onOpenModal={setShowUserUpdateEmailModal}
         />
       </View>
+      <UpdateUserEmailModal
+        visible={showUserUpdateEmailModal}
+        onClose={() => setShowUserUpdateEmailModal(false)}
+      />
 
       {/* Username */}
       <View style={styles.formGroup}>
@@ -73,9 +83,14 @@ export function UpdateUserDataForm() {
         <UpdateUserInfo
           placeholder='Opcional'
           variant='password'
-          defaultValue='**********'
+          defaultValue='*******'
+          onOpenModal={setShowUserUpdatePassword}
         />
       </View>
+      <UpdateUserPasswordModal
+        visible={showUserUpdatePassword}
+        onClose={() => setShowUserUpdatePassword(false)}
+      />
     </View>
   )
 }

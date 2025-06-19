@@ -5,47 +5,45 @@ import { colors } from '@/styles/theme'
 import { Input } from '../../input'
 import { Button } from '../../button'
 import { ErrorMenssage } from '../../error-menssage'
-import { styles } from './styles'
 import { IconUser } from '@tabler/icons-react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  UpdateUsernameFormSchema,
-  updateUsernameFormSchema,
-} from '@/validators/user/update-username'
 import { ModalSeparator } from '../../separator'
-import { updateUsername } from '@/services/http/user/update-username'
 
-export function UpdateUsernameForm() {
+import { styles } from './styles'
+import {
+  updateUserPasswordFormSchema,
+  UpdateUserPasswordFormSchema,
+} from '@/validators/user/update-password'
+import { updateUserPassword } from '@/services/http/user/update-user-password'
+
+export function UpdateUserPasswordForm() {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<UpdateUsernameFormSchema>({
-    resolver: zodResolver(updateUsernameFormSchema),
+  } = useForm<UpdateUserPasswordFormSchema>({
+    resolver: zodResolver(updateUserPasswordFormSchema),
     defaultValues: {
-      newUsername: '',
-      oldUsername: '',
+      confirmPassword: '',
+      newPassword: '',
+      oldPassword: '',
     },
   })
 
-  const handleUpdateUsername = async (data: UpdateUsernameFormSchema) => {
+  const handleUpdateUserEmail = async (data: UpdateUserPasswordFormSchema) => {
     try {
-      const response = await updateUsername(data)
-
-      
-    } catch {
-
-    }
+      const response = await updateUserPassword(data)
+    } catch {}
   }
 
   return (
     <View style={styles.formContainer}>
       {/* Título da meta */}
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Nome de usuário atual:</Text>
+        <Text style={styles.label}>Senha atual:</Text>
         <Controller
           control={control}
-          name='oldUsername'
+          name='oldPassword'
           render={({ field: { value, onChange } }) => (
             <Input
               placeholder='Digite seu nome de usuário'
@@ -56,18 +54,38 @@ export function UpdateUsernameForm() {
             </Input>
           )}
         />
-        {errors.oldUsername && (
-          <ErrorMenssage>{errors.oldUsername.message}</ErrorMenssage>
+        {errors.oldPassword && (
+          <ErrorMenssage>{errors.oldPassword.message}</ErrorMenssage>
         )}
       </View>
+
       <ModalSeparator />
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Nova senha:</Text>
+        <Controller
+          control={control}
+          name='newPassword'
+          render={({ field: { value, onChange } }) => (
+            <Input
+              placeholder='Digite seu nome de usuário'
+              value={value}
+              onChangeText={onChange}
+            >
+              <Input.Icon icon={IconUser} />
+            </Input>
+          )}
+        />
+        {errors.newPassword && (
+          <ErrorMenssage>{errors.newPassword.message}</ErrorMenssage>
+        )}
+      </View>
 
       {/* Quantidade atual */}
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Novo nome de usuário: </Text>
+        <Text style={styles.label}>Confirmar sua nova senha:</Text>
         <Controller
           control={control}
-          name='newUsername'
+          name='confirmPassword'
           render={({ field: { value, onChange } }) => (
             <Input
               placeholder='Digite seu novo nome de usuário'
@@ -78,13 +96,13 @@ export function UpdateUsernameForm() {
             </Input>
           )}
         />
-        {errors.newUsername && (
-          <ErrorMenssage>{errors.newUsername.message}</ErrorMenssage>
+        {errors.confirmPassword && (
+          <ErrorMenssage>{errors.confirmPassword.message}</ErrorMenssage>
         )}
       </View>
 
       {/* Botões */}
-      <Button variant='secundary' onPress={handleSubmit(handleUpdateUsername)}>
+      <Button variant='secundary' onPress={handleSubmit(handleUpdateUserEmail)}>
         <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
       </Button>
 
