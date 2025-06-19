@@ -35,7 +35,7 @@ export function AccountActions() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Conta</Text>;
+      <Text style={styles.title}>Conta</Text>
       <Modal
         animationType='fade'
         transparent

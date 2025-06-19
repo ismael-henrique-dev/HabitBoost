@@ -30,7 +30,7 @@ export function HabitDetailsCard({ habit }: HabitDetailsCardProps) {
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.habitTitle}>{habit.title}</Text>
-          <IconCheck color={colors.zinc[900]} /> {/* Arrumar o status depois */}
+          <IconCheck color={colors.zinc[900]} />
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -38,9 +38,15 @@ export function HabitDetailsCard({ habit }: HabitDetailsCardProps) {
             dias no mês: {selectedDays.join(', ')}
           </Text>
           {habit.reminderTime && (
-            <>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Separator />
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 8,
+                }}
+              >
                 <IconBell color={colors.zinc[900]} size={16} />
                 <Text
                   style={{
@@ -52,7 +58,7 @@ export function HabitDetailsCard({ habit }: HabitDetailsCardProps) {
                   {habit.reminderTime}
                 </Text>
               </View>
-            </>
+            </View>
           )}
         </View>
       </View>
