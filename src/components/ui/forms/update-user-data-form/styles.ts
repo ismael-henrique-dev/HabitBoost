@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginVertical: 20,
     borderRadius: 24,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   formGroup: {
     gap: 12,
@@ -37,5 +37,21 @@ export const styles = StyleSheet.create({
     height: 72,
     borderRadius: 1234,
     resizeMode: 'cover',
+  },
+  userInfoAvatarContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  editAvatarButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: colors.zinc[200],
+    borderRadius: 1234,
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })

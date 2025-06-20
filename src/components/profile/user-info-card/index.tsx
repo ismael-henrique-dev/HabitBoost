@@ -107,7 +107,7 @@ export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
         {userData?.data.imageUrl ? (
           <Image
             source={{
-              uri: 'https://lh3.googleusercontent.com/a/ACg8ocLeR6AGRjYVsdLpX4wYC9brG_z2EdZ2hHlh-MyJPGpQeuD1kFA=s96-c',
+              uri: userData.data.imageUrl,
             }}
             style={styles.userAvatarImage}
           />
