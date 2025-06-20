@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Goal } from '@/types/goal'
+import { getGoals } from '@/services/http/goals/get-goals'
+import { useAuth } from './auth-context'
 
 type GoalContextData = {
   goals: Goal[]
@@ -14,17 +16,32 @@ const GoalContext = createContext<GoalContextData>({} as GoalContextData)
 
 export function GoalProvider({ children }: { children: React.ReactNode }) {
   const [goals, setGoals] = useState<Goal[]>([])
+  const { isLogged } = useAuth()
 
   useEffect(() => {
     async function loadGoals() {
-      const storedGoals = await AsyncStorage.getItem('@goalList')
-      if (storedGoals) {
-        setGoals(JSON.parse(storedGoals))
+      try {
+        if (isLogged) {
+          // 🔐 Se logado: buscar da API
+          const response = await getGoals()
+          const allGoals = response.Goals
+
+          setGoals(allGoals)
+          await AsyncStorage.setItem('@goalList', JSON.stringify(allGoals))
+        } else {
+          // 📦 Se não logado: pegar do AsyncStorage
+          const storedGoals = await AsyncStorage.getItem('@goalList')
+          if (storedGoals) {
+            setGoals(JSON.parse(storedGoals))
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar metas:', error)
       }
     }
 
     loadGoals()
-  }, [])
+  }, [isLogged])
 
   async function saveGoals(updatedGoals: Goal[]) {
     setGoals(updatedGoals)

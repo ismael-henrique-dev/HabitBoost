@@ -4,7 +4,8 @@ import { Habit, HabitStatus } from '@/types/habit'
 import dayjs from 'dayjs'
 import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
 import { useAuth } from './auth-context'
-
+import { getHabits } from '@/services/http/habits/get-habits'
+import { scheduleHabitNotificationsForDates } from '@/utils/schedule-habit-notifications-for-dates'
 
 type HabitContextData = {
   habits: Habit[]
@@ -36,12 +37,22 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function loadHabits() {
-      const storedHabits = await AsyncStorage.getItem('@habitsList')
-      if (storedHabits) {
-        const habitsArray: Habit[] = JSON.parse(storedHabits)
-        const today = dayjs().startOf('day')
+      const today = dayjs().startOf('day')
 
-        // Atualiza status para 'missed' se não foi concluído em dias anteriores
+      try {
+        let habitsArray: Habit[] = []
+
+        if (isLogged) {
+          const response = await getHabits()
+          habitsArray = response.habits
+          await AsyncStorage.setItem('@habitsList', JSON.stringify(habitsArray))
+        } else {
+          const storedHabits = await AsyncStorage.getItem('@habitsList')
+          if (storedHabits) {
+            habitsArray = JSON.parse(storedHabits)
+          }
+        }
+
         const updatedHabits = habitsArray.map((habit) => {
           const statusByDate = { ...habit.statusByDate }
           Object.keys(statusByDate || {}).forEach((date) => {
@@ -56,13 +67,36 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         })
 
         setHabits(updatedHabits)
-        // Atualiza o AsyncStorage também, se desejar persistir a mudança
         await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
+
+        // ✅ Agendar notificações
+        for (const habit of updatedHabits) {
+          if (
+            habit.reminderTime &&
+            Array.isArray(habit.days) &&
+            habit.days.length > 0
+          ) {
+            try {
+              await scheduleHabitNotificationsForDates(
+                habit.title,
+                habit.reminderTime,
+                habit.days
+              )
+            } catch (err) {
+              console.error(
+                `Erro ao agendar notificação para o hábito "${habit.title}":`,
+                err
+              )
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar hábitos:', error)
       }
     }
 
     loadHabits()
-  }, [])
+  }, [isLogged])
 
   async function updateHabit(id: string, habit: Habit) {
     const updatedHabits = habits.map((beforeHabit) => {

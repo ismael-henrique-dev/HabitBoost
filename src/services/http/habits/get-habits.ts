@@ -3,7 +3,11 @@ import { Habit } from '@/types/habit'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function getHabits(): Promise<Habit[]> {
+type GetHabitsResponse = {
+  habits: Habit[]
+}
+
+export async function getHabits(): Promise<GetHabitsResponse> {
   const token = await AsyncStorage.getItem('@token')
 
   if (!token) {
@@ -11,7 +15,7 @@ export async function getHabits(): Promise<Habit[]> {
   }
 
   try {
-    const response = await api.get<Habit[]>('/profile/get/habits', {
+    const response = await api.get<GetHabitsResponse>('/profile/get/habits', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

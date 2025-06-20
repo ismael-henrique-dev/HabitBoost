@@ -9,8 +9,7 @@ export type GetProfileResponse = {
 
 export async function getProfile(): Promise<GetProfileResponse | undefined> {
   try {
-    const token = await AsyncStorage.getItem('@token')
-    console.log(token)
+    const token = await AsyncStorage.getItem('@token') 
 
     if (token) {
       const response = await api.get<GetProfileResponse>('user/get', {

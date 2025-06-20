@@ -116,8 +116,6 @@ function Category({ categoryId }: { categoryId: string }) {
 
   const selectedCategory = categories.find((c) => c.id === categoryId)
 
-  console.log('Id da categororia selecionada: ', selectedCategory)
-
   if (!selectedCategory) {
     return (
       <View style={styles.category}>
