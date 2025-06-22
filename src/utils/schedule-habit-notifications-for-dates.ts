@@ -11,7 +11,10 @@ export async function scheduleHabitNotificationsForDates(
   const minute = parseInt(minuteStr)
 
   for (const dateString of dates) {
-    const dateTime = dayjs(dateString).set('hour', hour).set('minute', minute).set('second', 0)
+    const dateTime = dayjs(dateString)
+      .set('hour', hour)
+      .set('minute', minute)
+      .set('second', 0)
 
     if (dateTime.isBefore(dayjs())) continue
 
@@ -21,7 +24,10 @@ export async function scheduleHabitNotificationsForDates(
         body: `Hora de realizar: ${title}`,
         sound: true,
       },
-      trigger: dateTime.toDate() as unknown as Notifications.NotificationTriggerInput,
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DATE, 
+        date: dateTime.valueOf(),
+      },
     })
   }
 }
