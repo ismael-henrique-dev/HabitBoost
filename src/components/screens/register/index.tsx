@@ -41,6 +41,7 @@ export function RegisterScreen() {
       setIsLoading(true)
       await register(registerData)
       console.log(data)
+      router.navigate('/account-activation')
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)

@@ -1,7 +1,6 @@
 import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import { UpdateUserEmailFormSchema } from '@/validators/user/update-email'
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type CreateHabitResponse = {
@@ -15,7 +14,7 @@ export async function updateUserEmail(
     const token = await AsyncStorage.getItem('@token')
     if (token) {
       const response = await api.patch<CreateHabitResponse>(
-        'update/email',
+        'update/email/request',
         data,
         {
           headers: {

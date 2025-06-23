@@ -10,6 +10,7 @@ export const s = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 8,
+   
   },
   default: {
     backgroundColor: colors.zinc[200],
