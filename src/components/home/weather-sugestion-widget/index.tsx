@@ -4,12 +4,7 @@ import {
   IconSun,
   IconX,
 } from '@tabler/icons-react-native'
-import {
-  Alert,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Alert, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
@@ -19,10 +14,10 @@ import { getSuggestionByWeather } from '@/utils/get-suggestion-by-weather'
 import { translateWeather } from '@/utils/translate-weather'
 import { useSettings } from '@/hooks/use-settings'
 import { WeatherSuggestionSkeleton } from '@/components/ui/skeletons/weather-widget-skeleton'
-
+import { weatherIconsMap } from '@/utils/weather-icons-map'
 
 type WeatherData = {
-  weather: { main: string; description: string }[]
+  weather: { main: string; description: string; icon: string }[]
   main: { temp: number }
 }
 
@@ -116,6 +111,8 @@ export function WeatherSuggestionWidget() {
   if (permissionLocationStatus === 'granted' && weather) {
     const clima = weather.weather[0].main
     const sugestao = getSuggestionByWeather(clima)
+    const iconCode = weather.weather[0].icon
+    const WeatherIcon = weatherIconsMap[iconCode]
 
     return (
       <View
@@ -128,7 +125,7 @@ export function WeatherSuggestionWidget() {
       >
         <View style={styles.header}>
           <View style={styles.headerGroup}>
-            {clima && <IconSun size={24} color={colors.zinc[50]} />}
+            {WeatherIcon && <WeatherIcon size={24} color={colors.zinc[50]} />}
             <Text style={styles.title}>{translateWeather(clima)}</Text>
           </View>
         </View>

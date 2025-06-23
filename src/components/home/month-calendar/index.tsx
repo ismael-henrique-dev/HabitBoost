@@ -1,6 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native'
 import { useState, useRef, useEffect } from 'react'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/pt-br'
 import { styles } from './styles'
 import { useHabit } from '@/contexts/habit-context'
@@ -36,7 +42,7 @@ export function MonthCalendar() {
 
   // Gera dias do primeiro hábito até 1 mês após o dia atual
   const endDate = today.add(1, 'month') // Define o limite como hoje + 1 mês
-  const daysOfMonth = []
+  const daysOfMonth: Dayjs[] = []
   for (
     let date = firstHabitDate;
     date.isBefore(endDate) || date.isSame(endDate, 'day');
@@ -50,12 +56,25 @@ export function MonthCalendar() {
 
   useEffect(() => {
     if (itemWidth > 0) {
-      scrollRef.current?.scrollTo({
-        x: todayIndex * itemWidth,
-        animated: true,
-      })
+      const todayPositionIndex = daysOfMonth.findIndex((date) =>
+        date.isSame(today, 'day')
+      )
+
+      const screenWidth = Dimensions.get('window').width
+      const scrollOffset =
+        todayPositionIndex * itemWidth - screenWidth / 2 + itemWidth / 2
+
+      // Só centraliza se não for o primeiro hábito
+      const isFirstHabitToday = firstHabitDate.isSame(today, 'day')
+
+      if (!isFirstHabitToday) {
+        scrollRef.current?.scrollTo({
+          x: scrollOffset > 0 ? scrollOffset : 0,
+          animated: true,
+        })
+      }
     }
-  }, [itemWidth])
+  }, [itemWidth, daysOfMonth])
 
   const handleItemLayout = (event: any) => {
     const { width } = event.nativeEvent.layout
