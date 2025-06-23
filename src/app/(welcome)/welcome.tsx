@@ -1,4 +1,4 @@
-import { WelcomeScreen } from '@/components/screens/welcome'
+import { WelcomeScreen } from '@/screens/welcome'
 
 export default function Welcome() {
   return <WelcomeScreen />

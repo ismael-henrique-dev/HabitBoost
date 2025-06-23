@@ -1,4 +1,4 @@
-import { OverviewScreen } from '@/components/screens/overview'
+import { OverviewScreen } from '@/screens/overview'
 
 export default function Overview() {
   return <OverviewScreen />

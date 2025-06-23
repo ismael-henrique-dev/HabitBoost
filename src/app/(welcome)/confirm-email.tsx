@@ -1,4 +1,4 @@
-import { ConfirmEmailScreen } from '@/components/screens/confirm-email'
+import { ConfirmEmailScreen } from '@/screens/confirm-email'
 
 export default function ConfirmEmail() {
   return <ConfirmEmailScreen />

@@ -1,4 +1,4 @@
-import { CreateGoalScreen } from '@/components/screens/create-goal'
+import { CreateGoalScreen } from '@/screens/create-goal'
 
 export default function CreateGoal() {
   return <CreateGoalScreen />

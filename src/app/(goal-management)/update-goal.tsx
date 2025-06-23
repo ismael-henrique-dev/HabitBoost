@@ -1,4 +1,4 @@
-import { UpdateGoalScreen } from '@/components/screens/update-goal'
+import { UpdateGoalScreen } from '@/screens/update-goal'
 
 export default function UpdateGoal() {
   return <UpdateGoalScreen />

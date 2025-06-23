@@ -1,5 +1,4 @@
-import { HabitDetailsScreen } from "@/components/screens/habit-details";
-
+import { HabitDetailsScreen } from '@/screens/habit-details'
 
 export default function HabitDetails() {
   return <HabitDetailsScreen />

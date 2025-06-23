@@ -1,4 +1,4 @@
-import { CreateHabitScreen } from '@/components/screens/create-habit'
+import { CreateHabitScreen } from '@/screens/create-habit'
 
 export default function CreateHabit() {
   return <CreateHabitScreen />

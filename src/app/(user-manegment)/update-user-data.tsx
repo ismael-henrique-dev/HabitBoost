@@ -1,4 +1,4 @@
-import { UpdateUserDataScreen } from '@/components/screens/update-user-data'
+import { UpdateUserDataScreen } from '@/screens/update-user-data'
 
 export default function UpdateUserData() {
   return <UpdateUserDataScreen />
