@@ -71,6 +71,13 @@ function RootLayoutNav() {
   )
 }
 
+type MyVariantsMap = {
+  custom: {
+    customTitle: string
+    type: 'success' | 'error' | 'info'
+  }
+}
+
 // ② Só aqui, **dentro** do SettingsProvider, podemos chamar useSettings()
 function InnerRoutes() {
   const { NotificationsProvider } = createNotifications({

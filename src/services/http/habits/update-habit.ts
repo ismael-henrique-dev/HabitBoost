@@ -22,8 +22,8 @@ export async function updateHabitOnServer(habitId: string, data: Habit) {
     const statusCode = getAxiosStatusCode(error)
 
     switch (statusCode) {
-      case 409:
-        throw new Error('Este nome ou email já está em uso.')
+      case 404:
+        throw new Error('Categoria do hábito não encontrada.')
       case 500:
         throw new Error('Erro interno no servidor.')
       default:

@@ -20,6 +20,7 @@ import {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
 import { useState } from 'react'
+import { getErrorMessage } from '@/utils/get-error-menssage'
 
 export function UpdateHabitForm() {
   const { isLogged } = useAuth()
@@ -48,17 +49,16 @@ export function UpdateHabitForm() {
   })
 
   const [date, setDate] = useState(() => {
-  if (habit?.reminderTime) {
-    const [hour, minute] = habit.reminderTime.split(':').map(Number)
-    const now = new Date()
-    now.setHours(hour)
-    now.setMinutes(minute)
-    now.setSeconds(0)
-    return now
-  }
-  return new Date()
-})
-
+    if (habit?.reminderTime) {
+      const [hour, minute] = habit.reminderTime.split(':').map(Number)
+      const now = new Date()
+      now.setHours(hour)
+      now.setMinutes(minute)
+      now.setSeconds(0)
+      return now
+    }
+    return new Date()
+  })
 
   const handleUpdateHabit = async (data: HabitFormData) => {
     try {
@@ -91,19 +91,29 @@ export function UpdateHabitForm() {
         }
       }
 
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Habito atualizado com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
       router.navigate('/')
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
 
-      // notify('custom', {
-      //   params: {
-      //     customTitle: 'Habito criado com sucesso!',
-      //     type: 'success',
-      //   },
-      //   config: {
-      //     duration: 2000,
-      //   },
-      // })
-    } catch (error) {
-      console.error('Erro ao criar hábito:', error)
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+      console.error('Erro ao atualizar o hábito:', error)
     }
   }
 

@@ -12,7 +12,8 @@ import { useHabit } from '@/contexts/habit-context'
 import { router } from 'expo-router'
 import { deleteHabitOnServer } from '@/services/http/habits/delete-habit'
 import { useAuth } from '@/contexts/auth-context'
-
+import { getErrorMessage } from '@/utils/get-error-menssage'
+import { notify } from 'react-native-notificated'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -35,13 +36,36 @@ export function HabitOptionsBottomSheet({
   }, [])
 
   async function handleDeleteHabit(id: string) {
-    if (isLogged) {
-      await deleteHabitOnServer(id)
-      deleteHabit(id)
-    } else {
-      deleteHabit(id)
+    try {
+      if (isLogged) {
+        await deleteHabitOnServer(id)
+        deleteHabit(id)
+      } else {
+        deleteHabit(id)
+      }
+
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Habito deletado com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+      console.log(error)
     }
-    // colocar toast aqui
   }
 
   return (

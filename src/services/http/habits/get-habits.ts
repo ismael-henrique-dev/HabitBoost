@@ -31,7 +31,7 @@ export async function getHabits(): Promise<GetHabitsResponse> {
       case 401:
         throw new Error('Não autorizado. Verifique seu login.')
       case 404:
-        throw new Error('Hábitos não encontrados.')
+        throw new Error('Usuário não encontrado.')
       case 500:
         throw new Error('Erro interno no servidor.')
       default:

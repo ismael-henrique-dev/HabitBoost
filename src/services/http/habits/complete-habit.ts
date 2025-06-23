@@ -12,7 +12,7 @@ export async function completeHabitOnServer(habitId: string, data: CompleteHabit
   try {
     const token = await AsyncStorage.getItem('@token')
     if (token) {
-      const response = await api.patch(`update/habit/status/${habitId}`, data, {
+      const response = await api.patch<CompleteHabitData>(`update/habit/status/${habitId}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,8 +27,6 @@ export async function completeHabitOnServer(habitId: string, data: CompleteHabit
     const statusCode = getAxiosStatusCode(error)
 
     switch (statusCode) {
-      case 409:
-        throw new Error('Este nome ou email já está em uso.')
       case 500:
         throw new Error('Erro interno no servidor.')
       default:

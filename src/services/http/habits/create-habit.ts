@@ -32,8 +32,6 @@ export async function createHabitOnServer(
     const statusCode = getAxiosStatusCode(error)
 
     switch (statusCode) {
-      case 409:
-        throw new Error('Este nome ou email já está em uso.')
       case 500:
         throw new Error('Erro interno no servidor.')
       default:

@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { HabitFormData, habitFormSchema } from '@/validators/habit/create-habit'
 import { Input } from '../../input'
@@ -21,6 +21,7 @@ import {
 import { createHabitOnServer } from '@/services/http/habits/create-habit'
 import { useAuth } from '@/contexts/auth-context'
 import { scheduleHabitNotificationsForDates } from '@/utils/schedule-habit-notifications-for-dates'
+import { getErrorMessage } from '@/utils/get-error-menssage'
 
 export function CreateHabitForm() {
   const { isLogged } = useAuth()
@@ -112,16 +113,27 @@ export function CreateHabitForm() {
 
       router.navigate('/')
 
-      // notify('custom', {
-      //   params: {
-      //     customTitle: 'Habito criado com sucesso!',
-      //     type: 'success',
-      //   },
-      //   config: {
-      //     duration: 2000,
-      //   },
-      // })
-    } catch (error) {
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Habito criado com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
       console.error('Erro ao criar hábito:', error)
     }
   }
@@ -166,21 +178,19 @@ export function CreateHabitForm() {
       <View style={styles.formGroup}>
         <Text style={styles.label}>Horário do lembrete:</Text>
         {/* <TouchableOpacity onPress={showTimepicker}> */}
-          <Controller
-            control={control}
-            name='reminderTime'
-            render={({ field: { value } }) => (
-              <Input
-                placeholder={
-                  value
-                    ? `Selecionado: ${value}`
-                    : 'Selecionar horário(opcional)'
-                }
-                value={value}
-                onPress={showTimepicker}
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name='reminderTime'
+          render={({ field: { value } }) => (
+            <Input
+              placeholder={
+                value ? `Selecionado: ${value}` : 'Selecionar horário(opcional)'
+              }
+              value={value}
+              onPress={showTimepicker}
+            />
+          )}
+        />
         {/* </TouchableOpacity> */}
       </View>
 
