@@ -1,6 +1,6 @@
 import { UpdateUserDataForm } from '@/components/ui/forms/update-user-data-form'
 import { colors } from '@/styles/theme'
-import { ScrollView, Text } from 'react-native'
+import { ScrollView } from 'react-native'
 
 export function UpdateUserDataScreen() {
   return (

@@ -1,11 +1,11 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { Text, ToastAndroid, View } from 'react-native'
 import { router } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { Input } from '../../input'
 import { Button } from '../../button'
 import { ErrorMenssage } from '../../error-menssage'
-import { IconUser } from '@tabler/icons-react-native'
+import { IconLock, IconMail, IconUser } from '@tabler/icons-react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ModalSeparator } from '../../separator'
 import { styles } from './styles'
@@ -14,12 +14,15 @@ import {
   UpdateUserEmailFormSchema,
 } from '@/validators/user/update-email'
 import { updateUserEmail } from '@/services/http/user/update-user-email'
+import { useState } from 'react'
 
 export function UpdateUserEmailForm() {
+  const [isLoading, setIsLoading] = useState(false)
+
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<UpdateUserEmailFormSchema>({
     resolver: zodResolver(updateUserEmailFormSchema),
     defaultValues: {
@@ -27,17 +30,24 @@ export function UpdateUserEmailForm() {
       oldEmail: '',
       password: '',
     },
+    mode: 'onChange', // importante para isValid funcionar em tempo real
   })
 
   const handleUpdateUserEmail = async (data: UpdateUserEmailFormSchema) => {
     try {
-      const response = await updateUserEmail(data)
-    } catch {}
+      setIsLoading(true)
+      await updateUserEmail(data)
+      router.navigate('/profile')
+    } catch {
+      ToastAndroid.show('Erro ao atualizar email', 300)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <View style={styles.formContainer}>
-      {/* Título da meta */}
+      {/* Email atual */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>Email atual:</Text>
         <Controller
@@ -45,11 +55,11 @@ export function UpdateUserEmailForm() {
           name='oldEmail'
           render={({ field: { value, onChange } }) => (
             <Input
-              placeholder='Digite seu nome de usuário'
+              placeholder='Digite seu email atual'
               value={value}
               onChangeText={onChange}
             >
-              <Input.Icon icon={IconUser} />
+              <Input.Icon icon={IconMail} />
             </Input>
           )}
         />
@@ -57,6 +67,8 @@ export function UpdateUserEmailForm() {
           <ErrorMenssage>{errors.oldEmail.message}</ErrorMenssage>
         )}
       </View>
+
+      {/* Senha atual */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>Senha atual:</Text>
         <Controller
@@ -64,11 +76,13 @@ export function UpdateUserEmailForm() {
           name='password'
           render={({ field: { value, onChange } }) => (
             <Input
-              placeholder='Digite seu nome de usuário'
+              placeholder='Digite sua senha'
               value={value}
               onChangeText={onChange}
+              secureTextEntry={true}
+              variant='password'
             >
-              <Input.Icon icon={IconUser} />
+              <Input.Icon icon={IconLock} />
             </Input>
           )}
         />
@@ -76,21 +90,22 @@ export function UpdateUserEmailForm() {
           <ErrorMenssage>{errors.password.message}</ErrorMenssage>
         )}
       </View>
+
       <ModalSeparator />
 
-      {/* Quantidade atual */}
+      {/* Novo email */}
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Novo nome de usuário: </Text>
+        <Text style={styles.label}>Novo email: </Text>
         <Controller
           control={control}
           name='newEmail'
           render={({ field: { value, onChange } }) => (
             <Input
-              placeholder='Digite seu novo nome de usuário'
+              placeholder='Digite seu novo email'
               value={value}
               onChangeText={onChange}
             >
-              <Input.Icon icon={IconUser} />
+              <Input.Icon icon={IconMail} />
             </Input>
           )}
         />
@@ -100,11 +115,16 @@ export function UpdateUserEmailForm() {
       </View>
 
       {/* Botões */}
-      <Button variant='secundary' onPress={handleSubmit(handleUpdateUserEmail)}>
+      <Button
+        variant='secundary'
+        onPress={handleSubmit(handleUpdateUserEmail)}
+        disabled={isLoading || !isValid}
+        isLoading={isLoading}
+      >
         <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
       </Button>
 
-      <Button onPress={() => router.back()}>
+      <Button onPress={() => router.back()} disabled={isLoading}>
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>

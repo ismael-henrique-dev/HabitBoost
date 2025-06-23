@@ -10,6 +10,7 @@ export function ValidateUpdateEmailScreen() {
 
   useEffect(() => {
     const validateEmail = async () => {
+      console.log(token)
       try {
         await ValidateUserUpdateEmail(token as string)
         router.navigate('/profile')

@@ -165,17 +165,23 @@ export function CreateHabitForm() {
       {/* Relógio aqui dps */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>Horário do lembrete:</Text>
-        <TouchableOpacity onPress={showTimepicker}>
+        {/* <TouchableOpacity onPress={showTimepicker}> */}
           <Controller
             control={control}
             name='reminderTime'
             render={({ field: { value } }) => (
-              <Text style={{ color: colors.lime[500], fontSize: 16 }}>
-                {value ? `Selecionado: ${value}` : 'Selecionar horário'}
-              </Text>
+              <Input
+                placeholder={
+                  value
+                    ? `Selecionado: ${value}`
+                    : 'Selecionar horário(opcional)'
+                }
+                value={value}
+                onPress={showTimepicker}
+              />
             )}
           />
-        </TouchableOpacity>
+        {/* </TouchableOpacity> */}
       </View>
 
       <View style={styles.formGroup}>

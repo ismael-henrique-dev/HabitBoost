@@ -15,7 +15,11 @@ import { notify } from 'react-native-notificated'
 import { Habit } from '@/types/habit'
 import { updateHabitOnServer } from '@/services/http/habits/update-habit'
 import { useAuth } from '@/contexts/auth-context'
-
+import {
+  DateTimePickerAndroid,
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker'
+import { useState } from 'react'
 
 export function UpdateHabitForm() {
   const { isLogged } = useAuth()
@@ -27,6 +31,7 @@ export function UpdateHabitForm() {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<HabitFormData>({
     resolver: zodResolver(habitFormSchema),
@@ -41,6 +46,19 @@ export function UpdateHabitForm() {
       reminderTime: habit?.reminderTime ?? '',
     },
   })
+
+  const [date, setDate] = useState(() => {
+  if (habit?.reminderTime) {
+    const [hour, minute] = habit.reminderTime.split(':').map(Number)
+    const now = new Date()
+    now.setHours(hour)
+    now.setMinutes(minute)
+    now.setSeconds(0)
+    return now
+  }
+  return new Date()
+})
+
 
   const handleUpdateHabit = async (data: HabitFormData) => {
     try {
@@ -89,6 +107,34 @@ export function UpdateHabitForm() {
     }
   }
 
+  const onChange = (
+    event: DateTimePickerEvent,
+    selectedDate?: Date | undefined
+  ) => {
+    if (selectedDate) {
+      setDate(selectedDate)
+
+      const timeString = selectedDate.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+
+      setValue('reminderTime', timeString)
+    }
+  }
+
+  const showTimepicker = () => {
+    DateTimePickerAndroid.open({
+      value: date,
+      onChange,
+      mode: 'time',
+      is24Hour: true,
+      display: 'clock',
+      minimumDate: new Date(),
+    })
+  }
+
   return (
     <View style={styles.formContainer}>
       {/* Title */}
@@ -128,20 +174,21 @@ export function UpdateHabitForm() {
       {/* Relógio aqui dps */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>Horário do lembrete:</Text>
+        {/* <TouchableOpacity onPress={showTimepicker}> */}
         <Controller
           control={control}
           name='reminderTime'
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { value } }) => (
             <Input
-              placeholder='Opcional'
+              placeholder={
+                value ? `Selecionado: ${value}` : 'Selecionar horário(opcional)'
+              }
               value={value}
-              onChangeText={onChange}
+              onPress={showTimepicker}
             />
           )}
         />
-        {errors.reminderTime && (
-          <ErrorMenssage>{errors.reminderTime.message}</ErrorMenssage>
-        )}
+        {/* </TouchableOpacity> */}
       </View>
 
       <View style={styles.formGroup}>
