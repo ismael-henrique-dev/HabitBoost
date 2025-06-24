@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Goal } from '@/types/goal'
 import { getGoals } from '@/services/http/goals/get-goals'
 import { useAuth } from './auth-context'
+import { updateGoalOnServer } from '@/services/http/goals/update-goal'
 
 type GoalContextData = {
   goals: Goal[]
@@ -65,17 +66,26 @@ export function GoalProvider({ children }: { children: React.ReactNode }) {
     saveGoals(updatedGoals)
   }
 
-  function completeGoal(id: string) {
-    const updatedGoals = goals.map((goal) => {
-      if (goal.id === id) {
-        return {
-          ...goal,
-          currentCount: goal.currentCount + 1,
-        }
-      }
-      return goal
-    })
+  async function completeGoal(id: string) {
+    const goal = goals.find((goal) => goal.id === id)
+    if (!goal) return
+
+    const updatedGoal: Goal = {
+      ...goal,
+      currentCount: goal.currentCount + 1,
+      updatedAt: new Date(),
+    }
+
+    if (isLogged) {
+      await updateGoalOnServer(id, updatedGoal)
+    }
+
+    const updatedGoals = goals.map((goal) =>
+      goal.id === id ? updatedGoal : goal
+    )
+
     saveGoals(updatedGoals)
+    updateGoal(id, updatedGoal)
   }
 
   return (

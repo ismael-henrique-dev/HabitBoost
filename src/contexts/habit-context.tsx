@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
 import { useAuth } from './auth-context'
 import { getHabits } from '@/services/http/habits/get-habits'
-import { scheduleHabitNotificationsForDates } from '@/utils/schedule-habit-notifications-for-dates'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 
 type HabitContextData = {
@@ -69,28 +68,6 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
 
         setHabits(updatedHabits)
         await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
-
-        // ✅ Agendar notificações
-        // for (const habit of updatedHabits) {
-        //   if (
-        //     habit.reminderTime &&
-        //     Array.isArray(habit.days) &&
-        //     habit.days.length > 0
-        //   ) {
-        //     try {
-        //       await scheduleHabitNotificationsForDates(
-        //         habit.title,
-        //         habit.reminderTime,
-        //         habit.days
-        //       )
-        //     } catch (err) {
-        //       console.error(
-        //         `Erro ao agendar notificação para o hábito "${habit.title}":`,
-        //         err
-        //       )
-        //     }
-        //   }
-        // }
       } catch (responseError) {
         const error = getErrorMessage(responseError)
         console.log(error)
@@ -128,9 +105,23 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
 
     const updatedHabits = habits.map((habit) => {
       if (habit.id === id) {
-        const currentStatus = habit.statusByDate?.[date] ?? 'unstarted'
-        const newStatus: HabitStatus =
-          currentStatus === 'concluded' ? 'unstarted' : 'concluded'
+        let newStatus: HabitStatus
+        const currentStatus = habit.statusByDate?.[date]
+        const today = dayjs().startOf('day')
+        const isPast = dayjs(date).isBefore(today)
+
+        if (currentStatus === 'concluded' && isPast) {
+          newStatus = 'missed'
+        } else if (
+          currentStatus === 'unstarted' ||
+          currentStatus === 'missed'
+        ) {
+          newStatus = 'concluded'
+        } else if(currentStatus === "concluded") {
+          newStatus = "unstarted"
+        } else {
+          newStatus = currentStatus
+        }
 
         const updatedHabit = {
           ...habit,
