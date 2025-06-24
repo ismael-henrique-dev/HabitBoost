@@ -16,7 +16,8 @@ import { useGoal } from '@/contexts/goal-context'
 import { Goal } from '@/types/goal'
 import { createGoalOnServer } from '@/services/http/goals/create-goal'
 import { useAuth } from '@/contexts/auth-context'
-
+import { notify } from 'react-native-notificated'
+import { getErrorMessage } from '@/utils/get-error-menssage'
 
 export function CreateGoalForm() {
   const { isLogged } = useAuth()
@@ -52,9 +53,31 @@ export function CreateGoalForm() {
       } else {
         createGoal(goal)
       }
+
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Meta criada com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+
       router.back()
-    } catch (error) {
-      console.error('Erro ao criar meta:', error)
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+      console.error('Erro ao criar hábito:', error)
     }
   }
 
@@ -83,13 +106,13 @@ export function CreateGoalForm() {
           name='targetCount'
           render={({ field: { onChange, value } }) => (
             <Input
+              keyboardType='numeric'
               placeholder='1x'
               value={value?.toString() ?? ''}
               onChangeText={(text) => {
                 const numeric = Number(text)
                 onChange(isNaN(numeric) ? 0 : numeric)
               }}
-              keyboardType='numeric'
             />
           )}
         />

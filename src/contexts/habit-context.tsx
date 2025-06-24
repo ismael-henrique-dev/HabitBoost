@@ -6,6 +6,7 @@ import { completeHabitOnServer } from '@/services/http/habits/complete-habit'
 import { useAuth } from './auth-context'
 import { getHabits } from '@/services/http/habits/get-habits'
 import { scheduleHabitNotificationsForDates } from '@/utils/schedule-habit-notifications-for-dates'
+import { getErrorMessage } from '@/utils/get-error-menssage'
 
 type HabitContextData = {
   habits: Habit[]
@@ -70,28 +71,29 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         await AsyncStorage.setItem('@habitsList', JSON.stringify(updatedHabits))
 
         // ✅ Agendar notificações
-        for (const habit of updatedHabits) {
-          if (
-            habit.reminderTime &&
-            Array.isArray(habit.days) &&
-            habit.days.length > 0
-          ) {
-            try {
-              await scheduleHabitNotificationsForDates(
-                habit.title,
-                habit.reminderTime,
-                habit.days
-              )
-            } catch (err) {
-              console.error(
-                `Erro ao agendar notificação para o hábito "${habit.title}":`,
-                err
-              )
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao carregar hábitos:', error)
+        // for (const habit of updatedHabits) {
+        //   if (
+        //     habit.reminderTime &&
+        //     Array.isArray(habit.days) &&
+        //     habit.days.length > 0
+        //   ) {
+        //     try {
+        //       await scheduleHabitNotificationsForDates(
+        //         habit.title,
+        //         habit.reminderTime,
+        //         habit.days
+        //       )
+        //     } catch (err) {
+        //       console.error(
+        //         `Erro ao agendar notificação para o hábito "${habit.title}":`,
+        //         err
+        //       )
+        //     }
+        //   }
+        // }
+      } catch (responseError) {
+        const error = getErrorMessage(responseError)
+        console.log(error)
       }
     }
 
