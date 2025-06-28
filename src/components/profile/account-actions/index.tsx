@@ -13,10 +13,13 @@ import { Button } from '@/components/ui'
 import { deleteUserOnServer } from '@/services/http/user/delete-user'
 import { useAuth } from '@/contexts/auth-context'
 import { router } from 'expo-router'
+import { notify } from 'react-native-notificated'
+import { getErrorMessage } from '@/utils/get-error-menssage'
 
 export function AccountActions() {
   const [modalVisible, setModalVisible] = useState(false)
   const { setIsLogged, logout } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
   async function hableLogout() {
     await logout()
@@ -25,11 +28,35 @@ export function AccountActions() {
 
   async function handleDeleteUserAccount() {
     try {
+      setIsLoading(true)
       await deleteUserOnServer()
       await logout()
       setIsLogged(false)
-    } catch {
-      console.log('erro')
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Conta deletada com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+      setModalVisible(false)
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+      console.log(error)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -46,10 +73,15 @@ export function AccountActions() {
           <ModalContent
             setModalVisible={() => setModalVisible(false)}
             anyFunction={handleDeleteUserAccount}
+            isLoading={isLoading}
           />
         </View>
       </Modal>
-      <ActionItem icon={IconUserEdit} label='Alterar dados cadastrais' onPress={() => router.navigate('/update-user-data')} />
+      <ActionItem
+        icon={IconUserEdit}
+        label='Alterar dados cadastrais'
+        onPress={() => router.navigate('/update-user-data')}
+      />
       <ActionItem
         icon={IconTrash}
         label='Deletar conta'
@@ -63,12 +95,16 @@ export function AccountActions() {
 type ModalContentProps = {
   setModalVisible: (value: React.SetStateAction<boolean>) => void
   anyFunction: () => void
+  isLoading: boolean
 }
 
-function ModalContent({ setModalVisible, anyFunction }: ModalContentProps) {
+function ModalContent({
+  setModalVisible,
+  anyFunction,
+  isLoading,
+}: ModalContentProps) {
   async function handleFunction() {
     anyFunction()
-    setModalVisible(false)
   }
 
   return (
@@ -86,12 +122,17 @@ function ModalContent({ setModalVisible, anyFunction }: ModalContentProps) {
         permenantemente.
       </Text>
       <View style={styles.modalActions}>
-        <Button variant='alert' onPress={handleFunction}>
+        <Button
+          isLoading={isLoading}
+          disabled={isLoading}
+          variant='alert'
+          onPress={handleFunction}
+        >
           <Button.Title style={{ color: colors.zinc[50] }}>
             Deletar conta
           </Button.Title>
         </Button>
-        <Button onPress={() => setModalVisible(false)}>
+        <Button disabled={isLoading} onPress={() => setModalVisible(false)}>
           <Button.Title>Cancelar</Button.Title>
         </Button>
       </View>

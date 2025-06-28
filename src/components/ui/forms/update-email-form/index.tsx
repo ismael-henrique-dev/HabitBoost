@@ -5,7 +5,7 @@ import { colors } from '@/styles/theme'
 import { Input } from '../../input'
 import { Button } from '../../button'
 import { ErrorMenssage } from '../../error-menssage'
-import { IconLock, IconMail, IconUser } from '@tabler/icons-react-native'
+import { IconLock, IconMail } from '@tabler/icons-react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ModalSeparator } from '../../separator'
 import { styles } from './styles'
@@ -15,6 +15,8 @@ import {
 } from '@/validators/user/update-email'
 import { updateUserEmail } from '@/services/http/user/update-user-email'
 import { useState } from 'react'
+import { getErrorMessage } from '@/utils/get-error-menssage'
+import { notify } from 'react-native-notificated'
 
 export function UpdateUserEmailForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -38,8 +40,18 @@ export function UpdateUserEmailForm() {
       setIsLoading(true)
       await updateUserEmail(data)
       router.navigate('/profile')
-    } catch {
-      ToastAndroid.show('Erro ao atualizar email', 300)
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+      ToastAndroid.show(error, 500)
+      // notify('custom' as any, {
+      //   params: {
+      //     customTitle: error,
+      //     type: 'error',
+      //   },
+      //   config: {
+      //     duration: 2000,
+      //   },
+      // })
     } finally {
       setIsLoading(false)
     }
@@ -79,7 +91,6 @@ export function UpdateUserEmailForm() {
               placeholder='Digite sua senha'
               value={value}
               onChangeText={onChange}
-              secureTextEntry={true}
               variant='password'
             >
               <Input.Icon icon={IconLock} />

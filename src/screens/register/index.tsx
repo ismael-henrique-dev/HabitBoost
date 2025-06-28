@@ -14,6 +14,7 @@ import {
 import { register } from '@/services/http/auth/register'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 import { ErrorMenssage } from '@/components/ui/error-menssage'
+import { notify } from 'react-native-notificated'
 
 export function RegisterScreen() {
   const [isLoading, setIsLoading] = useState(false)
@@ -41,10 +42,31 @@ export function RegisterScreen() {
       setIsLoading(true)
       await register(registerData)
       console.log(data)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Primeira etapa realizada com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+
       router.navigate('/account-activation')
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
     } finally {
       setIsLoading(false)
     }
@@ -52,7 +74,11 @@ export function RegisterScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={{ flexGrow: 1, paddingVertical: 20, backgroundColor: colors.zinc[50] }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingVertical: 20,
+        backgroundColor: colors.zinc[50],
+      }}
       keyboardShouldPersistTaps='handled'
     >
       <View style={styles.container}>

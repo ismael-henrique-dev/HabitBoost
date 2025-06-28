@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     elevation: 4,
     marginVertical: 8,
+    zIndex: 1000
   },
   iconTextContainer: {
     flexDirection: 'row',

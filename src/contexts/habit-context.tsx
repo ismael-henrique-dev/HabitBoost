@@ -42,6 +42,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
       const today = dayjs().startOf('day')
 
       try {
+        setIsLoading(true)
         let habitsArray: Habit[] = []
 
         if (isLogged) {
@@ -73,6 +74,8 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
       } catch (responseError) {
         const error = getErrorMessage(responseError)
         console.log(error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -119,8 +122,8 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
           currentStatus === 'missed'
         ) {
           newStatus = 'concluded'
-        } else if(currentStatus === "concluded") {
-          newStatus = "unstarted"
+        } else if (currentStatus === 'concluded') {
+          newStatus = 'unstarted'
         } else {
           newStatus = currentStatus
         }

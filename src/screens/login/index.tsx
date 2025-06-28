@@ -14,10 +14,13 @@ import { ErrorMenssage } from '@/components/ui/error-menssage'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '@/contexts/auth-context'
+import { notify } from 'react-native-notificated'
+import { useSettings } from '@/hooks/use-settings'
 
 export function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const { setIsLogged } = useAuth()
+  // const { updateSetting } = useSettings()
 
   const {
     control,
@@ -36,16 +39,37 @@ export function LoginScreen() {
       setIsLoading(true)
       const response = await login(data)
 
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Login realizado com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+
       console.log(data)
 
-      await AsyncStorage.clear() // resolver esse problema de quandpo o user faz login para sua conta, a data é deletada
+      await AsyncStorage.clear()
 
+      // updateSetting('firstTimeUser', false)
       await AsyncStorage.setItem('@token', response.token)
       setIsLogged(true)
       router.navigate('/profile')
     } catch (responseError) {
       const error = getErrorMessage(responseError)
       console.log(error)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
     } finally {
       setIsLoading(false)
     }

@@ -51,6 +51,7 @@ function ModalRoot({ visible, onClose, children, ...rest }: ModalRootProps) {
       transparent
       animationType="fade"
       onRequestClose={onClose}
+      
       {...rest}
     >
       <View style={internal.overlay}>
