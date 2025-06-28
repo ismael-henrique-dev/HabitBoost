@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
   },
   sheetContent: {
     flex: 1,
+    // paddingVertical: 20, 
   },
   sheetHeader: {
     marginVertical: 12,
@@ -45,6 +46,8 @@ export const styles = StyleSheet.create({
   },
   bottomSheetContainer: {
     gap: 12,
+    marginBottom: 20,
+    
   },
   filterItemLabel: {
     fontSize: 14,

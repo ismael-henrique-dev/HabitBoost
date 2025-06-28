@@ -6,7 +6,7 @@ import { styles } from './styles'
 type RankingCardProps = {
   icon: React.ElementType
   title: string
-  value: number
+  value: number | undefined
   loading?: boolean
 }
 
@@ -75,7 +75,9 @@ export function RankingCard({
         </View>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <Text style={styles.valueText}>{value}</Text>
+      <Text style={styles.valueText}>
+        {value !== undefined && <Text style={styles.valueText}>{value}</Text>}
+      </Text>
     </View>
   )
 }

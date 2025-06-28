@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     marginTop: 44,
   },
   podiumItem: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   circle: {
     width: 72,
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.zinc[900],
     fontFamily: fontFamily.semiBold,
-    marginBottom: 12
+    marginBottom: 12,
   },
   bar: {
     width: 50,
@@ -58,5 +58,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
+  },
+  userAvatarImage: {
+    width: 72,
+    height: 72,
+    borderRadius: 1234,
+    resizeMode: 'cover',
   },
 })

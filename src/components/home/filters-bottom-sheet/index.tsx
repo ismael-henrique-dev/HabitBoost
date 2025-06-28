@@ -70,7 +70,7 @@ export function FiltersBottomSheet() {
 
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        snapPoints={['40%', '40%']}
+        snapPoints={['50%', '50%']}
         index={1}
         backgroundStyle={styles.bottomSheetBackgroundStyle}
         handleIndicatorStyle={styles.handleIndicatorStyle}
@@ -87,108 +87,101 @@ export function FiltersBottomSheet() {
             </TouchableOpacity>
           </View>
 
-          <BottomSheetScrollView style={styles.bottomSheetContainer}>
+          <View style={styles.bottomSheetContainer}>
             {/* Categoria */}
             <Text style={styles.filterItemLabel}>Categoria:</Text>
+
             <BottomSheetScrollView
               horizontal
-              contentContainerStyle={{ paddingVertical: 12 }}
               showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingVertical: 16,
+                paddingHorizontal: 4,
+              }}
+              style={{ marginBottom: 8 }}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                {categories.map((item) => {
-                  const IconComponent = categoriesIcons[item.iconId]
-                  const isSelected = selectedCategory === item.id
+              {categories.map((item) => {
+                const IconComponent = categoriesIcons[item.iconId]
+                const isSelected = selectedCategory === item.id
 
-                  return (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => {
-                        const newCategoryId = isSelected ? null : item.id
-                        setSelectedCategory(newCategoryId)
-                        router.setParams({ categoryId: newCategoryId })
-                      }}
-                      style={[
-                        styles.categoryItem,
-                        isSelected && {
-                          backgroundColor: colors.lime[500],
-                          borderWidth: 0,
-                        },
-                      ]}
-                    >
-                      <View style={styles.categoryInfo}>
-                        {IconComponent && (
-                          <IconComponent size={20} color={colors.zinc[600]} />
-                        )}
-                        <Text style={styles.categoryName}>{item.name}</Text>
-                      </View>
-                      {isSelected && (
-                        <TouchableOpacity
-                          onPress={() => setSelectedCategory(null)}
-                        >
-                          <IconCircleX size={16} color={colors.zinc[900]} />
-                        </TouchableOpacity>
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    onPress={() => {
+                      const newCategoryId = isSelected ? null : item.id
+                      setSelectedCategory(newCategoryId)
+                      router.setParams({ categoryId: newCategoryId })
+                    }}
+                    style={[
+                      styles.categoryItem,
+                      isSelected && {
+                        backgroundColor: colors.lime[500],
+                        borderWidth: 0,
+                      },
+                    ]}
+                  >
+                    <View style={styles.categoryInfo}>
+                      {IconComponent && (
+                        <IconComponent size={20} color={colors.zinc[600]} />
                       )}
-                    </TouchableOpacity>
-                  )
-                })}
-              </View>
+                      <Text style={styles.categoryName}>{item.name}</Text>
+                    </View>
+                    {isSelected && (
+                      <TouchableOpacity
+                        onPress={() => setSelectedCategory(null)}
+                      >
+                        <IconCircleX size={16} color={colors.zinc[900]} />
+                      </TouchableOpacity>
+                    )}
+                  </TouchableOpacity>
+                )
+              })}
             </BottomSheetScrollView>
 
             {/* Status */}
             <Text style={styles.filterItemLabel}>Status:</Text>
             <BottomSheetScrollView
               horizontal
-              contentContainerStyle={{ paddingVertical: 12 }}
               showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingVertical: 16,
+                paddingHorizontal: 4,
+              }}
+              style={{ marginBottom: 8 }}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                {statusData.map((item) => {
-                  const isSelected = selectedStatus === item.id
+              {statusData.map((item) => {
+                const isSelected = selectedStatus === item.id
 
-                  return (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => {
-                        const newStatus = isSelected ? null : item.id
-                        setSelectedStatus(newStatus)
-                        router.setParams({ status: newStatus })
-                      }}
-                      style={[
-                        styles.categoryItem,
-                        isSelected && {
-                          backgroundColor: colors.lime[500],
-                          borderWidth: 0,
-                        },
-                      ]}
-                    >
-                      <View style={styles.categoryInfo}>
-                        {item.icon}
-                        <Text style={styles.categoryName}>{item.label}</Text>
-                      </View>
-                      {isSelected && (
-                        <TouchableOpacity
-                          onPress={() => setSelectedStatus(null)}
-                        >
-                          <IconCircleX size={16} color={colors.zinc[900]} />
-                        </TouchableOpacity>
-                      )}
-                    </TouchableOpacity>
-                  )
-                })}
-              </View>
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    onPress={() => {
+                      const newStatus = isSelected ? null : item.id
+                      setSelectedStatus(newStatus)
+                      router.setParams({ status: newStatus })
+                    }}
+                    style={[
+                      styles.categoryItem,
+                      isSelected && {
+                        backgroundColor: colors.lime[500],
+                        borderWidth: 0,
+                      },
+                    ]}
+                  >
+                    <View style={styles.categoryInfo}>
+                      {item.icon}
+                      <Text style={styles.categoryName}>{item.label}</Text>
+                    </View>
+                    {isSelected && (
+                      <TouchableOpacity onPress={() => setSelectedStatus(null)}>
+                        <IconCircleX size={16} color={colors.zinc[900]} />
+                      </TouchableOpacity>
+                    )}
+                  </TouchableOpacity>
+                )
+              })}
             </BottomSheetScrollView>
-          </BottomSheetScrollView>
+          </View>
         </View>
       </BottomSheetModal>
     </View>

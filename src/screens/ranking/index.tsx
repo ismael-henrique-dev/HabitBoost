@@ -29,13 +29,13 @@ export function RankingScreen() {
     const fetchData = async () => {
       const response = await getRankingData()
       if (response) {
-        setRankingData({ data: response.topUsers })
+        setRankingData({ data: response.leaderboard })
       }
       setLoading(false)
     }
 
     fetchData()
-  }, [])
+  }, [totalGoalsCompleted])
 
   const podiumData = {
     first: rankingData?.data[0],
@@ -54,8 +54,12 @@ export function RankingScreen() {
           <>
             <RankingCard
               icon={IconTrophy}
-              title='Metas para você ser o vencedor'
-              value={goalsToBeTheWinner}
+              title={
+                goalsToBeTheWinner === 0
+                  ? 'Parábens, você é o vencedor.'
+                  : 'Metas para você ser o vencedor'
+              }
+              value={goalsToBeTheWinner === 0 ? undefined : goalsToBeTheWinner}
               loading={loading}
             />
             <RankingCard

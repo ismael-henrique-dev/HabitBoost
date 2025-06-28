@@ -4,13 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export type RankingUser = {
   username: string
-  image_url: string | null
+  imageUrl: string | null
   weektotal: number
 }
 
 export type RankingResponse = {
   Description: string
-  topUsers: RankingUser[]
+  leaderboard: RankingUser[]
 }
 
 export async function getRankingData(): Promise<RankingResponse | undefined> {

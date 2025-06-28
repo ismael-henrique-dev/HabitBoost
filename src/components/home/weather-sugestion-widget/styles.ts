@@ -19,11 +19,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
+    flex: 1,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: fontFamily.semiBold,
     color: colors.zinc[50],
+    flexShrink: 1,
   },
 
   description: {

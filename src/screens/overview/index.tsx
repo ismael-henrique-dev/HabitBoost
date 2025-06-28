@@ -43,9 +43,8 @@ export function OverviewScreen() {
         <Text style={styles.link}>VER MAIS</Text>
       </View>
       <WeeklyBarChart />
-       <View style={styles.infoGroup}>
+      <View style={styles.infoGroup}>
         <Text style={styles.title}>Resumo das metas</Text>
-        <Text style={styles.link}>VER MAIS</Text>
       </View>
       <GoalSummaryCard />
     </ScrollView>
