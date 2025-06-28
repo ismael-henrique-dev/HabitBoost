@@ -1,27 +1,32 @@
-import { View } from 'react-native'
+import { useState } from 'react'
+import { View, TouchableOpacity, Text } from 'react-native'
 import { useHabit } from '@/contexts/habit-context'
 import { HabitCard } from '../habit-card'
 import { styles } from './styles'
 import dayjs from 'dayjs'
 import Animated, {
-  FadeIn,
-  FadeOut,
   Layout,
   Easing,
   FadeInUp,
-  FadeOutDown,
   FadeOutUp,
 } from 'react-native-reanimated'
 import { useLocalSearchParams } from 'expo-router'
+import { EmptyHabitList } from '../empty-habit-list'
+import { colors, fontFamily } from '@/styles/theme'
+import { HabitListSkeleton } from '@/components/ui/skeletons/habit-list-skeleton'
+
+const HABITS_PER_PAGE = 5
 
 export function HabitList() {
-  const { habits, selectedDate } = useHabit()
+  const { isLoading, habits, selectedDate } = useHabit()
   const formattedSelectedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
   const { categoryId, status } = useLocalSearchParams<{
     categoryId?: string
     status?: string
   }>()
+
+  const [visibleCount, setVisibleCount] = useState(HABITS_PER_PAGE)
 
   const isValidCategory = categoryId && categoryId !== 'null'
   const isValidStatus = status && status !== 'null'
@@ -51,9 +56,14 @@ export function HabitList() {
 
   const layoutAnimation = Layout.springify().damping(300).stiffness(0).mass(0.1)
 
+  const visibleHabits = filteredHabits.slice(0, visibleCount)
+  const hasMoreToShow = filteredHabits.length > visibleCount
+
   return (
     <View style={styles.container}>
-      {filteredHabits.map((habit) => (
+      {isLoading && <HabitListSkeleton />}
+      {visibleHabits.length === 0 && !isLoading && <EmptyHabitList />}
+      {visibleHabits.map((habit) => (
         <Animated.View
           key={habit.id}
           entering={enteringAnimation}
@@ -74,6 +84,26 @@ export function HabitList() {
           />
         </Animated.View>
       ))}
+
+      {hasMoreToShow && (
+        <TouchableOpacity
+          onPress={() => setVisibleCount((prev) => prev + HABITS_PER_PAGE)}
+          style={{
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: colors.lime[600],
+              fontFamily: fontFamily.semiBold,
+              fontSize: 16,
+              textDecorationLine: 'underline',
+            }}
+          >
+            VER MAIS
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   )
 }

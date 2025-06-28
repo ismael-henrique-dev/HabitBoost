@@ -1,6 +1,7 @@
 import { Habit } from '@/types/habit'
 import { GoalCard } from '../goal-card'
 import { useGoal } from '@/contexts/goal-context'
+import { EmptyGoalList } from '../empty-goal-list'
 
 type GoalsListProps = {
   habit: Habit
@@ -28,6 +29,7 @@ export function GoalsList({ habit }: GoalsListProps) {
           title={goal.title}
         />
       ))}
+      {filteredGoals.length === 0 && <EmptyGoalList habitId={habit.id} />}
     </>
   )
 }

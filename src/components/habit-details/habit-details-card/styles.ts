@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   habitTitle: {
     fontFamily: fontFamily.semiBold,
     fontSize: 16,
+    marginRight: 4
   },
   habitDescription: {
     color: colors.zinc[600],

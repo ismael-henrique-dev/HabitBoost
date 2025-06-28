@@ -1,6 +1,11 @@
 import { Separator } from '@/components/ui/separator'
 import { colors, fontFamily } from '@/styles/theme'
-import { IconBell, IconCheck } from '@tabler/icons-react-native'
+import {
+  IconBell,
+  IconCheck,
+  IconCircleHalfVertical,
+  IconHourglassHigh,
+} from '@tabler/icons-react-native'
 import { Text, View } from 'react-native'
 import { styles } from './styles'
 import { Habit } from '@/types/habit'
@@ -9,9 +14,13 @@ import { categoriesIcons } from '@/utils/icons-list'
 
 type HabitDetailsCardProps = {
   habit: Habit
+  selectedDate: string
 }
 
-export function HabitDetailsCard({ habit }: HabitDetailsCardProps) {
+export function HabitDetailsCard({
+  habit,
+  selectedDate,
+}: HabitDetailsCardProps) {
   const selectedDays = Array.isArray(habit.days)
     ? habit.days.map((date) => new Date(date).getDate())
     : []
@@ -30,7 +39,15 @@ export function HabitDetailsCard({ habit }: HabitDetailsCardProps) {
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.habitTitle}>{habit.title}</Text>
-          <IconCheck color={colors.zinc[900]} />
+          {habit.statusByDate[selectedDate] === 'concluded' && (
+            <IconCheck color={colors.zinc[900]} size={20} />
+          )}
+          {habit.statusByDate[selectedDate] === 'unstarted' && (
+            <IconCircleHalfVertical color={colors.zinc[900]} size={20} />
+          )}
+          {habit.statusByDate[selectedDate] === 'missed' && (
+            <IconHourglassHigh color={colors.zinc[900]} size={20} />
+          )}
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>

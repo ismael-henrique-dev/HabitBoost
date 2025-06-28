@@ -8,6 +8,7 @@ import { getHabits } from '@/services/http/habits/get-habits'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 
 type HabitContextData = {
+  isLoading: boolean
   habits: Habit[]
   selectedDate: Date
   createHabit: (habit: Habit) => void
@@ -22,6 +23,7 @@ const HabitContext = createContext<HabitContextData>({} as HabitContextData)
 export function HabitProvider({ children }: { children: React.ReactNode }) {
   const [habits, setHabits] = useState<Habit[]>([])
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [isLoading, setIsLoading] = useState(false)
   const { isLogged } = useAuth()
 
   async function createHabit(habit: Habit) {
@@ -156,6 +158,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
   return (
     <HabitContext.Provider
       value={{
+        isLoading,
         habits,
         selectedDate,
         createHabit,

@@ -41,15 +41,7 @@ export function HabitCard(props: HabitCardProps) {
       return
     }
     completeHabit(props.id, props.selectedDate)
-    // if (isLogged) {
-    //   await completeHabitOnServer(props.id, {
-    //     date: props.selectedDate,
-    //     status: props.statusByDate[props.selectedDate],
-    //   })
-    //   completeHabit(props.id, props.selectedDate)
-    // } else {
-    //   completeHabit(props.id, props.selectedDate)
-    // }
+
   }
 
   return (
@@ -57,7 +49,7 @@ export function HabitCard(props: HabitCardProps) {
       onPress={() => {
         router.navigate({
           pathname: '/habit-details',
-          params: { habitId: props.id },
+          params: { habitId: props.id, selectedDate: props.selectedDate},
         })
       }}
     >

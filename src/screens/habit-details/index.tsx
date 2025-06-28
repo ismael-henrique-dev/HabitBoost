@@ -9,7 +9,7 @@ import { GoalsList } from '@/components/habit-details/goals-list'
 import { GoalsHeader } from '@/components/habit-details/goals-header'
 
 export function HabitDetailsScreen() {
-  const { habitId } = useLocalSearchParams()
+  const { habitId, selectedDate } = useLocalSearchParams()
   const { habits } = useHabit()
 
   const habit = habits.find((habit) => habit.id === habitId)
@@ -18,7 +18,10 @@ export function HabitDetailsScreen() {
       {/* Header */}
       <ScrollView contentContainerStyle={styles.content}>
         {/* Hábito card */}
-        <HabitDetailsCard habit={habit as Habit} />
+        <HabitDetailsCard
+          habit={habit as Habit}
+          selectedDate={selectedDate as string}
+        />
 
         {/* Metas Header */}
         <GoalsHeader habitId={habitId as string} />
