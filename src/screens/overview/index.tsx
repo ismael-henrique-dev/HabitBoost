@@ -13,17 +13,23 @@ import { GoalSummaryCard } from '@/components/overview/goals-summary-card'
 import { router } from 'expo-router'
 
 export function OverviewScreen() {
-  const { totalGoals, totalGoalsCompleted, totalHabits, totalHabitsCompleted } =
-    useStatistics()
+  const {
+    totalGoals,
+    totalGoalsCompleted,
+    totalHabits,
+    totalHabitsCompleted,
+    currentSequence,
+    bestSequence,
+  } = useStatistics()
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <OverviewCard
         icon={IconFlame}
         title='Sequência atual'
-        mainValue='123'
+        mainValue={String(currentSequence)}
         mainLabel='dias'
-        secondaryText='Melhor sequência: 200'
+        secondaryText={`Melhor sequência: ${bestSequence}`}
       />
       <OverviewCard
         icon={IconCalendarCheck}
@@ -41,7 +47,12 @@ export function OverviewScreen() {
       />
       <View style={styles.infoGroup}>
         <Text style={styles.title}>Resumo dos hábitos</Text>
-        <Text onPress={() => router.navigate('/habit-history')} style={styles.link}>VER MAIS</Text>
+        <Text
+          onPress={() => router.navigate('/habit-history')}
+          style={styles.link}
+        >
+          VER MAIS
+        </Text>
       </View>
       <WeeklyBarChart />
       <View style={styles.infoGroup}>

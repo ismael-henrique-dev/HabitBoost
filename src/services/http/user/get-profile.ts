@@ -3,7 +3,7 @@ import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export type GetProfileResponse = {
-  data: { username: string; email: string; imageUrl: string }
+  data: { username: string; email: string; imageUrl: string | null }
   Description: string
 }
 

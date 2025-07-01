@@ -5,9 +5,11 @@ import * as ImagePicker from 'expo-image-picker'
 import { uploadImage } from '@/services/http/user/update-user-profile-image'
 import React, { useState } from 'react'
 import { useUser } from '@/contexts/user-context'
+import { deleteImage } from '@/services/http/user/delete-user-profile-image'
 
 export function UpdateUserProfileImageActions() {
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingRemoveImage, setIsLoadingRemoveImage] = useState(false)
   const { userData, setUserData } = useUser()
 
   async function handlePickerImage() {
@@ -76,11 +78,42 @@ export function UpdateUserProfileImageActions() {
     }
   }
 
+  async function handleDeleteProfileImage() {
+    try {
+      setIsLoadingRemoveImage(true)
+
+      await deleteImage()
+
+      if (userData) {
+        setUserData({
+          ...userData,
+          data: {
+            ...userData.data,
+            imageUrl: null,
+          },
+        })
+      }
+
+      ToastAndroid.show('Imagem deletada com sucesso!', ToastAndroid.SHORT)
+    } catch (error) {
+      console.error('Erro ao deletar a imagem:', error)
+      ToastAndroid.show('Erro inesperado', ToastAndroid.LONG)
+    } finally {
+      setIsLoadingRemoveImage(false)
+    }
+  }
+
   return (
     <View style={{ padding: 16, gap: 12 }}>
-      <Button variant='alert' style={{ width: '100%' }}>
+      <Button
+        isLoading={isLoadingRemoveImage}
+        disabled={isLoadingRemoveImage}
+        onPress={handleDeleteProfileImage}
+        variant='alert'
+        style={{ width: '100%' }}
+      >
         <Button.Title style={{ color: colors.zinc[50] }}>
-          Remover foto atual
+          {isLoading ? 'Removendo imagem...' : 'Remover foto atual'}
         </Button.Title>
       </Button>
 
@@ -96,7 +129,11 @@ export function UpdateUserProfileImageActions() {
         </Button.Title>
       </Button>
 
-      <Button disabled={isLoading} variant='default' style={{ width: '100%' }}>
+      <Button
+        disabled={isLoading || isLoadingRemoveImage}
+        variant='default'
+        style={{ width: '100%' }}
+      >
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>

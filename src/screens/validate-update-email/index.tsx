@@ -29,7 +29,6 @@ export function ValidateUpdateEmailScreen() {
           })
         }
 
-        await AsyncStorage.setItem('@token', token as string)
         ToastAndroid.show('Email atualizado com sucesso!', ToastAndroid.SHORT)
 
         console.log(response)
