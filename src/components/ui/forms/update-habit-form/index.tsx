@@ -21,6 +21,10 @@ import {
 } from '@react-native-community/datetimepicker'
 import { useState } from 'react'
 import { getErrorMessage } from '@/utils/get-error-menssage'
+import { cancelAllNotificationsForHabit } from '@/utils/cancel-all-notifications-for-habit'
+import { convertTimeStringToDate } from '@/utils/convert-time-string-to-date'
+import { createNotify } from '@/utils/create-notification'
+import { saveNotificationId } from '@/utils/save-notification-id'
 
 export function UpdateHabitForm() {
   const { isLogged } = useAuth()
@@ -71,6 +75,26 @@ export function UpdateHabitForm() {
       console.log('Dias selecionados:', selectedDays)
 
       if (habit) {
+        // Cancela todas as notificações antigas relacionadas a esse hábito e cria novas
+
+        if (data.reminderTime && selectedDays.length > 0) {
+          await cancelAllNotificationsForHabit(habit.id)
+
+          for (let i = 0; i < selectedDays.length; i++) {
+            const convertedDate = convertTimeStringToDate(
+              selectedDays[i],
+              data.reminderTime
+            )
+            if (convertedDate > new Date()) {
+              const notificationId = await createNotify(
+                convertedDate,
+                habit.title
+              )
+              await saveNotificationId(habit.id, notificationId)
+            }
+          }
+        }
+
         const updatedHabit: Habit = {
           ...habit,
           days: selectedDays,

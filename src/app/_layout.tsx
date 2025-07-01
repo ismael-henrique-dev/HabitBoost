@@ -27,6 +27,15 @@ import { SettingsProvider } from '@/contexts/settings-context'
 import { useSettings } from '@/hooks/use-settings'
 import { GoalProvider } from '@/contexts/goal-context'
 import { AuthProvider } from '@/contexts/auth-context'
+import * as Notifications from 'expo-notifications'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowAlert: true,
+  }),
+})
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,

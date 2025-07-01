@@ -11,7 +11,7 @@ import { router } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
-import { notify } from 'react-native-notificated'
+
 import { v4 as uuidv4 } from 'uuid'
 import { useState } from 'react'
 import {
@@ -20,8 +20,12 @@ import {
 } from '@react-native-community/datetimepicker'
 import { createHabitOnServer } from '@/services/http/habits/create-habit'
 import { useAuth } from '@/contexts/auth-context'
-import { scheduleHabitNotificationsForDates } from '@/utils/schedule-habit-notifications-for-dates'
 import { getErrorMessage } from '@/utils/get-error-menssage'
+import { convertTimeStringToDate } from '@/utils/convert-time-string-to-date'
+import { createNotify } from '@/utils/create-notification'
+import { notify } from 'react-native-notificated'
+import { createNotificationsChannel } from '@/utils/create-notification-channel'
+import { saveNotificationId } from '@/utils/save-notification-id'
 
 export function CreateHabitForm() {
   const { isLogged } = useAuth()
@@ -97,11 +101,18 @@ export function CreateHabitForm() {
       console.log('Novo hábito: ' + newHabit)
 
       if (data.reminderTime && selectedDays.length > 0) {
-        await scheduleHabitNotificationsForDates(
-          data.title,
-          data.reminderTime,
-          selectedDays
-        )
+        createNotificationsChannel()
+
+        for (let i = 0; i < selectedDays.length; i++) {
+          const convertedDate = convertTimeStringToDate(
+            selectedDays[i],
+            data.reminderTime
+          )
+          if (convertedDate > new Date()) {
+            const notificationId = await createNotify(convertedDate, newHabit.title)
+            await saveNotificationId(newHabit.id, notificationId)
+          }
+        }
       }
 
       if (isLogged) {

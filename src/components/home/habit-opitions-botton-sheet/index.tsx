@@ -14,6 +14,7 @@ import { deleteHabitOnServer } from '@/services/http/habits/delete-habit'
 import { useAuth } from '@/contexts/auth-context'
 import { getErrorMessage } from '@/utils/get-error-menssage'
 import { notify } from 'react-native-notificated'
+import { cancelAllNotificationsForHabit } from '@/utils/cancel-all-notifications-for-habit'
 
 type CategorySelectBottomSheetProps = {
   habitId: string
@@ -37,6 +38,7 @@ export function HabitOptionsBottomSheet({
 
   async function handleDeleteHabit(id: string) {
     try {
+      await cancelAllNotificationsForHabit(habitId)
       if (isLogged) {
         await deleteHabitOnServer(id)
         deleteHabit(id)
