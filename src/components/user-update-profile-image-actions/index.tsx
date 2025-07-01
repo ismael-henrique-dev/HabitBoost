@@ -1,20 +1,19 @@
 import { Alert, ToastAndroid, View } from 'react-native'
 import { Button } from '../ui'
-import { styles } from './styles'
 import { colors } from '@/styles/theme'
 import * as ImagePicker from 'expo-image-picker'
 import { uploadImage } from '@/services/http/user/update-user-profile-image'
-import React from 'react'
+import React, { useState } from 'react'
+import { useUser } from '@/contexts/user-context'
 
-type UpdateUserProfileImageActionsProps = {
-  setImageUrl: (value: React.SetStateAction<string>) => void
-}
+export function UpdateUserProfileImageActions() {
+  const [isLoading, setIsLoading] = useState(false)
+  const { userData, setUserData } = useUser()
 
-export function UpdateUserProfileImageActions({
-  setImageUrl,
-}: UpdateUserProfileImageActionsProps) {
   async function handlePickerImage() {
     try {
+      setIsLoading(true)
+
       const { granted } =
         await ImagePicker.requestMediaLibraryPermissionsAsync()
 
@@ -50,7 +49,15 @@ export function UpdateUserProfileImageActions({
         type: `image/${extension}`,
       } as any)
 
-      setImageUrl(asset.uri)
+      if (userData) {
+        setUserData({
+          ...userData,
+          data: {
+            ...userData.data,
+            imageUrl: asset.uri,
+          },
+        })
+      }
       console.log(asset.uri)
 
       const response = await uploadImage(formData)
@@ -64,6 +71,8 @@ export function UpdateUserProfileImageActions({
     } catch (error) {
       console.error('Erro ao selecionar/enviar imagem:', error)
       ToastAndroid.show('Erro inesperado', ToastAndroid.LONG)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -76,16 +85,18 @@ export function UpdateUserProfileImageActions({
       </Button>
 
       <Button
+        isLoading={isLoading}
+        disabled={isLoading}
         variant='secundary'
         onPress={handlePickerImage}
         style={{ width: '100%' }}
       >
         <Button.Title style={{ color: colors.zinc[50] }}>
-          Selecionar foto da galeria
+          {isLoading ? 'Fazendo upload...' : 'Selecionar foto da galeria'}
         </Button.Title>
       </Button>
 
-      <Button variant='default' style={{ width: '100%' }}>
+      <Button disabled={isLoading} variant='default' style={{ width: '100%' }}>
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>

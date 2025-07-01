@@ -15,7 +15,7 @@ export async function ValidateUserUpdateEmail(
       const response = await api.patch<ValidateUserUpdateEmailResponse>(
         'update/email/validate',
         {
-          validateToken,
+          token: validateToken,
         },
         {
           headers: {
@@ -23,6 +23,8 @@ export async function ValidateUserUpdateEmail(
           },
         }
       )
+
+      console.log("Validate email response: ", response.data)
       return response.data
     } else {
       throw new Error('Token não encontrado.')

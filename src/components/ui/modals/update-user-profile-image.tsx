@@ -1,17 +1,14 @@
-import { View } from 'react-native'
 import { ModalBase } from './modal-base'
 import { UpdateUserProfileImageActions } from '@/components/user-update-profile-image-actions'
 
 type UpdateUsernameModalProps = {
   visible: boolean
   onClose: () => void
-  setImageUrl: (value: React.SetStateAction<string>) => void
 }
 
 export function UpdateUserProfileImageModal({
   visible,
   onClose,
-  setImageUrl
 }: UpdateUsernameModalProps) {
   return (
     <ModalBase visible={visible} onClose={onClose}>
@@ -24,7 +21,7 @@ export function UpdateUserProfileImageModal({
           Deseja de fato alterar foto de perfil?
         </ModalBase.HeaderSubtitle>
 
-        <UpdateUserProfileImageActions setImageUrl={setImageUrl} />
+        <UpdateUserProfileImageActions />
       </ModalBase.Content>
     </ModalBase>
   )

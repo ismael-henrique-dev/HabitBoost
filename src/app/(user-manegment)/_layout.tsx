@@ -14,6 +14,12 @@ export default function UserManagementLayout() {
           headerTitle: 'Editar dados cadastrais',
         }}
       />
+      <Stack.Screen
+        name='validate-update-email'
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   )
 }

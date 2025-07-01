@@ -16,7 +16,7 @@ import {
 import { updateUserEmail } from '@/services/http/user/update-user-email'
 import { useState } from 'react'
 import { getErrorMessage } from '@/utils/get-error-menssage'
-import { notify } from 'react-native-notificated'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function UpdateUserEmailForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -32,26 +32,19 @@ export function UpdateUserEmailForm() {
       oldEmail: '',
       password: '',
     },
-    mode: 'onChange', // importante para isValid funcionar em tempo real
+    mode: 'onChange',
   })
 
   const handleUpdateUserEmail = async (data: UpdateUserEmailFormSchema) => {
     try {
       setIsLoading(true)
       await updateUserEmail(data)
-      router.navigate('/profile')
+      await AsyncStorage.setItem('@updatedEmail', data.newEmail)
+
+      ToastAndroid.show('Email enviado!', ToastAndroid.SHORT)
     } catch (responseError) {
       const error = getErrorMessage(responseError)
-      ToastAndroid.show(error, 500)
-      // notify('custom' as any, {
-      //   params: {
-      //     customTitle: error,
-      //     type: 'error',
-      //   },
-      //   config: {
-      //     duration: 2000,
-      //   },
-      // })
+      ToastAndroid.show(error, ToastAndroid.SHORT)
     } finally {
       setIsLoading(false)
     }
@@ -129,7 +122,7 @@ export function UpdateUserEmailForm() {
       <Button
         variant='secundary'
         onPress={handleSubmit(handleUpdateUserEmail)}
-        disabled={isLoading || !isValid}
+        disabled={isLoading}
         isLoading={isLoading}
       >
         <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>

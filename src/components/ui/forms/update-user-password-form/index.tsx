@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { Text, ToastAndroid, View } from 'react-native'
 import { router } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { Input } from '../../input'
@@ -15,8 +15,11 @@ import {
   UpdateUserPasswordFormSchema,
 } from '@/validators/user/update-password'
 import { updateUserPassword } from '@/services/http/user/update-user-password'
+import { useState } from 'react'
+import { getErrorMessage } from '@/utils/get-error-menssage'
 
 export function UpdateUserPasswordForm() {
+  const [isLoading, setIsLoading] = useState(false)
   const {
     control,
     handleSubmit,
@@ -32,8 +35,16 @@ export function UpdateUserPasswordForm() {
 
   const handleUpdateUserEmail = async (data: UpdateUserPasswordFormSchema) => {
     try {
-      const response = await updateUserPassword(data)
-    } catch {}
+      setIsLoading(true)
+
+      await updateUserPassword(data)
+      ToastAndroid.show('Senha atualizada com sucesso!', ToastAndroid.SHORT)
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+      ToastAndroid.show(error, ToastAndroid.SHORT)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -46,7 +57,7 @@ export function UpdateUserPasswordForm() {
           name='oldPassword'
           render={({ field: { value, onChange } }) => (
             <Input
-              placeholder='Digite seu nome de usuário'
+              placeholder='Digite sua senha atual'
               value={value}
               onChangeText={onChange}
             >
@@ -67,7 +78,7 @@ export function UpdateUserPasswordForm() {
           name='newPassword'
           render={({ field: { value, onChange } }) => (
             <Input
-              placeholder='Digite seu nome de usuário'
+              placeholder='Digite sua nova senha'
               value={value}
               onChangeText={onChange}
             >
@@ -88,7 +99,7 @@ export function UpdateUserPasswordForm() {
           name='confirmPassword'
           render={({ field: { value, onChange } }) => (
             <Input
-              placeholder='Digite seu novo nome de usuário'
+              placeholder='Confirme sua nova senha'
               value={value}
               onChangeText={onChange}
             >
@@ -102,11 +113,16 @@ export function UpdateUserPasswordForm() {
       </View>
 
       {/* Botões */}
-      <Button variant='secundary' onPress={handleSubmit(handleUpdateUserEmail)}>
+      <Button
+        isLoading={isLoading}
+        disabled={isLoading}
+        variant='secundary'
+        onPress={handleSubmit(handleUpdateUserEmail)}
+      >
         <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
       </Button>
 
-      <Button onPress={() => router.back()}>
+      <Button onPress={() => router.back()} disabled={isLoading}>
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>

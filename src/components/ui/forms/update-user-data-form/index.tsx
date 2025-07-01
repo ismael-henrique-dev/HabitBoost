@@ -2,18 +2,17 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { styles } from './styles'
 import { UpdateUserInfo } from '@/components/update-user-data'
 import { getInitials } from '@/utils/get-initials'
-import { UserData } from '@/components/profile/user-info-card'
-import { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useState } from 'react'
 import { UpdateUsernameModal } from '../../modals/update-username-modal'
 import { UpdateUserEmailModal } from '../../modals/update-user-email-modal'
 import { UpdateUserPasswordModal } from '../../modals/update-user-password-modal'
 import { IconPencil } from '@tabler/icons-react-native'
 import { colors } from '@/styles/theme'
 import { UpdateUserProfileImageModal } from '../../modals/update-user-profile-image'
+import { useUser } from '@/contexts/user-context'
 
 export function UpdateUserDataForm() {
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const { userData } = useUser()
   const [showUserUpdateDataModal, setShowUserUpdateDataModal] = useState(false)
   const [showUserUpdateEmailModal, setShowUserUpdateEmailModal] =
     useState(false)
@@ -21,31 +20,15 @@ export function UpdateUserDataForm() {
   const [showUserProfileModalUpdateImage, setShowUserProfileModalUpdateImage] =
     useState(false)
 
-  const [imageUrl, setImageUrl] = useState('')
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AsyncStorage.getItem('@userData')
-        if (response) {
-          const parsed: UserData = JSON.parse(response)
-          setUserData(parsed)
-          setImageUrl(parsed.data.imageUrl)
-        }
-      } catch (error) {
-        console.error('Erro ao recuperar dados do usuário:', error)
-      }
-    }
-
-    fetchData()
-  }, [])
-
   return (
     <View style={styles.formContainer}>
       <View style={styles.userInfoAvatarContainer}>
         <View style={styles.userInfoAvatar}>
           {userData?.data.imageUrl ? (
-            <Image source={{ uri: imageUrl }} style={styles.userAvatarImage} />
+            <Image
+              source={{ uri: userData.data.imageUrl }}
+              style={styles.userAvatarImage}
+            />
           ) : (
             <Text style={styles.userInfoAvatarText}>
               {userData ? getInitials(userData.data.username) : '...'}
@@ -66,7 +49,6 @@ export function UpdateUserDataForm() {
         <UpdateUserProfileImageModal
           visible={showUserProfileModalUpdateImage}
           onClose={() => setShowUserProfileModalUpdateImage(false)}
-          setImageUrl={setImageUrl}
         />
       </View>
       {/* Email */}

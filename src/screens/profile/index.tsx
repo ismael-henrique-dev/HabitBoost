@@ -19,7 +19,7 @@ export function ProfileScreen() {
       }}
     >
       <View style={styles.container}>
-        {isLogged && <UserInfoCard isLogged={isLogged} />}
+        {isLogged && <UserInfoCard />}
         <AppSettings />
         {isLogged ? (
           <AccountActions />

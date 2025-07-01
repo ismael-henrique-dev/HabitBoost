@@ -23,9 +23,7 @@ export function WeeklyBarChartInline({ week }: Props) {
     <View style={styles.weekContainer}>
       <View style={styles.weekHeader}>
         <Text style={styles.weekLabel}>{week.label}</Text>
-  
       </View>
-
       <View style={styles.chartContainer}>
         {week.days.map((item, index) => {
           const percentage = item.max === 0 ? 0 : item.value / item.max
@@ -66,6 +64,6 @@ export function WeeklyBarChartInline({ week }: Props) {
           )
         })}
       </View>
-    // </View>
+    </View>
   )
 }

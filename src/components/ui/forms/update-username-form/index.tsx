@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { Text, ToastAndroid, View } from 'react-native'
 import { router } from 'expo-router'
 import { colors } from '@/styles/theme'
 import { Input } from '../../input'
@@ -14,8 +14,13 @@ import {
 } from '@/validators/user/update-username'
 import { ModalSeparator } from '../../separator'
 import { updateUsername } from '@/services/http/user/update-username'
+import { useState } from 'react'
+import { getErrorMessage } from '@/utils/get-error-menssage'
+import { useUser } from '@/contexts/user-context'
 
 export function UpdateUsernameForm() {
+  const [isLoading, setIsLoading] = useState(false)
+  const { userData, setUserData } = useUser()
   const {
     control,
     handleSubmit,
@@ -30,11 +35,28 @@ export function UpdateUsernameForm() {
 
   const handleUpdateUsername = async (data: UpdateUsernameFormSchema) => {
     try {
-      const response = await updateUsername(data)
+      setIsLoading(true)
 
-      
-    } catch {
+      await updateUsername(data)
+      if (userData) {
+        setUserData({
+          ...userData,
+          data: {
+            ...userData.data,
+            username: data.newUsername,
+          },
+        })
+      }
 
+      ToastAndroid.show(
+        'Nome de usuário atualizado com sucesso!',
+        ToastAndroid.SHORT
+      )
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+      ToastAndroid.show(error, ToastAndroid.SHORT)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -84,11 +106,16 @@ export function UpdateUsernameForm() {
       </View>
 
       {/* Botões */}
-      <Button variant='secundary' onPress={handleSubmit(handleUpdateUsername)}>
+      <Button
+        isLoading={isLoading}
+        disabled={isLoading}
+        variant='secundary'
+        onPress={handleSubmit(handleUpdateUsername)}
+      >
         <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
       </Button>
 
-      <Button onPress={() => router.back()}>
+      <Button onPress={() => router.back()} disabled={isLoading}>
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>

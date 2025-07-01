@@ -22,7 +22,7 @@ export async function updateUsername(
           },
         }
       )
-      console.log('Create category response: ', response.data)
+   
 
       return response.data
     } else {

@@ -7,22 +7,16 @@ import {
 } from '@/services/http/user/get-profile'
 import { getInitials } from '@/utils/get-initials'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useUser } from '@/contexts/user-context'
 
-export type UserData = Pick<GetProfileResponse, 'data'>
-
-type UserInfoCardProps = {
-  isLogged: boolean
-}
-
-export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
-  const [userData, setUserData] = useState<UserData | null>(null)
-  const [loading, setLoading] = useState(true)
+export function UserInfoCard() {
+  const { userData, isLoading } = useUser()
   const opacity = useRef(new Animated.Value(1)).current
 
   useEffect(() => {
     let animation: Animated.CompositeAnimation
 
-    if (loading) {
+    if (isLoading) {
       animation = Animated.loop(
         Animated.sequence([
           Animated.timing(opacity, {
@@ -45,29 +39,9 @@ export function UserInfoCard({ isLogged: userIsLogged }: UserInfoCardProps) {
     return () => {
       animation?.stop()
     }
-  }, [loading])
+  }, [isLoading])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getProfile()
-      if (response) {
-        setUserData(response)
-        await AsyncStorage.setItem('@userData', JSON.stringify(response))
-      }
-      setLoading(false)
-    }
-
-    if (userIsLogged) {
-      fetchData()
-    }
-
-    if (!userIsLogged) {
-      setUserData(null)
-      setLoading(false)
-    }
-  }, [userIsLogged])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={styles.userInfoContainer}>
         <Animated.View
