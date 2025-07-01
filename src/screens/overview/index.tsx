@@ -10,6 +10,7 @@ import React from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { styles } from './styles'
 import { GoalSummaryCard } from '@/components/overview/goals-summary-card'
+import { router } from 'expo-router'
 
 export function OverviewScreen() {
   const { totalGoals, totalGoalsCompleted, totalHabits, totalHabitsCompleted } =
@@ -40,7 +41,7 @@ export function OverviewScreen() {
       />
       <View style={styles.infoGroup}>
         <Text style={styles.title}>Resumo dos hábitos</Text>
-        <Text style={styles.link}>VER MAIS</Text>
+        <Text onPress={() => router.navigate('/habit-history')} style={styles.link}>VER MAIS</Text>
       </View>
       <WeeklyBarChart />
       <View style={styles.infoGroup}>

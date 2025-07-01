@@ -26,6 +26,12 @@ export default function HabitManagementLayout() {
           headerTitle: 'Detalhes do hábito',
         }}
       />
+      <Stack.Screen
+        name='habit-history'
+        options={{
+          headerTitle: 'Resumo dos hábitos',
+        }}
+      />
     </Stack>
   )
 }
