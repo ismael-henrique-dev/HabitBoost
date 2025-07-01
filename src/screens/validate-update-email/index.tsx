@@ -10,12 +10,13 @@ export function ValidateUpdateEmailScreen() {
 
   useEffect(() => {
     const validateEmail = async () => {
-      console.log(token)
+      console.log("Validate token: "+ token)
       try {
-        await ValidateUserUpdateEmail(token as string)
+        const response = await ValidateUserUpdateEmail(token as string)
+        console.log(response)
         router.navigate('/profile')
       } catch (error) {
-        console.log(token)
+        console.log(error)
         alert('Token inválido ou expirado.')
         router.navigate('/')
       }
@@ -26,7 +27,7 @@ export function ValidateUpdateEmailScreen() {
   return (
     <View style={styles.container}>
       <ActivityIndicator size={48} color={colors.lime[500]} />
-      <Text style={styles.text}>Validando e-mail...</Text>
+      <Text style={styles.text}>Validando novo e-mail...</Text>
     </View>
   )
 }

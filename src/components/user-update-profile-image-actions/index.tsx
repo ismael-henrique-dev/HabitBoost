@@ -28,7 +28,7 @@ export function UpdateUserProfileImageActions({
 
       const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        mediaTypes: ['images'], 
+        mediaTypes: ['images'],
         base64: false,
         aspect: [4, 4],
         quality: 1,
@@ -51,7 +51,7 @@ export function UpdateUserProfileImageActions({
       } as any)
 
       setImageUrl(asset.uri)
-      console.log(formData)
+      console.log(asset.uri)
 
       const response = await uploadImage(formData)
 
@@ -68,18 +68,24 @@ export function UpdateUserProfileImageActions({
   }
 
   return (
-    <View style={styles.container}>
-      <Button variant='alert'>
+    <View style={{ padding: 16, gap: 12 }}>
+      <Button variant='alert' style={{ width: '100%' }}>
         <Button.Title style={{ color: colors.zinc[50] }}>
           Remover foto atual
         </Button.Title>
       </Button>
-      <Button variant='secundary' onPress={handlePickerImage}>
+
+      <Button
+        variant='secundary'
+        onPress={handlePickerImage}
+        style={{ width: '100%' }}
+      >
         <Button.Title style={{ color: colors.zinc[50] }}>
           Selecionar foto da galeria
         </Button.Title>
       </Button>
-      <Button>
+
+      <Button variant='default' style={{ width: '100%' }}>
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>

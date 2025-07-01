@@ -43,7 +43,10 @@ export function RankingScreen() {
     third: rankingData?.data[2],
   }
 
-  const goalsToBeTheWinner = podiumData.first?.weektotal! - totalGoalsCompleted
+  const goalsToBeTheWinner =
+    podiumData.first && podiumData.first.weektotal > totalGoalsCompleted
+      ? podiumData.first.weektotal - totalGoalsCompleted
+      : 0
 
   return (
     <ScrollView>
@@ -52,23 +55,31 @@ export function RankingScreen() {
       >
         {isLogged ? (
           <>
-            <RankingCard
-              icon={IconTrophy}
-              title={
-                goalsToBeTheWinner === 0
-                  ? 'Parábens, você é o vencedor.'
-                  : 'Metas para você ser o vencedor'
-              }
-              value={goalsToBeTheWinner === 0 ? undefined : goalsToBeTheWinner}
-              loading={loading}
-            />
-            <RankingCard
-              icon={IconTargetArrow}
-              title='Metas concluídas por você'
-              value={totalGoalsCompleted}
-              loading={loading}
-            />
-            <Podium data={podiumData} loading={loading} />
+            {rankingData?.data.length === 0 ? (
+              <WarningCard warningMessage='Ainda não há participantes no ranking esta semana.' />
+            ) : (
+              <>
+                <RankingCard
+                  icon={IconTrophy}
+                  title={
+                    goalsToBeTheWinner === 0
+                      ? 'Parabéns, você é o vencedor.'
+                      : 'Metas para você ser o vencedor'
+                  }
+                  value={
+                    goalsToBeTheWinner === 0 ? undefined : goalsToBeTheWinner
+                  }
+                  loading={loading}
+                />
+                <RankingCard
+                  icon={IconTargetArrow}
+                  title='Metas concluídas por você'
+                  value={totalGoalsCompleted}
+                  loading={loading}
+                />
+                <Podium data={podiumData} loading={loading} />
+              </>
+            )}
           </>
         ) : (
           <>

@@ -2,7 +2,7 @@ import { Input, Button } from '@/components/ui'
 import { colors } from '@/styles/theme'
 import { IconLock, IconMail } from '@tabler/icons-react-native'
 import { Link, router } from 'expo-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
 import { styles } from './styles'
 import { Image } from 'react-native'
@@ -19,8 +19,14 @@ import { useSettings } from '@/hooks/use-settings'
 
 export function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false)
-  const { setIsLogged } = useAuth()
+  const { isLogged, setIsLogged } = useAuth()
   // const { updateSetting } = useSettings()
+
+  useEffect(() => {
+    if (isLogged) {
+      router.navigate('/profile')
+    }
+  }, [])
 
   const {
     control,
@@ -51,7 +57,7 @@ export function LoginScreen() {
 
       console.log(data)
 
-      await AsyncStorage.clear()
+      // await AsyncStorage.clear()
 
       // updateSetting('firstTimeUser', false)
       await AsyncStorage.setItem('@token', response.token)

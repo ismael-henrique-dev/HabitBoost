@@ -78,20 +78,49 @@ export function UpdateHabitForm() {
         // Cancela todas as notificações antigas relacionadas a esse hábito e cria novas
 
         if (data.reminderTime && selectedDays.length > 0) {
-          await cancelAllNotificationsForHabit(habit.id)
+          cancelAllNotificationsForHabit(habit.id)
+
+          let count = 0
 
           for (let i = 0; i < selectedDays.length; i++) {
             const convertedDate = convertTimeStringToDate(
               selectedDays[i],
               data.reminderTime
             )
-            if (convertedDate > new Date()) {
+
+            console.log('Data convertida:', convertedDate.toLocaleString())
+            console.log('Agora:', new Date().toLocaleString())
+
+            if (convertedDate.getTime() > Date.now()) {
               const notificationId = await createNotify(
                 convertedDate,
                 habit.title
               )
               await saveNotificationId(habit.id, notificationId)
+              count++
             }
+          }
+
+          if (count > 0) {
+            notify('custom' as any, {
+              params: {
+                customTitle: `${count} lembrete(s) agendado(s) com sucesso!`,
+                type: 'success',
+              },
+              config: {
+                duration: 3000,
+              },
+            })
+          } else {
+            notify('custom' as any, {
+              params: {
+                customTitle: `Nenhum lembrete foi agendado, pois os horários estavam no passado.`,
+                type: 'warning',
+              },
+              config: {
+                duration: 4000,
+              },
+            })
           }
         }
 
