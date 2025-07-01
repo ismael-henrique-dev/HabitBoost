@@ -12,5 +12,7 @@ export async function createNotify(date: Date, notifyTitle: string) {
     },
   })
 
+  console.log("Criando notification: " + notificationId)
+
   return notificationId
 }

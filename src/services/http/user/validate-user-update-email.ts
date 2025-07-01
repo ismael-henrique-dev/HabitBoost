@@ -1,19 +1,26 @@
 import { api } from '@/services/api'
 import { getAxiosStatusCode } from '@/utils/get-axios-status-code'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type ValidateUserUpdateEmailResponse = {
   token: string
 }
 
 export async function ValidateUserUpdateEmail(
-  token: string
+  validateToken: string
 ): Promise<ValidateUserUpdateEmailResponse> {
   try {
+    const token = await AsyncStorage.getItem('@token')
     if (token) {
       const response = await api.patch<ValidateUserUpdateEmailResponse>(
         'update/email/validate',
         {
-          token,
+          validateToken,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       )
       return response.data

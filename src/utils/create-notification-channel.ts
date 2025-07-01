@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications'
 
 export async function createNotificationsChannel() {
-  console.log('NewChannel')
+  console.log('Verificando canal de notificação...')
 
   const { status } = await Notifications.requestPermissionsAsync()
   if (status !== 'granted') {
@@ -9,8 +9,19 @@ export async function createNotificationsChannel() {
     return
   }
 
-  await Notifications.setNotificationChannelAsync('habits', {
-    name: 'Habits notifications',
-    importance: Notifications.AndroidImportance.HIGH,
-  })
+  // Pega todos os canais existentes (Android)
+  const existingChannels = await Notifications.getNotificationChannelsAsync()
+  const habitsChannelExists = existingChannels.some(
+    (channel) => channel.id === 'habits'
+  )
+
+  if (!habitsChannelExists) {
+    console.log('Criando canal de notificação "habits"...')
+    await Notifications.setNotificationChannelAsync('habits', {
+      name: 'Habits notifications',
+      importance: Notifications.AndroidImportance.HIGH,
+    })
+  } else {
+    console.log('Canal "habits" já existe.')
+  }
 }

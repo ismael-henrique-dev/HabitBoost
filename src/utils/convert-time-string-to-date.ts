@@ -1,11 +1,17 @@
-export function convertTimeStringToDate(dateString: string, time: string): Date {
+import dayjs from 'dayjs'
+
+export function convertTimeStringToDate(
+  dateString: string,
+  time: string
+): Date {
   const [hour, minute] = time.split(':').map(Number)
-  const date = new Date(dateString)
 
-  date.setHours(hour)
-  date.setMinutes(minute)
-  date.setSeconds(0)
-  date.setMilliseconds(0)
+  // Cria a data com hora local usando dayjs
+  const date = dayjs(dateString)
+    .hour(hour)
+    .minute(minute)
+    .second(0)
+    .millisecond(0)
 
-  return date
+  return date.toDate() // ← transforma em Date padrão para usar no trigger
 }
