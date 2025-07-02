@@ -15,6 +15,8 @@ import { categoriesIcons } from '@/utils/icons-list'
 
 import { deleteCategoryOnServer } from '@/services/http/categories/delete-category'
 import { useAuth } from '@/contexts/auth-context'
+import { getErrorMessage } from '@/utils/get-error-menssage'
+import { notify } from 'react-native-notificated'
 
 type CategorySelectBottomSheetProps = {
   selectedCategoryId: string | null
@@ -30,11 +32,35 @@ export function CategorySelectBottomSheet({
   const { isLogged } = useAuth()
 
   const handleDeleteCategory = async (id: string) => {
-    if (isLogged) {
-      await deleteCategoryOnServer(id)
-      deleteCategory(id)
-    } else {
-      deleteCategory(id)
+    try {
+      if (isLogged) {
+        await deleteCategoryOnServer(id)
+        deleteCategory(id)
+      } else {
+        deleteCategory(id)
+      }
+
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Categoria deletada com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
     }
   }
 

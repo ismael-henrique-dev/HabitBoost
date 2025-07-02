@@ -35,6 +35,7 @@ import {
   IconEye,
   IconMovie,
   IconMusic,
+  IconPhoto,
   IconProps,
   IconSalad,
   IconShoppingBag,
@@ -42,6 +43,7 @@ import {
 } from '@tabler/icons-react-native'
 
 export const categoriesIcons: Record<string, React.ComponentType<IconProps>> = {
+  'icon-default-category': IconPhoto,
   'icon-tools-kitchen': IconToolsKitchen2,
   'icon-shopping-bag': IconShoppingBag,
   'icon-bed': IconBed,

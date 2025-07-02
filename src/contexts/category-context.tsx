@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { Category } from '@/types/category'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { getCategories } from '@/services/http/categories/get-categories'
 import { defaultCategories } from '@/utils/default-categories'
 import { useAuth } from './auth-context'
 
 type CategoryContextData = {
+  isLoading: boolean
   categories: Category[]
+  customCategories: Category[]
   createCategory: (category: Category) => void
   deleteCategory: (id: string) => void
 }
@@ -21,6 +22,7 @@ const STORAGE_KEY = '@custom_categories'
 export function CategoryProvider({ children }: { children: React.ReactNode }) {
   const [customCategories, setCustomCategories] = useState<Category[]>([])
   const [fetchedCategories, setFetchedCategories] = useState<Category[]>([])
+  const [isLoading, setIsloading] = useState(false)
   const { isLogged } = useAuth() // ← aqui está o hook
 
   const categories = useMemo(() => {
@@ -30,6 +32,7 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function loadCategories() {
       try {
+        setIsloading(true)
         // Sempre carrega as categorias do AsyncStorage
         const stored = await AsyncStorage.getItem(STORAGE_KEY)
         if (stored) {
@@ -56,6 +59,8 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error('Erro ao carregar categorias:', error)
+      } finally {
+        setIsloading(false)
       }
     }
 
@@ -71,11 +76,6 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
   }
 
   function createCategory(category: Category) {
-    if (customCategories.length >= 5) {
-      alert('Você só pode criar até 5 categorias personalizadas.')
-      return
-    }
-
     const updated = [...customCategories, category]
     setCustomCategories(updated)
     saveCustomCategories(updated)
@@ -89,7 +89,13 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CategoryContext.Provider
-      value={{ categories, createCategory, deleteCategory }}
+      value={{
+        isLoading,
+        categories,
+        customCategories,
+        createCategory,
+        deleteCategory,
+      }}
     >
       {children}
     </CategoryContext.Provider>

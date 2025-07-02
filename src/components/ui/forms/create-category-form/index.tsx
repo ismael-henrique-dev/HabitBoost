@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '../../input'
 import { ErrorMenssage } from '../../error-menssage'
@@ -22,14 +22,19 @@ import { categoriesIcons } from '@/utils/icons-list'
 
 import { createCategoryOnServer } from '@/services/http/categories/create-category'
 import { useAuth } from '@/contexts/auth-context'
+import { getErrorMessage } from '@/utils/get-error-menssage'
+import { notify } from 'react-native-notificated'
 
 export function CreateCategoryForm() {
   const { isLogged } = useAuth()
   const [iconModalVisible, setIconModalVisible] = useState(false)
-  const [selectedIconId, setSelectedIconId] = useState<string | null>(null)
+  const [selectedIconId, setSelectedIconId] = useState<string>(
+    'icon-default-category'
+  )
+  const [isLoading, setIsloading] = useState(false)
 
   const SelectedIcon = selectedIconId ? categoriesIcons[selectedIconId] : null
-  const { createCategory } = useCategory()
+  const { createCategory, customCategories } = useCategory()
   const {
     control,
     handleSubmit,
@@ -43,10 +48,7 @@ export function CreateCategoryForm() {
 
   const handleCreateCategory = async (data: CreateCategoryFormData) => {
     try {
-      if (!selectedIconId) {
-        alert('Selecione um ícone para a categoria.')
-        return
-      }
+      setIsloading(true)
 
       const category: Category = {
         id: uuidv4(),
@@ -55,17 +57,48 @@ export function CreateCategoryForm() {
         iconId: selectedIconId!,
       }
 
-      if (isLogged) {
-        await createCategoryOnServer(category)
-        createCategory(category)
+      if (customCategories.length >= 5) {
+        Alert.alert(
+          'Atenção',
+          'Você só pode criar até 5 categorias personalizadas.'
+        )
+        return
       } else {
-        createCategory(category)
+        if (isLogged) {
+          await createCategoryOnServer(category)
+          createCategory(category)
+        } else {
+          createCategory(category)
+        }
       }
 
       console.log('Nova categoria: ', category)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: 'Categoria criada com sucesso!',
+          type: 'success',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+
       router.back()
-    } catch (error) {
-      console.error('Erro ao criar categoria:', error)
+    } catch (responseError) {
+      const error = getErrorMessage(responseError)
+
+      notify('custom' as any, {
+        params: {
+          customTitle: error,
+          type: 'error',
+        },
+        config: {
+          duration: 2000,
+        },
+      })
+    } finally {
+      setIsloading(false)
     }
   }
 
@@ -110,10 +143,17 @@ export function CreateCategoryForm() {
         {errors.name && <ErrorMenssage>{errors.name.message}</ErrorMenssage>}
       </View>
 
-      <Button variant='secundary' onPress={handleSubmit(handleCreateCategory)}>
-        <Button.Title style={{ color: colors.zinc[50] }}>Concluir</Button.Title>
+      <Button
+        isLoading={isLoading}
+        disabled={isLoading}
+        variant='secundary'
+        onPress={handleSubmit(handleCreateCategory)}
+      >
+        <Button.Title style={{ color: colors.zinc[50] }}>
+          {isLoading ? 'Criando categoria...' : 'Criar categoria'}
+        </Button.Title>
       </Button>
-      <Button onPress={() => router.back()}>
+      <Button disabled={isLoading} onPress={() => router.back()}>
         <Button.Title>Cancelar</Button.Title>
       </Button>
     </View>
