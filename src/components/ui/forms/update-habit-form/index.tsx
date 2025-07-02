@@ -1,5 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { HabitFormData, habitFormSchema } from '@/validators/habit/create-habit'
 import { Input } from '../../input'
@@ -8,7 +8,7 @@ import { ErrorMenssage } from '../../error-menssage'
 import { CategorySelectBottomSheet } from '../../select'
 import { styles } from './styles'
 import { router, useLocalSearchParams } from 'expo-router'
-import { colors } from '@/styles/theme'
+import { colors, fontFamily } from '@/styles/theme'
 import { Calendar } from '../../calendar'
 import { useHabit } from '@/contexts/habit-context'
 import { notify } from 'react-native-notificated'
@@ -25,6 +25,7 @@ import { cancelAllNotificationsForHabit } from '@/utils/cancel-all-notifications
 import { convertTimeStringToDate } from '@/utils/convert-time-string-to-date'
 import { createNotify } from '@/utils/create-notification'
 import { saveNotificationId } from '@/utils/save-notification-id'
+import { IconX } from '@tabler/icons-react-native'
 
 export function UpdateHabitForm() {
   const { isLogged } = useAuth()
@@ -235,10 +236,10 @@ export function UpdateHabitForm() {
         )}
       </View>
       {/* Relógio aqui dps */}
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Horário do lembrete:</Text>
+      {/* <View style={styles.formGroup}> */}
+        {/* <Text style={styles.label}>Horário do lembrete:</Text> */}
         {/* <TouchableOpacity onPress={showTimepicker}> */}
-        <Controller
+        {/* <Controller
           control={control}
           name='reminderTime'
           render={({ field: { value } }) => (
@@ -249,6 +250,46 @@ export function UpdateHabitForm() {
               value={value}
               onPress={showTimepicker}
             />
+          )}
+        /> */}
+        {/* </TouchableOpacity> */}
+      {/* </View> */}
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Horário do lembrete:</Text>
+        {/* <TouchableOpacity onPress={showTimepicker}> */}
+        <Controller
+          control={control}
+          name='reminderTime'
+          render={({ field: { value, onChange } }) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                height: 48,
+                paddingHorizontal: 12,
+                backgroundColor: colors.zinc[200],
+                borderRadius: 12,
+              }}
+            >
+              <Text
+                onPress={showTimepicker}
+                style={{
+                  fontSize: 16,
+                  fontFamily: fontFamily.regular,
+                  color: colors.zinc[600],
+                }}
+              >
+                {value
+                  ? `Selecionado: ${value}`
+                  : 'Selecionar horário(opcional)'}
+              </Text>
+              <TouchableOpacity onPress={() => onChange('')}>
+                <IconX size={20} color={colors.zinc[600]} />
+              </TouchableOpacity>
+            </View>
           )}
         />
         {/* </TouchableOpacity> */}
