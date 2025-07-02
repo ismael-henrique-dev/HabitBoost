@@ -151,7 +151,7 @@ export function WeatherSuggestionWidget() {
       <View style={styles.header}>
         <View style={styles.headerGroup}>
           <IconExclamationCircle size={24} color={colors.zinc[50]} />
-          <Text style={styles.title} numberOfLines={2}>{'Sugestões baseadas no clima'}</Text>
+          <Text style={styles.title}>{'Sugestões baseadas no clima'}</Text>
         </View>
         <TouchableOpacity onPress={() => updateSetting('weatherWidget', false)}  style={{ marginLeft: 8 }} >
           <IconX size={24} color={colors.zinc[50]} />

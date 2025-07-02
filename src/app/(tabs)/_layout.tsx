@@ -28,6 +28,7 @@ export default function TabLayout() {
             fontFamily: fontFamily.semiBold,
             fontSize: 20,
             color: colors.zinc[900],
+            width: '100%'
           },
           tabBarShowLabel: true,
           tabBarLabelStyle: {
@@ -40,7 +41,7 @@ export default function TabLayout() {
           tabBarStyle: {
             backgroundColor: colors.zinc[50],
             height: 82,
-            paddingHorizontal: 12,
+            paddingHorizontal: 2,
             paddingTop: 12,
             paddingVertical: 8,
             elevation: 0,

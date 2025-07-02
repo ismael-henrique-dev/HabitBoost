@@ -4,6 +4,7 @@ export async function createNotify(date: Date, notifyTitle: string) {
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
       title: notifyTitle,
+      body: 'Lembrete do hábito, faça agora!'
     },
     trigger: {
       channelId: 'habits',
