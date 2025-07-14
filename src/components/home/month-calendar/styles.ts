@@ -4,18 +4,19 @@ import { colors } from '@/styles/theme'
 export const styles = StyleSheet.create({
   calendarContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginVertical: 16,
-    paddingHorizontal: 8,
+    gap: 8,
+    // paddingHorizontal: 8,
   },
   dayItem: {
     backgroundColor: '#fff',
     borderRadius: 8,
-    width: 50,
+    width: 58,
     height: 70,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 4,
+    // marginRight: 8,
+    // marginHorizontal: 4,
     elevation: 2,
   },
   dayItemSelected: {

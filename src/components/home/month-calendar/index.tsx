@@ -5,44 +5,43 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native'
-import { useState, useRef, useEffect } from 'react'
-import dayjs, { Dayjs } from 'dayjs'
-import 'dayjs/locale/pt-br'
+import { useRef, useEffect } from 'react'
 import { styles } from './styles'
 import { useHabit } from '@/contexts/habit-context'
+import dayjs, { Dayjs } from 'dayjs'
+import 'dayjs/locale/pt-br'
 
 dayjs.locale('pt-br')
 
 export function MonthCalendar() {
-  const { habits, selectedDate, setSelectedDate } = useHabit()
-  const [itemWidth, setItemWidth] = useState(0)
   const scrollRef = useRef<ScrollView>(null)
+  const { habits, selectedDate, setSelectedDate } = useHabit()
+  const ITEM_WIDTH = 66
   const today = dayjs()
 
-  // Garante que selectedDate tenha um valor inicial
   useEffect(() => {
     if (!selectedDate) {
       setSelectedDate(today.toDate())
     }
   }, [selectedDate, setSelectedDate])
 
-  // Encontra a data de criação mais antiga
-  const firstHabitDate =
-    habits.length > 0
-      ? dayjs(
-          habits.reduce(
-            (earliest, habit) =>
-              dayjs(habit.createdAt).isBefore(dayjs(earliest))
-                ? habit.createdAt
-                : earliest,
-            habits[0].createdAt
-          )
-        )
-      : today
+  const hasHabits = habits.length > 0
 
-  // Gera dias do primeiro hábito até 1 mês após o dia atual
-  const endDate = today.add(1, 'month') // Define o limite como hoje + 1 mês
+  const firstHabitDate = hasHabits
+    ? dayjs(
+        habits.reduce(
+          (earliest, habit) =>
+            dayjs(habit.createdAt).isBefore(dayjs(earliest))
+              ? habit.createdAt
+              : earliest,
+          habits[0].createdAt
+        )
+      )
+    : today
+
+  const endDate = today.add(1, 'month')
   const daysOfMonth: Dayjs[] = []
+
   for (
     let date = firstHabitDate;
     date.isBefore(endDate) || date.isSame(endDate, 'day');
@@ -51,35 +50,27 @@ export function MonthCalendar() {
     daysOfMonth.push(date)
   }
 
-  const todayIndex = today.date()
   const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
   useEffect(() => {
-    if (itemWidth > 0) {
-      const todayPositionIndex = daysOfMonth.findIndex((date) =>
-        date.isSame(today, 'day')
-      )
+    const isFirstHabitToday = firstHabitDate.isSame(today, 'day')
+    const todayIndex = daysOfMonth.findIndex((date) =>
+      date.isSame(today, 'day')
+    )
 
+    if (todayIndex !== -1 && !isFirstHabitToday && scrollRef.current) {
       const screenWidth = Dimensions.get('window').width
       const scrollOffset =
-        todayPositionIndex * itemWidth - screenWidth / 2 + itemWidth / 2
+        todayIndex * ITEM_WIDTH - screenWidth / 2 + ITEM_WIDTH / 2
 
-      // Só centraliza se não for o primeiro hábito
-      const isFirstHabitToday = firstHabitDate.isSame(today, 'day')
-
-      if (!isFirstHabitToday) {
+      requestAnimationFrame(() => {
         scrollRef.current?.scrollTo({
-          x: scrollOffset > 0 ? scrollOffset : 0,
-          animated: true,
+          x: Math.max(scrollOffset, 0),
+          animated: false,
         })
-      }
+      })
     }
-  }, [itemWidth, daysOfMonth])
-
-  const handleItemLayout = (event: any) => {
-    const { width } = event.nativeEvent.layout
-    setItemWidth(width)
-  }
+  }, [daysOfMonth.length])
 
   return (
     <ScrollView
@@ -88,7 +79,7 @@ export function MonthCalendar() {
       showsHorizontalScrollIndicator={false}
     >
       <View style={styles.calendarContainer}>
-        {daysOfMonth.map((date, index) => {
+        {daysOfMonth.map((date) => {
           const isSelected = date.isSame(selectedDate, 'day')
 
           return (
@@ -96,7 +87,6 @@ export function MonthCalendar() {
               key={date.format('YYYY-MM-DD')}
               style={[styles.dayItem, isSelected && styles.dayItemSelected]}
               onPress={() => setSelectedDate(date.toDate())}
-              onLayout={index === 0 ? handleItemLayout : undefined}
             >
               <Text
                 style={[
